@@ -1,0 +1,190 @@
+<MainScreen>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDBoxLayout:
+            size_hint_y: .1
+            padding: [0, 0, 0, 0]
+            spacing: '10dp'
+            MDIconButton:
+                icon: 'menu'
+				halign: 'center'
+				valign: 'top'
+				on_press: root.on_release()
+            MDLabel:
+            MDTextFieldRound:
+                normal_color: app.theme_cls.primary_light
+                hint_text: '搜索'
+				id:search_key
+                font_name: './Lishu.ttf'
+                size_hint_x: 2
+                pos_hint: {'x': .1, 'y': .2}
+            MDIconButton:
+                icon: "magnify"
+				on_press: root.on_press()
+                halign:'center'
+                valign: 'top'
+            MDLabel:
+        
+
+        ScreenManager:
+        	id:screen_manager
+        	MDScreen:
+        		name:'tab_screen'
+        		MDBoxLayout:
+		        	id:home_data
+		        	spacing:dp(5)
+		        	padding:[10,2,10,2]
+		        	MDBoxLayout:
+		        		orientation:'vertical'
+		        		size_hint_x:.45
+		        		ScrollView:
+		        			MDBoxLayout:
+		        				orientation:'vertical'
+		        				id:hot_class
+		        				adaptive_height:True
+
+		        	MDBoxLayout:
+		        		orientation:'vertical'
+		        		size_hint_x:.45
+		        		ScrollView:
+		        			MDBoxLayout:
+		        				orientation:'vertical'
+		        				id:info_class
+		        				adaptive_height:True
+		    MDScreen: 
+		    	name:'info_screen'
+			
+				
+		    	
+<SearchScreen>:
+	MDBoxLayout:
+    	spacing:dp(5)
+    	padding:[10,2,10,2]
+    	MDBoxLayout:
+    		orientation:'vertical'
+    		size_hint_x:.45
+    		ScrollView:
+    			MDBoxLayout:
+    				orientation:'vertical'
+    				id:all_search
+    				adaptive_height:True
+
+    	MDBoxLayout:
+    		orientation:'vertical'
+    		size_hint_x:.45
+    		ScrollView:
+    			MDBoxLayout:
+    				orientation:'vertical'
+    				id:new_search
+    				adaptive_height:True
+   
+
+<HotCard>:
+	orientation:'vertical'
+	size_hint_x:1
+	size_hint_y:None 
+	height: Window.height/4
+	padding:dp(10)
+	radius:[50]
+	MDBoxLayout:
+		size_hint_y:.9
+		AsyncImage:
+			source: root.image
+		MDBoxLayout:
+			orientation:'vertical'
+			size_hint_y:.9
+			MDLabel:
+				text:root.title_text
+				font_size: Window.height/40
+				bold: True  
+				font_name:'./Lishu.ttf'
+				halign: 'center'
+			MDLabel:
+				text:root.info_text
+				font_size: Window.height/60
+				bold: False
+				font_name:'./Lishu.ttf'
+				halign: 'center'
+
+<InfoSearchCard>:
+	orientation:'vertical'
+	size_hint_x:1
+	size_hint_y:None 
+	height: Window.height/4
+	padding:dp(10)
+	radius:[50]
+	MDBoxLayout:
+		orientation:'vertical'
+		size_hint_y:.9
+		MDLabel:
+			text:root.title_text
+			font_size: Window.height/40
+			bold: True  
+			font_name:'./Lishu.ttf'
+			halign: 'center'
+		MDLabel:
+			text:root.des_text
+			font_size: Window.height/60
+			bold: False
+			font_name:'./Lishu.ttf'
+			halign: 'center'
+		MDLabel:
+			text:root.info_text
+			font_size: Window.height/60
+			bold: False
+			font_name:'./Lishu.ttf'
+			halign: 'center'
+
+<InfoCard>:
+	orientation:'vertical'
+	size_hint_x:1
+	size_hint_y:None 
+	height: Window.height/4
+	padding:dp(10)
+	radius:[50]
+	MDBoxLayout:
+		size_hint_y:.9
+		AsyncImage:
+			source: root.image
+		MDBoxLayout:
+			orientation:'vertical'
+			size_hint_y:.9
+			MDLabel:
+				text:root.title_text
+				font_size: Window.height/40
+				bold: True  
+				font_name:'./Lishu.ttf'
+				halign: 'center'
+			MDLabel:
+				text:root.des_text
+				font_size: Window.height/80
+				bold: False
+				font_name:'./Lishu.ttf'
+				halign: 'center'
+			MDLabel:
+				text:root.info_text
+				font_size: Window.height/60
+				bold: False
+				font_name:'./Lishu.ttf'
+				halign: 'center'
+
+<ArticleScreen>:
+	text_data:''
+	ScrollView:   
+		MDBoxLayout:
+			orientation:'vertical'
+			id:article_screen
+			spacing:10
+			padding:10
+			MDTextFieldRect:
+				text:root.text_data
+				font_name:'./Lishu.ttf'
+				adaptive_height:True
+				size_hint_y:Window.height*2
+				font_size:Window.height/60
+
+
+	
+
+	
+	
