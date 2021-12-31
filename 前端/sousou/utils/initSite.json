@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1,
+    "key": "huawei",
+    "name": "华为",
+    "api": "https://consumer.huawei.com/cn/phones/",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用",
+	"header":{
+	            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+	            "Accept-Language": "zh-CN,zh;q=0.9",
+	            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36",
+	            "Sec-Fetch-Dest": "document",
+	            "Sec-Fetch-Mode": "navigate",
+	            "Cache-Control": "max-age=0",
+	            "Connection": "keep-alive",
+	            "sec-ch-ua": "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"",
+	            "Sec-Fetch-Mode": "navigate"
+	            },
+	"pic_href":"",
+	"play_href":"",
+	"class_rules":{
+		"all_range":"",
+		"class_name":["手机","电脑","平板","智慧屏"],
+		"class_href":[
+			"https://consumer.huawei.com/cn/phones/",
+			"https://consumer.huawei.com/cn/laptops/",
+			"https://consumer.huawei.com/cn/tablets/",
+			"https://consumer.huawei.com/cn/visions/"
+		],
+		"list_name":"",
+		"list_href":"",
+		"list_src":"",
+		"list_state":"",
+		"list_src":""},
+	"search_rules":{
+		"search_href":"",
+		"all_range":"",
+		"list_name":"",
+		"list_href":"",
+		"list_src":"",
+		"list_state":"",
+		"list_src":""},
+	"play_rules":{
+		"all_range":"",
+		"play_name":"",
+		"play_src":"",
+		"play_state":"",
+		"name_tag_list":"",
+		"name_tag":"",
+		"play_list":"",
+		"play_list_name":"",
+		"play_list_href":""
+	},
+	"target_key":"",
+	"except_key":""
+  },
+  {
+    "id": 2,
+    "key": "88zyw",
+    "name": "88 影视资源站",
+    "api": "http://www.88zyw.net/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 3,
+    "key": "apibdzy",
+    "name": "百度云资源",
+    "api": "https://api.apibdzy.com/api.php/provide/vod/at/xml",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 4,
+    "key": "mbo",
+    "name": "秒播资源",
+    "api": "http://caiji.mb77.vip/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 5,
+    "key": "zuidazy",
+    "name": "最大资源网",
+    "api": "http://www.zdziyuan.com/inc/api.php",
+    "download": "http://www.zdziyuan.com/inc/apidown.php",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 6,
+    "key": "123ku",
+    "name": "123 资源",
+    "api": "http://cj.123ku2.com:12315/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 7,
+    "key": "okzy",
+    "name": "OK 资源网",
+    "api": "http://cj.okzy.tv/inc/api.php",
+    "download": "http://cj.okzy.tv/inc/apidown.php",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 8,
+    "key": "kuyunzy",
+    "name": "酷云资源",
+    "api": "http://caiji.kuyun98.com/inc/ldg_api.php",
+    "download": "http://caiji.kuyun98.com/inc/apidown.php",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 9,
+    "key": "kubozy",
+    "name": "酷播资源",
+    "api": "http://api.kbzyapi.com/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 10,
+    "key": "yongjiuzy",
+    "name": "永久资源",
+    "api": "http://cj.yongjiuzyw.com/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 11,
+    "key": "rrzy",
+    "name": "人人资源",
+    "api": "https://www.rrzyw.cc/api.php/provide/vod/from/rrm3u8/at/xml/",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 12,
+    "key": "bbkdj",
+    "name": "步步高顶尖资源网",
+    "api": "http://api.bbkdj.com/api",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 13,
+    "key": "zuixinzy",
+    "name": "最新资源",
+    "api": "http://api.zuixinapi.com/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 14,
+    "key": "subo988",
+    "name": "速播资源站",
+    "api": "https://www.subo988.com/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  },
+  {
+    "id": 15,
+    "key": "1886zy",
+    "name": "1886 资源",
+    "api": "http://cj.1886zy.co/inc/api.php",
+    "download": "",
+    "group": "默认",
+    "isActive": true,
+    "status": "可用"
+  }
+]
