@@ -8,3 +8,4 @@ https://github.com/sunxu888/uniapp-movie
 https://github.com/deepsearun/uniapp-applecms-movies
 https://github.com/bwsnb/Free-Font 免费中文字体
 https://github.com/zenozeng/Free-Chinese-Fonts 免费中文字体
+https://github.com/shmily-yu/uniappLearn uniapp教程
