@@ -4,6 +4,9 @@
 			<image src="../../static/back.png" mode="aspectFit" class="back-img" @click="pageBacked()"></image>
 			<view class="title">播放</view>
 		</view>
+		<view class="play" maxlength="300" v-if="hidePlay">
+			<video class="player" :autoplay="true" codec="jiema" :src="url" :initial-time="initialtime" play-strategy='3' @error="changeWare()"></video>
+		</view>
 		<view class="header">
 			<image :src="image" mode="aspectFit" class="item-img"></image>
 			<view class="item-box">
@@ -28,10 +31,21 @@ export default {
 			userState: '',
 			name: '',
 			notiveImage: '',
-			
+			hidePlay:true,
+			url: 'https://consumer.huawei.com/content/dam/huawei-cbg-site/cn/mkt/pdp/phones/p50-pocket/video/sunscreen.mp4',
+			initialtime: 0,
+			jiema:'hardware'
 		};
 	},
 	methods: {
+		changeWare(){
+			if(this.jiema==='software'){
+				this.$refs.uToast.show({ title: '视频源出错', type: 'warning', duration: '2300' });
+			}else{
+				this.jiema='software';
+			}
+			
+		},
 		pageBacked(){
 				this.$router.go(-1);
 		},
@@ -87,6 +101,13 @@ export default {
 		.title{
 			margin-top: 8rpx;
 			margin-left: 250rpx;
+		}
+	}
+	.play{
+		.player {
+			width: 100%;
+			margin-top: 10rpx;
+			margin-bottom: 10rpx;
 		}
 	}
 	.header {
