@@ -1,13 +1,6 @@
-https://github.com/Tzlibai/uni-app-video
-https://github.com/deepsearun/uniapp-applecms-movies
-https://github.com/erping123/kuaikuaiyingshi-app
-https://github.com/unilei/movie-aipan-uniapp
-https://github.com/xiaotan225/weixiaoying
-https://github.com/xiaotan225/weixiaoying
-https://github.com/sunxu888/uniapp-movie
-https://github.com/deepsearun/uniapp-applecms-movies
 https://github.com/bwsnb/Free-Font 免费中文字体
 https://github.com/zenozeng/Free-Chinese-Fonts 免费中文字体
 https://github.com/shmily-yu/uniappLearn uniapp教程
 https://github.com/xieyushi/uniappwebviewconnect webview uniapp通讯
 https://github.com/zz694818748/uniapp-APP-m3u8  m3u8 下载
+https://github.com/sewenfengqing/uniapp-NotificationProgress 下载进度条
