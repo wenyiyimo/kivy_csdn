@@ -10,3 +10,4 @@ https://github.com/bwsnb/Free-Font 免费中文字体
 https://github.com/zenozeng/Free-Chinese-Fonts 免费中文字体
 https://github.com/shmily-yu/uniappLearn uniapp教程
 https://github.com/xieyushi/uniappwebviewconnect webview uniapp通讯
+https://github.com/zz694818748/uniapp-APP-m3u8  m3u8 下载
