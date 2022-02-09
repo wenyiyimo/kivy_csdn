@@ -5,3 +5,28 @@ https://github.com/xieyushi/uniappwebviewconnect webview uniapp通讯
 https://github.com/zz694818748/uniapp-APP-m3u8  m3u8 下载
 https://github.com/sewenfengqing/uniapp-NotificationProgress 下载进度条
 https://github.com/deepsearun/uniapp-applecms-movies/blob/main/pages/download/download.vue 下载模板
+
+.inner-wrap {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.u-icon-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		height: 190rpx;
+		flex: 0 0 33.33333333%;
+		justify-content: center;
+		overflow: hidden;
+	}
+	
+	.u-icon-name {
+		color: $u-tips-color;
+		word-wrap: break-word;
+		word-break:break-all;
+		margin-top: 16rpx;
+		font-size: 26rpx;
+		padding: 0 14rpx;
+		// 给定高度是为了图标名超出一行时，进行换行能有更好的效果
+		height: 26rpx;
+	}
