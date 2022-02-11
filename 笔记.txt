@@ -7,4 +7,4 @@ https://github.com/sewenfengqing/uniapp-NotificationProgress 下载进度条
 https://github.com/deepsearun/uniapp-applecms-movies/blob/main/pages/download/download.vue 下载模板
 
 <u-swiper :height="250" :list="list" :title="true" :effect3d="true" 
-				:indicator-pos="indicatorPos" mode="none" :interval="3000" @click="click"></u-swiper>
+				:indicator-pos="bottomCenter" mode="none" :interval="3000" @click="click"></u-swiper>
