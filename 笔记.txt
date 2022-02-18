@@ -6,5 +6,4 @@ https://github.com/zz694818748/uniapp-APP-m3u8  m3u8 下载
 https://github.com/sewenfengqing/uniapp-NotificationProgress 下载进度条
 https://github.com/deepsearun/uniapp-applecms-movies/blob/main/pages/download/download.vue 下载模板
 
-<u-swiper :height="250" :list="list" :title="true" :effect3d="true" 
-				:indicator-pos="bottomCenter" mode="none" :interval="3000" @click="click"></u-swiper>
+https://github.com/clearlove2303/lzg-uniapp/blob/6d0d9825dd5e6617a7a90e9f5f8359d077c3eff5/common/download-util.js 下载
