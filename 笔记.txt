@@ -7,3 +7,4 @@ https://github.com/sewenfengqing/uniapp-NotificationProgress 下载进度条
 https://github.com/deepsearun/uniapp-applecms-movies/blob/main/pages/download/download.vue 下载模板
 
 https://github.com/clearlove2303/lzg-uniapp/blob/6d0d9825dd5e6617a7a90e9f5f8359d077c3eff5/common/download-util.js 下载
+https://github.com/512541024/-/blob/f33bb505def3d0534c048a94324855f33a5697c1/components/yfs-video/yfs-video.vue
