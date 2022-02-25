@@ -12,3 +12,4 @@ https://github.com/512541024/-/blob/f33bb505def3d0534c048a94324855f33a5697c1/com
 https://github.com/paower/ch/blob/89c0c1353b456b1b82ed7890850cbc5bbc3dbb83/beid/components/cu-video.vue
 https://github.com/xzebin/my-music/blob/614ff9ca97f939431190d291781a66b136fdb901/components/shoyu-video/shoyu-video.vue
 https://github.com/WanyueKJ/wanyue_online_education_uniapp/blob/cc64f122fe3ee5774510420fcb7847f3fd2cbc69/packageB/pages/content-detail/content-detail.vue
+https://github.com/minyuanriji/wwwfrontend/blob/cc5eb9abb3957a3ab1f6cca94632b27e92d34cb4/components/com-video/com-video.vue
