@@ -17,3 +17,37 @@ https://github.com/MIchaelJier/Yunyun-Study-for-Mobile/blob/0ad3da48e6ea3d9507a5
 
 <view class="more-box" @click.stop="(args)=>tapRate(args,1)"><text class="`${platform}-title`" :class="1.0==rate?'solid-bottom':''"
 								 :style="{color:1.0==rate?color:'#fff',borderBottomColor:1.0==rate?color:'#fff'}">1.0x</text></view>
+
+
+<view v-for="(i, j) in siteList" :key="j" class="item-group">
+	<view class="name-group">{{i.name}}</view>
+	<view class='deal-name'>
+	<button class="delete" size="mini" :ripple="true" @click="deleteEvent(i)">删除</button>
+	<button class="pushpin" size="mini" :ripple="true" @click="pushpinEvent(i, j)">置顶</button>
+	<switch class="switch-button" :checked="i.isActive" @change="switchChange(i)" type="switch" active-color="#c7ccce"></switch>
+	</view>
+</view>
+
+
+		.item-group {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			.deal-name{
+				display: flex;
+				flex-direction: row;
+				justify-content: space-around;
+				.delete {
+					margin-right: 30px;
+				}
+				.pushpin {
+					margin-right: 30px;
+				}
+					
+				.switch-button{
+					
+				}
+			}
+			
+			
+		}
