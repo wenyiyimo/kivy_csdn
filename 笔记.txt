@@ -24,4 +24,113 @@ if(jsonString.startsWith('{')&&jsonString.endsWith("}")){
 	jsonString = jsonString.substring(0,lastNum+1);
 	let jsonData = JSON.parse(jsonString);
 }
-console.log(jsonData)
+cons
+
+
+
+<template>
+	<list :id="parentListId" class="page" :bounce="false" isSwiperList="false">
+		<cell>
+			<view id="head">
+			</view>
+		</cell>
+		<cell>
+			<view class="main-content" :style="'height:' + pageHeight + 'px'">
+				<view class="sticky-view">
+					<text class="sticky-title">Sticky view</text>
+				</view>
+				<list ref="sublist" class="list" :offset-accuracy="5" :bounce="false" isSwiperList="false">
+					<cell v-for="(item, index) in dataList" :key="item.id" :ref="'item'+index" @click="onclick">
+						<view class="list-item">
+							<text>{{item.name}}</text>
+						</view>
+					</cell>
+				</list>
+			</view>
+		</cell>
+	</list>
+</template>
+
+<script>
+	// #ifdef APP-PLUS
+	const dom = weex.requireModule('dom');
+	// #endif
+
+	export default {
+		data() {
+			return {
+				parentListId: "parentListId",
+				pageHeight: 300,
+				dataList: [],
+			
+			}
+		},
+		created() {
+			for (var i = 1; i <= 32; i++) {
+				this.dataList.push({
+					id: i,
+					name: i
+				});
+			}
+		},
+		onReady() {
+			this.pageHeight = uni.getSystemInfoSync().windowHeight;
+			uni.createSelectorQuery().in(this).select('#head').boundingClientRect().exec(rect => {
+				this.$refs.sublist.setSpecialEffects({
+					id: this.parentListId,
+					headerHeight: rect[0].height
+				});
+			});
+		},
+		methods: {
+			}
+	}
+</script>
+
+<style>
+	/* #ifndef APP-PLUS */
+	page {
+		width: 100%;
+		min-height: 100%;
+		display: flex;
+	}
+
+	/* #endif */
+
+	.page {
+		flex: 1;
+	}
+
+	
+	.header {
+		height: 0px;
+	
+	}
+
+	.header-title {
+		font-size: 30px;
+		font-weight: bold;
+		color: #444;
+	}
+
+	.sticky-view {
+		margin-left: 12px;
+		margin-right: 12px;
+		padding: 20px;
+		background-color: #EBEBEB;
+		border-radius: 5px;
+	}
+
+	.list {
+		flex: 1;
+	}
+
+	.list-item {
+		margin-left: 12px;
+		margin-right: 12px;
+		margin-top: 12px;
+		padding: 20px;
+		background-color: #fff;
+		border-radius: 5px;
+	}
+</style>
