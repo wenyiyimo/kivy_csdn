@@ -73,3 +73,5 @@ this.timeSet=setInterval(function(){
 onUnload(){
 		clearInterval(this.timeSet)
 	},
+https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-jinja2/get/2.8.0.zip
+https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-markupsafe/get/0.23.0.zip
