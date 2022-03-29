@@ -57,15 +57,19 @@ getElRect(elClass, dataVal) {
 		}).exec();
 	})
 },
+let that = this;
 this.timeSet=setInterval(function(){
 			uni.createSelectorQuery().selectViewport().scrollOffset(res => {
 			  // console.log(res.scrollTop);
 			  console.log(res)
 			  if(res.scrollHeight-res.scrollTop<this.pageHeight){
-				  this.fixedstate='fixed'; 
+				  that.fixedstate='fixed'; 
 			  }else{
-				  this.fixedstate='relative'
+				  that.fixedstate='relative'
 			  }
 			}).exec();
 		
-	},1000)
+	},1000);
+onUnload(){
+		clearInterval(this.timeSet)
+	},
