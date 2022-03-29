@@ -57,3 +57,7 @@ getElRect(elClass, dataVal) {
 		}).exec();
 	})
 },
+uni.createSelectorQuery().selectViewport().scrollOffset(res => {
+			  // console.log(res.scrollTop);
+			  console.log(res)
+			}).exec();
