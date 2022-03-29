@@ -15,122 +15,45 @@ https://github.com/minyuanriji/wwwfrontend/blob/cc5eb9abb3957a3ab1f6cca94632b27e
 https://github.com/MIchaelJier/Yunyun-Study-for-Mobile/blob/0ad3da48e6ea3d9507a5b8a6468bce3bd6fec377/pages/Coursedetails/video/myVideo.vue
 
 
-if(jsonString.startsWith('{')&&jsonString.endsWith("}")){
-	let jsonData = JSON.parse(jsonString);
-}else{
-	let firstNum = jsonString.indexOf('{');
-	jsonString = jsonString.substring(firstNum);
-	let lastNum = jsonString.lastIndexOf('}');
-	jsonString = jsonString.substring(0,lastNum+1);
-	let jsonData = JSON.parse(jsonString);
-}
-cons
-
-
-
-<template>
-	<list :id="parentListId" class="page" :bounce="false" isSwiperList="false">
-		<cell>
-			<view id="head">
-			</view>
-		</cell>
-		<cell>
-			<view class="main-content" :style="'height:' + pageHeight + 'px'">
-				<view class="sticky-view">
-					<text class="sticky-title">Sticky view</text>
-				</view>
-				<list ref="sublist" class="list" :offset-accuracy="5" :bounce="false" isSwiperList="false">
-					<cell v-for="(item, index) in dataList" :key="item.id" :ref="'item'+index" @click="onclick">
-						<view class="list-item">
-							<text>{{item.name}}</text>
-						</view>
-					</cell>
-				</list>
-			</view>
-		</cell>
-	</list>
-</template>
-
-<script>
-	// #ifdef APP-PLUS
-	const dom = weex.requireModule('dom');
-	// #endif
-
-	export default {
-		data() {
-			return {
-				parentListId: "parentListId",
-				pageHeight: 300,
-				dataList: [],
-			
+// 获取右边菜单每个item到顶部的距离
+getMenuItemTop() {
+	new Promise(resolve => {
+		let selectorQuery = uni.createSelectorQuery();
+		selectorQuery.selectAll('.class-item').boundingClientRect((rects) => {
+			// 如果节点尚未生成，rects值为[](因为用selectAll，所以返回的是数组)，循环调用执行
+			if(!rects.length) {
+				setTimeout(() => {
+					this.getMenuItemTop();
+				}, 500);
+				return ;
 			}
-		},
-		created() {
-			for (var i = 1; i <= 32; i++) {
-				this.dataList.push({
-					id: i,
-					name: i
-				});
+			rects.forEach((rect) => {
+				// 这里减去rects[0].top，是因为第一项顶部可能不是贴到导航栏(比如有个搜索框的情况)
+				this.arr.push(rect.top - rects[0].top);
+				resolve();
+			})
+		}).exec()
+	})
+},
+
+
+
+// 获取一个目标元素的高度
+getElRect(elClass, dataVal) {
+	new Promise((resolve, reject) => {
+		const query = uni.createSelectorQuery().in(this);
+		query.select('.' + elClass).fields({
+			size: true
+		}, res => {
+			// 如果节点尚未生成，res值为null，循环调用执行
+			if (!res) {
+				setTimeout(() => {
+					this.getElRect(elClass);
+				}, 10);
+				return;
 			}
-		},
-		onReady() {
-			this.pageHeight = uni.getSystemInfoSync().windowHeight;
-			uni.createSelectorQuery().in(this).select('#head').boundingClientRect().exec(rect => {
-				this.$refs.sublist.setSpecialEffects({
-					id: this.parentListId,
-					headerHeight: rect[0].height
-				});
-			});
-		},
-		methods: {
-			}
-	}
-</script>
-
-<style>
-	/* #ifndef APP-PLUS */
-	page {
-		width: 100%;
-		min-height: 100%;
-		display: flex;
-	}
-
-	/* #endif */
-
-	.page {
-		flex: 1;
-	}
-
-	
-	.header {
-		height: 0px;
-	
-	}
-
-	.header-title {
-		font-size: 30px;
-		font-weight: bold;
-		color: #444;
-	}
-
-	.sticky-view {
-		margin-left: 12px;
-		margin-right: 12px;
-		padding: 20px;
-		background-color: #EBEBEB;
-		border-radius: 5px;
-	}
-
-	.list {
-		flex: 1;
-	}
-
-	.list-item {
-		margin-left: 12px;
-		margin-right: 12px;
-		margin-top: 12px;
-		padding: 20px;
-		background-color: #fff;
-		border-radius: 5px;
-	}
-</style>
+			this[dataVal] = res.height;
+			resolve();
+		}).exec();
+	})
+},
