@@ -19,9 +19,10 @@
 					></uni-search-bar>
 					<text class="search-text" @click="searchEvent">搜索</text>
 				</view>
-				<view class="tab-data" v-for="(item, index) in tabItems" :key="index">
-					<text class="tab-item" :class="[current == index ? 'tab-item-active' : 'tab-item']" @click="onClickItem(index)">{{ item}}</text>
-				</view>
+				<view class="tab-data">
+				<view v-for="(item, index) in tabItems" :key="index">
+					<text class="tab-item" :class="[current == index ? 'tab-item-active' : '']" @click="onClickItem(index)">{{ item}}</text>
+				</view></view>
 				<list ref="sublist" offset-accuracy="5" bounce="false" show-scrollbar="false">
 					<cell class="data-item">
 						<view v-if="current === 0" id="detail-item" class="detail-item" v-for="(item, index) in detailLists" :key="index">
@@ -248,13 +249,13 @@ export default {
 	.tab-item{
 		font-size: 20px;
 		color: #000;
-		margin-top: 10px;
+	
 		margin-bottom: 10px;
 	}
 	.tab-item-active{
 		font-size: 20px;
 		color: #00aa00;
-		margin-top: 10px;
+
 		margin-bottom: 10px;
 	}
 		.data-item {
