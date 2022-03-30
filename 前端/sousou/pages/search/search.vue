@@ -1,56 +1,136 @@
 <template>
-	<view class="search">
-		<u-sticky :offset-top="-50">
-			<view class="header">
-				<image src="../../static/back.png" mode="aspectFit" class="header-img" @click="goBack()"></image>
-				<u-search v-model="search" @search="searchEvent" @custom="searchEvent" :clearabled="true" @clear="searchClearEvent" borderColor="#000000"></u-search>
-			</view>
-		</u-sticky>
-		<view class="body">
-			<view class="tab-item">
-				<view class="tab-data" v-for="(item, index) in nameLists" :key="index">
-					<u-button class="item-title" size="mini" :ripple="true" @click="tabSearch(index)">{{ item }}</u-button>
+	<list :id="parentListId" class="search" offset-accuracy="5" bounce="false" show-scrollbar="false">
+		<cell><view id="head"></view></cell>
+		<cell>
+			<view class="main-content" :style="'height:' + pageHeight + 'px'">
+				<view class="header">
+					<image src="../../static/back.png" mode="aspectFit" class="header-img" @click="goBack()"></image>
+					<uni-search-bar
+						v-model="search"
+						class="search-layout"
+						:style="{ width: `${searchwidth}px` }"
+						:value="search"
+						placeholder="请输入搜索关键词"
+						bgColor="#EEEEEE"
+						cancelButton="none"
+						@confirm="searchEvent"
+						@clear="searchClearEvent"
+						borderColor="#000000"
+					></uni-search-bar>
+					<text class="search-text" @click="searchEvent">搜索</text>
 				</view>
-			</view>
-			<view class="data-item">
-				<view class="detail-item" v-for="(item, index) in detailLists" :key="index">
-					<view class="out-item">
-						<view class="tui-list-item" @click="detailButton(item)">
-							<image :src="item[2]" mode="aspectFit" class="item-img"></image>
-							<view class="item-box">
-								<view class="item-title">{{ item[0] }}</view>
-								<view class="item-name">来源：{{ nameLists[searchNum] }}</view>
-								<view class="item-state">状态：{{ item[3] }}</view>
+				<list ref="sublist" offset-accuracy="5" bounce="false" show-scrollbar="false">
+					<cell class="data-item">
+						<uni-segmented-control :current="current" :values="items" style-type="text" active-color="#4cd964" @clickItem="onClickItem" />
+						<view v-if="current === 0" id="detail-item" class="detail-item" v-for="(item, index) in detailLists" :key="index">
+							<view class="out-item">
+								<view class="tui-list-item" @click="detailButton(item)">
+									<image :src="item[2]" mode="aspectFit" class="item-img"></image>
+									<view class="item-box">
+										<text class="item-title">{{ item[0] }}</text>
+										<text class="item-name">来源：{{ item[4] }}</text>
+										<text class="item-state">状态：{{ item[3] }}</text>
+									</view>
+								</view>
 							</view>
 						</view>
-					</view>
-				</view>
+						<view v-if="current === 1" id="detail-item" class="detail-item" v-for="(item, index) in nodetailLists" :key="index">
+							<view class="out-item">
+								<view class="tui-list-item" @click="detailButton(item)">
+									<image :src="item[2]" mode="aspectFit" class="item-img"></image>
+									<view class="item-box">
+										<text class="item-title">{{ item[0] }}</text>
+										<text class="item-name">来源：{{ item[4] }}</text>
+										<text class="item-state">状态：{{ item[3] }}</text>
+									</view>
+								</view>
+							</view>
+						</view>
+						<view v-if="current === 2" id="detail-item" class="detail-item" v-for="(item, index) in searchLists" :key="index">
+							<view class="out-item">
+								<view class="tui-list-item" @click="detailButton(item)">
+									<image :src="item[2]" mode="aspectFit" class="item-img"></image>
+									<view class="item-box">
+										<text class="item-title">{{ item[0] }}</text>
+										<text class="item-name">来源：{{ item[4] }}</text>
+										<text class="item-state">状态：{{ item[3] }}</text>
+									</view>
+								</view>
+							</view>
+						</view>
+					</cell>
+				</list>
 			</view>
-		</view>
-	</view>
+		</cell>
+	</list>
 </template>
 
 <script>
 import db from '../../utils/database.js';
 import http from '../../utils/request.js';
+
+const dom = weex.requireModule('dom');
+
 export default {
 	data() {
 		return {
+			items: ['精确', '相关', '所有'],
+			current: 0,
+			searchwidth: 200,
 			siteLists: [],
-			nameLists: [],
 			search: '',
 			searchLists: [],
 			detailLists: [],
-			searchNum: 0
+			nodetailLists: [],
+			fullControlsWidth: null,
+			fullControlsHeigt: null,
+			pageHeight: 300,
+			parentListId: 'parentListId'
 		};
 	},
+	created() {
+		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
+		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
+		if (this.fullControlsWidth > this.fullControlsHeigt) {
+			this.searchwidth = (this.fullControlsWidth * 3) / 4;
+		} else {
+			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+		}
+	},
+	onReady() {
+		this.pageHeight = uni.getSystemInfoSync().windowHeight - 40;
+
+		uni.createSelectorQuery()
+			.in(this)
+			.select('#head')
+			.boundingClientRect()
+			.exec(rect => {
+				this.$refs.sublist.setSpecialEffects({
+					id: this.parentListId,
+					headerHeight: rect[0].height
+				});
+			});
+		// let that=this
+		// setTimeout(function(){
+
+		// 	const result = dom.getComponentRect(that.$refs.tabitem, option => {
+		// 		console.log('getComponentRect:', option)
+		// 	})
+
+		// },5000)
+	},
+
 	methods: {
+		onClickItem(e) {
+			if (this.current !== e.currentIndex) {
+				this.current = e.currentIndex;
+			}
+		},
 		async getNameLists() {
 			const res = await db.getAll('site');
 			if (res.flag) {
 				for (let i of res.data) {
 					if (i.isActive) {
-						this.nameLists.push(i.name);
 						this.siteLists.push(i);
 					}
 				}
@@ -61,56 +141,71 @@ export default {
 			}
 		},
 		async goBack() {
-			this.$router.go(-1);
+			// this.$router.go(-1);
+
+			uni.redirectTo({
+				url: `/pages/index/index`
+			});
+		},
+		async dealSearchLists(datas) {
+			let siteName = datas[0];
+			for (let data of datas[1]) {
+				data.push(siteName);
+				this.searchLists.push(data);
+				if (data[0] == this.search) {
+					this.detailLists.push(data);
+				} else {
+					this.nodetailLists.push(data);
+				}
+			}
 		},
 		async searchEvent() {
 			if (this.search === '') {
 				return false;
 			} else {
-				const st = await http.getSearchList(this.siteLists[this.searchNum], this.search);
-				this.searchLists.push(st.data);
-				this.detailLists = st.data[1];
+				this.searchLists = [];
+				this.detailLists = [];
+				this.nodetailLists = [];
+				for (let site of this.siteLists) {
+					let siteName = site.id;
+					if (siteName == 'XT') {
+						const st = await http.getSearchList(site, this.search);
+						if (st.flag) {
+							this.dealSearchLists(st.data);
+						}
+					}
+					if (siteName == 'APP') {
+						const st = await http.appSearch(site, this.search);
+						if (st.flag) {
+							this.dealSearchLists(st.data);
+						}
+					}
+				}
 			}
 		},
 		async searchClearEvent() {
 			this.search = '';
-			this.searchLists = [];
-			this.detailLists = [];
-			this.searchNum = 0;
 		},
-		async tabSearch(index) {
-			this.searchNum = index;
-			let flag = false;
-			for (let i of this.searchLists) {
-				if (i[0] === this.nameLists[this.searchNum]) {
-					this.detailLists = i[1];
-					flag = true;
-				}
-			}
-			if (!flag) {
-				this.searchEvent();
-			}
-		},
-		async detailButton(item){
+		async detailButton(item) {
 			const targetHref = item[1];
 			const targetImage = item[2];
 			const targetTitle = item[0];
 			const targetState = item[3];
-			const targetName =this.nameLists[this.searchNum];
-			const key=targetName+"@@"+item[1];
-			const res=await db.get('notive',key);
-			if(res.flag){
-				const targetStar = 'static/star.png';
+			const targetName = item[4];
+			const key = targetName + '@@' + item[1];
+			const res = await db.get('notive', key);
+			if (res.flag) {
+				const targetStar = '../../static/star.png';
 				const targetUserState = res.data.userState;
 				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-				this.$u.route({ url: urll });
-			}else{
-				const targetStar = 'static/star1.png';
+				uni.navigateTo({ url: urll });
+			} else {
+				const targetStar = '../../static/star1.png';
 				const targetUserState = '无';
 				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-				this.$u.route({ url: urll });
+
+				uni.navigateTo({ url: urll });
 			}
-			
 		}
 	},
 	onLoad: function(option) {
@@ -122,82 +217,74 @@ export default {
 
 <style lang="scss" scoped>
 .search {
-	padding: 20rpx 10rpx;
-	background-color: #f8f8f8;
+	margin-top: 40px;
+	flex: 1;
 	.header {
 		display: flex;
 		flex-direction: row;
-		justify-content: center;
-		align-items: item;
-
+		justify-content: space-between;
 		.header-img {
-			height: 60rpx;
-			width: 60rpx;
-			margin-right: 10rpx;
-			display: block;
+			height: 40px;
+			width: 40px;
+			margin-top: 2px;
+			margin-left: 10px;
+		}
+		.search-layout {
+			height: 50px;
+		}
+		.search-text {
+			height: 50px;
+			margin-top: 15px;
+			font-size: 20px;
+			margin-right: 20px;
 		}
 	}
 	.body {
-		padding: 20rpx 10rpx;
+		margin-left: 10px;
 		display: flex;
-		.tab-item {
-			width: 120rpx;
-			margin-top: 20rpx;
-			margin-left: 10rpx;
-			.tab-data {
-				margin-top: 25rpx;
-			}
-		}
+		flex-direction: row;
+		justify-content: flex-start;
 		.data-item {
-			width: 600rpx;
-			margin-top: 10rpx;
-			margin-left: 10rpx;
-			flex: 1;
-			.out-item {
-				padding: 10rpx 10rpx;
+			//    position: fixed;
+			// top: 105px;
+			// left: 70px;
+			margin-top: 0px;
+			margin-left: 5px;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+		.out-item {
+			margin-bottom: 10px;
+			.tui-list-item {
 				display: flex;
-				align-items: item;
-				.tui-list-item {
-					padding: 30rpx 30rpx;
-					display: flex;
-					align-items: item;
-					.item-img {
-						height: 150rpx;
-						width: 150rpx;
-						margin-right: 20rpx;
-						display: block;
-					}
-					.item-box {
-						flex: 1;
-						width: 95%;
-						display: flex;
-						flex-direction: column;
-						justify-content: space-between;
-					}
-					.item-title {
-						font-size: 32rpx;
-						word-wrap: break-word;
-					}
-					.item-state {
-						color: #999;
-						font-size: 24rpx;
-						display: flex;
-					}
-					.item-userstate {
-						color: #999;
-						font-size: 24rpx;
-					}
-					.item-name {
-						color: #999;
-						font-size: 24rpx;
-					}
+				flex-direction: row;
+				justify-content: flex-start;
+				.item-img {
+					height: 100px;
+					width: 75px;
+					margin-right: 10px;
 				}
-				.removeNotice {
-					height: 50rpx;
-					width: 50rpx;
-					margin-top: auto;
-					margin-bottom: auto;
-					margin-left: auto;
+				.item-box {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-around;
+				}
+				.item-title {
+					font-size: 20px;
+				}
+				.item-state {
+					color: #999;
+					font-size: 16px;
+					display: flex;
+				}
+				.item-userstate {
+					color: #999;
+					font-size: 16px;
+				}
+				.item-name {
+					color: #999;
+					font-size: 16px;
 				}
 			}
 		}
