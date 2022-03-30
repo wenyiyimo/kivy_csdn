@@ -239,11 +239,7 @@ export default {
 			margin-right: 20px;
 		}
 	}
-	.body {
-		margin-left: 10px;
-		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
+	
 		.data-item {
 			//    position: fixed;
 			// top: 105px;
@@ -261,22 +257,28 @@ export default {
 				flex-direction: row;
 				justify-content: flex-start;
 				.item-img {
-					height: 100px;
-					width: 75px;
-					margin-right: 10px;
+					height: 150px;
+					width: 100px;
+					margin-right: 20px;
+					margin-left: 20px;
+					
 				}
-				.item-box {
-					display: flex;
-					flex-direction: column;
-					justify-content: space-around;
-				}
+			.item-box {
+			
+				width: 150px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				margin-right: 20px;
+			}
 				.item-title {
 					font-size: 20px;
+				
 				}
 				.item-state {
 					color: #999;
 					font-size: 16px;
-					display: flex;
+					
 				}
 				.item-userstate {
 					color: #999;
@@ -286,7 +288,7 @@ export default {
 					color: #999;
 					font-size: 16px;
 				}
-			}
+			
 		}
 	}
 }
