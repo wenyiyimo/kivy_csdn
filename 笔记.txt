@@ -15,63 +15,33 @@ https://github.com/minyuanriji/wwwfrontend/blob/cc5eb9abb3957a3ab1f6cca94632b27e
 https://github.com/MIchaelJier/Yunyun-Study-for-Mobile/blob/0ad3da48e6ea3d9507a5b8a6468bce3bd6fec377/pages/Coursedetails/video/myVideo.vue
 
 
-// 获取右边菜单每个item到顶部的距离
-getMenuItemTop() {
-	new Promise(resolve => {
-		let selectorQuery = uni.createSelectorQuery();
-		selectorQuery.selectAll('.class-item').boundingClientRect((rects) => {
-			// 如果节点尚未生成，rects值为[](因为用selectAll，所以返回的是数组)，循环调用执行
-			if(!rects.length) {
-				setTimeout(() => {
-					this.getMenuItemTop();
-				}, 500);
-				return ;
-			}
-			rects.forEach((rect) => {
-				// 这里减去rects[0].top，是因为第一项顶部可能不是贴到导航栏(比如有个搜索框的情况)
-				this.arr.push(rect.top - rects[0].top);
-				resolve();
-			})
-		}).exec()
-	})
-},
-
-
-
-// 获取一个目标元素的高度
-getElRect(elClass, dataVal) {
-	new Promise((resolve, reject) => {
-		const query = uni.createSelectorQuery().in(this);
-		query.select('.' + elClass).fields({
-			size: true
-		}, res => {
-			// 如果节点尚未生成，res值为null，循环调用执行
-			if (!res) {
-				setTimeout(() => {
-					this.getElRect(elClass);
-				}, 10);
-				return;
-			}
-			this[dataVal] = res.height;
-			resolve();
-		}).exec();
-	})
-},
-let that = this;
-this.timeSet=setInterval(function(){
-			uni.createSelectorQuery().selectViewport().scrollOffset(res => {
-			  // console.log(res.scrollTop);
-			  console.log(res)
-			  if(res.scrollHeight-res.scrollTop<this.pageHeight){
-				  that.fixedstate='fixed'; 
-			  }else{
-				  that.fixedstate='relative'
-			  }
-			}).exec();
-		
-	},1000);
-onUnload(){
-		clearInterval(this.timeSet)
-	},
+<loading :class="['n-loading', 'n-flex-'+flex, 'n-align-center', flex==='row'&&'n-justify-center']" @loading="onloading" :display="isLoading ? 'show' : 'hide'" :style="boxStyle">
+	<image v-if="hasMore&&isLoading" class="n-loading-img" :src="loadingSrc" mode="aspectFill"></image>
+	<text v-if="isLoading || (!hasMore&&showNoMore)" class="n-loading-text">{{loadText}}</text>
+	<text v-if="!isLoading&&hasMore" class="n-loading-text">{{mainText}}</text>
+</loading>
 https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-jinja2/get/2.8.0.zip
 https://bitbucket.org/teddy_beer_maniac/sublime-text-dependency-markupsafe/get/0.23.0.zip
+
+methods: {
+	// onLoading意味着触发了上提加载，正在请求数据
+	onloading(e) {
+		// console.log("正在加载")
+		this.isLoading = true
+		this.$emit("loading")
+		if (!this.hasMore) return;
+		// this.isLoading = true
+		// this.$emit("loading")
+		if (this.maxTime <= 0) return;
+		this.loadTimeOut && clearTimeout(this.loadTimeOut)
+		const that = this
+		this.loadTimeOut = setTimeout(()=>{
+			that.$emit("timeout")
+			that.cancel()
+		}, this.maxTime)
+	},
+	cancel() {
+		this.isLoading = false
+		this.loadTimeOut && clearTimeout(this.loadTimeOut)
+	}
+}
