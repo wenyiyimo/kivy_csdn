@@ -20,9 +20,10 @@
 					<text class="search-text" @click="searchEvent">搜索</text>
 				</view>
 				<view class="tab-data">
-				<view v-for="(item, index) in tabItems" :key="index">
-					<text class="tab-item" :class="[current == index ? 'tab-item-active' : '']" @click="onClickItem(index)">{{ item}}</text>
-				</view></view>
+					<view v-for="(item, index) in tabItems" :key="index">
+						<text class="tab-item" :class="[current == index ? 'tab-item-active' : '']" @click="onClickItem(index)">{{ item }}</text>
+					</view>
+				</view>
 				<list ref="sublist" offset-accuracy="5" bounce="false" show-scrollbar="false">
 					<cell class="data-item">
 						<view v-if="current === 0" id="detail-item" class="detail-item" v-for="(item, index) in detailLists" :key="index">
@@ -143,21 +144,20 @@ export default {
 		},
 		async dealSearchLists(datas) {
 			let siteName = datas[0];
-			let dn=0;
-			let nn =0;
+			let dn = this.detailLists.length
+			let nn = this.nodetailLists.length
 			for (let data of datas[1]) {
 				data.push(siteName);
-				this.searchLists.push(data);
-				if (data[0] == this.search&&dn<20) {
+				if (data[0] == this.search && dn <= 20) {
+					this.searchLists.push(data);
 					this.detailLists.push(data);
-					dn=dn+1;
+					dn = dn + 1;
 				} else {
-					if(nn<30){
+					if (data[0] != this.search && nn <= 30) {
+						this.searchLists.push(data);
 						this.nodetailLists.push(data);
-						nn=nn+1;
-					}else{
-						return
-					}
+						nn = nn + 1;
+					} 
 				}
 			}
 		},
@@ -169,19 +169,26 @@ export default {
 				this.detailLists = [];
 				this.nodetailLists = [];
 				for (let site of this.siteLists) {
-					let siteName = site.id;
-					if (siteName == 'XT') {
-						const st = await http.getSearchList(site, this.search);
-						if (st.flag) {
-							this.dealSearchLists(st.data);
+					let dn = this.detailLists.length
+					let nn = this.nodetailLists.length
+					if(dn>=20&&nn>=30){
+						return
+					}else{
+						let siteName = site.id;
+						if (siteName == 'XT') {
+							const st = await http.getSearchList(site, this.search);
+							if (st.flag) {
+								this.dealSearchLists(st.data);
+							}
+						}
+						if (siteName == 'APP') {
+							const st = await http.appSearch(site, this.search);
+							if (st.flag) {
+								this.dealSearchLists(st.data);
+							}
 						}
 					}
-					if (siteName == 'APP') {
-						const st = await http.appSearch(site, this.search);
-						if (st.flag) {
-							this.dealSearchLists(st.data);
-						}
-					}
+					
 				}
 			}
 		},
@@ -240,73 +247,67 @@ export default {
 			margin-right: 20px;
 		}
 	}
-	.tab-data{
+	.tab-data {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
-		
 	}
-	.tab-item{
+	.tab-item {
 		font-size: 20px;
 		color: #000;
-	
+
 		margin-bottom: 10px;
 	}
-	.tab-item-active{
+	.tab-item-active {
 		font-size: 20px;
 		color: #00aa00;
 
 		margin-bottom: 10px;
 	}
-		.data-item {
-			//    position: fixed;
-			// top: 105px;
-			// left: 70px;
-			margin-top: 0px;
-			margin-left: 5px;
+	.data-item {
+		//    position: fixed;
+		// top: 105px;
+		// left: 70px;
+		margin-top: 0px;
+		margin-left: 5px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+	.out-item {
+		margin-bottom: 10px;
+		.tui-list-item {
 			display: flex;
-			flex-direction: column;
+			flex-direction: row;
 			justify-content: flex-start;
-		}
-		.out-item {
-			margin-bottom: 10px;
-			.tui-list-item {
-				display: flex;
-				flex-direction: row;
-				justify-content: flex-start;
-				.item-img {
-					height: 150px;
-					width: 100px;
-					margin-right: 20px;
-					margin-left: 20px;
-					
-				}
+			.item-img {
+				height: 150px;
+				width: 100px;
+				margin-right: 20px;
+				margin-left: 20px;
+			}
 			.item-box {
-			
 				width: 150px;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-around;
 				margin-right: 20px;
 			}
-				.item-title {
-					font-size: 20px;
-				
-				}
-				.item-state {
-					color: #999;
-					font-size: 16px;
-					
-				}
-				.item-userstate {
-					color: #999;
-					font-size: 16px;
-				}
-				.item-name {
-					color: #999;
-					font-size: 16px;
-				}
-			
+			.item-title {
+				font-size: 20px;
+			}
+			.item-state {
+				color: #999;
+				font-size: 16px;
+			}
+			.item-userstate {
+				color: #999;
+				font-size: 16px;
+			}
+			.item-name {
+				color: #999;
+				font-size: 16px;
+			}
 		}
 	}
 }
