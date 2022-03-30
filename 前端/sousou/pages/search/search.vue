@@ -19,9 +19,11 @@
 					></uni-search-bar>
 					<text class="search-text" @click="searchEvent">搜索</text>
 				</view>
+				<view class="tab-data" v-for="(item, index) in tabItems" :key="index">
+					<text class="tab-item" :class="[current == index ? 'tab-item-active' : 'tab-item']" @click="onClickItem(index)">{{ item}}</text>
+				</view>
 				<list ref="sublist" offset-accuracy="5" bounce="false" show-scrollbar="false">
 					<cell class="data-item">
-						<uni-segmented-control :current="current" :values="items" style-type="text" active-color="#4cd964" @clickItem="onClickItem" />
 						<view v-if="current === 0" id="detail-item" class="detail-item" v-for="(item, index) in detailLists" :key="index">
 							<view class="out-item">
 								<view class="tui-list-item" @click="detailButton(item)">
@@ -68,13 +70,11 @@
 <script>
 import db from '../../utils/database.js';
 import http from '../../utils/request.js';
-
-const dom = weex.requireModule('dom');
-
+// const dom = weex.requireModule('dom');
 export default {
 	data() {
 		return {
-			items: ['精确', '相关', '所有'],
+			tabItems: ['精确', '相关', '所有'],
 			current: 0,
 			searchwidth: 200,
 			siteLists: [],
@@ -99,7 +99,6 @@ export default {
 	},
 	onReady() {
 		this.pageHeight = uni.getSystemInfoSync().windowHeight - 40;
-
 		uni.createSelectorQuery()
 			.in(this)
 			.select('#head')
@@ -112,19 +111,14 @@ export default {
 			});
 		// let that=this
 		// setTimeout(function(){
-
 		// 	const result = dom.getComponentRect(that.$refs.tabitem, option => {
 		// 		console.log('getComponentRect:', option)
 		// 	})
-
 		// },5000)
 	},
-
 	methods: {
-		onClickItem(e) {
-			if (this.current !== e.currentIndex) {
-				this.current = e.currentIndex;
-			}
+		onClickItem(index) {
+			this.current = index;
 		},
 		async getNameLists() {
 			const res = await db.getAll('site');
@@ -142,20 +136,27 @@ export default {
 		},
 		async goBack() {
 			// this.$router.go(-1);
-
 			uni.redirectTo({
 				url: `/pages/index/index`
 			});
 		},
 		async dealSearchLists(datas) {
 			let siteName = datas[0];
+			let dn=0;
+			let nn =0;
 			for (let data of datas[1]) {
 				data.push(siteName);
 				this.searchLists.push(data);
-				if (data[0] == this.search) {
+				if (data[0] == this.search&&dn<20) {
 					this.detailLists.push(data);
+					dn=dn+1;
 				} else {
-					this.nodetailLists.push(data);
+					if(nn<30){
+						this.nodetailLists.push(data);
+						nn=nn+1;
+					}else{
+						return
+					}
 				}
 			}
 		},
@@ -203,7 +204,6 @@ export default {
 				const targetStar = '../../static/star1.png';
 				const targetUserState = '无';
 				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-
 				uni.navigateTo({ url: urll });
 			}
 		}
@@ -239,7 +239,24 @@ export default {
 			margin-right: 20px;
 		}
 	}
-	
+	.tab-data{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		
+	}
+	.tab-item{
+		font-size: 20px;
+		color: #000;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+	.tab-item-active{
+		font-size: 20px;
+		color: #00aa00;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
 		.data-item {
 			//    position: fixed;
 			// top: 105px;
@@ -293,4 +310,3 @@ export default {
 	}
 }
 </style>
-hhh
