@@ -102,6 +102,9 @@ export default {
 						this.hasDownNum=this.hasDownNum+1;	
 					}
 					this.progress=`${this.hasDownNum}/${this.numLen}`;
+					if(this.hasDownNum==this.numLen){
+						this.progress='下载完成'
+					}
 			    },	
 				fail:() =>{
 					this.hasDownNum=this.hasDownNum+1;
@@ -145,6 +148,3 @@ export default {
 
 
 </style>
-
-
-
