@@ -148,3 +148,241 @@ export default {
 
 
 </style>
+<template>
+	<view class="download">
+		<view class="header">
+			<view style="height: 40px;background-color: #FFFFFF;"></view>
+			<view style="flex-direction: row;justify-content: center;background-color: #FFFFFF;">
+				<text class="head" style="justify-content: center;">下载</text>
+				</view>
+		</view>
+
+		<view class="body">
+		   <view class="tag-data" v-if="flag">
+		   	<view class="out-item">
+		   		<view class="item-box">
+		   			<text class="item-title">{{ nowDown[4] }}-{{ nowDown[0] }}</text>
+		   			<text class="item-name">来源：{{ nowDown[3] }}-{{ nowDown[2] }}</text>
+		   		</view>
+		   
+		   		<view class="item-state">
+		   			<view class="down-state">{{ progress }}</view>
+		   		</view>
+		   	</view>
+		   </view> 
+			<view class="tag-data" v-for="(item, index) in downloadLists" :key="index">
+				<view class="out-item">
+					<view class="item-box">
+						<text class="item-title">{{ item[4] }}-{{ item[0] }}</text>
+						<text class="item-name">来源：{{ item[3] }}-{{ item[2] }}</text>
+					</view>
+
+					<view class="item-state">
+						<view class="down-state">{{ item[5] }}</view>
+						<image :src="removeImage" mode="aspectFit" class="removeNotice" @click="removeItem(index)"></image>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+import downm3u8 from './download.js';
+import http from '../../utils/request.js';
+export default {
+	data() {
+		return {
+		    flag:false,
+			nowDown:0,
+			downloadLists: [],
+			numLen: 0,//m3u8长度
+			hasDownNum: 0,
+			progress: null,
+			removeImage: '../../static/delete.png'
+		};
+	},
+	methods: {
+		
+		removeItem(item) {
+			this.downloadLists.splice(item, item + 1);
+			uni.setStorageSync('downLists', this.downloadLists);
+		},
+		async preitem(){
+			for(let i=0;i<this.downloadLists.length;i++){
+				let item=this.downloadLists[i];
+				if(item[5]!="已完成"){
+					this.gethHefRes(item)
+					return
+			}
+		}
+		},
+		gethHefRes(item) {
+		
+			this.progress = '解析中...';
+			this.numLen = 0;
+			this.hasDownNum = 0;
+			let data = [];
+			if (this.url.endsWith('.mp4')) {
+				this.downMP4(this.url);
+			} else {
+				let that = this;
+
+				uni.request({
+					url: that.url,
+					method: 'GET',
+					timeout: 10000,
+					success(res) {
+						that.getDownUrl(res, '', res.header);
+					},
+					fail(res) {
+						console.log(res);
+					}
+				});
+			}
+		},
+		async getDownUrl(res, host, header) {
+			let num = 0;
+			let urlNum = 0;
+			var arr = res.data.split('\n');
+			for (let line of arr) {
+				line = line.trim();
+				if (line == '') {
+					continue;
+				}
+				if (line.startsWith('#EXT')) {
+					this.data.push(line);
+					num = num + 1;
+				} else {
+					if (line.startsWith('/')) {
+						var url = host + line;
+					}
+					if (line.indexOf('://') != -1) {
+						var url = line;
+					}
+					this.downFile(url, num, header);
+					this.data.push(url);
+					num = num + 1;
+					urlNum = urlNum + 1;
+				}
+			}
+			this.numLen = urlNum;
+		},
+		async downFile(url, num, header) {
+			const downloadTask = uni.downloadFile({
+				url: url,
+				header: header,
+				timeout: 15,
+				success: res => {
+					if (res.statusCode == 200) {
+						this.data[num] = res.tempFilePath;
+						this.hasDownNum = this.hasDownNum + 1;
+					} else {
+						this.hasDownNum = this.hasDownNum + 1;
+					}
+					this.progress = `${this.hasDownNum}/${this.numLen}`;
+					if (this.hasDownNum == this.numLen) {
+						this.progress = '下载完成';
+					}
+				},
+				fail: () => {
+					this.hasDownNum = this.hasDownNum + 1;
+					this.progress = `${this.hasDownNum}/${this.numLen}`;
+				}
+			});
+		},
+		async downMP4(url) {
+			const downloadTask = uni.downloadFile({
+				url: url,
+				success: res => {
+					if (res.statusCode === 200) {
+						this.progress = '下载完成';
+					} else {
+						this.progress = '下载失败';
+					}
+				}
+			});
+
+			downloadTask.onProgressUpdate(res => {
+				this.progress = `${res.progress}%`;
+			});
+		}
+	},
+	onLoad() {},
+	onShow() {
+		this.downloadLists = uni.getStorageSync('downLists');
+		console.log(this.downloadLists);
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+.download {
+	.header {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		position: sticky;
+		top: 0px;
+		z-index: 99;
+	}
+.tab-data {
+	    margin-top: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+	.tab-item {
+		font-size: 20px;
+		color: #000;
+
+		margin-bottom: 10px;
+	}
+	.tab-item-active {
+		font-size: 20px;
+		color: #00aa00;
+
+		margin-bottom: 10px;
+	}
+	.tag-data {
+		margin-top: 20px;
+	}
+	.out-item {
+		display: flex;
+		margin-left: 20px;
+		margin-right: 20px;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.item-state {
+		margin-top: 10px;
+		margin-left: 25px;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.item-box {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+	}
+
+	.item-title {
+		font-size: 20px;
+	}
+
+	.item-name {
+		color: #999;
+		font-size: 16px;
+	}
+	.down-state {
+		font-size: 20px;
+	}
+	.removeNotice {
+		margin-left: 20px;
+		height: 30px;
+		width: 35px;
+		margin-bottom: 20px;
+	}
+}
+</style>
