@@ -1,0 +1,322 @@
+<template>
+	<view class="index">
+		<view class="header">
+			<view style="height: 40px;background-color: #FFFFfF;"></view>
+			<view style="flex-direction: row;justify-content: space-between;">
+				<image src="../../static/edit.png" mode="aspectFit" class="header-img" @click="editYuan()"></image>
+				<uni-search-bar
+					class="search-layout"
+					:style="{ width: `${searchwidth}px` }"
+					v-model="search"
+					placeholder="请输入搜索关键词"
+					bgColor="#EEEEEE"
+					cancelButton="none"
+					@confirm="searchEvent"
+					@clear="searchClearEvent"
+					borderColor="#000000"
+				></uni-search-bar>
+				<text class="search-text" @click="searchEvent">搜索</text>
+			</view>
+		</view>
+
+		<view class="lunbo">
+			<uni-swiper-dot :info="lunbolist" :current="current" :dotsStyles="dotsStyle" field="content" mode="nav">
+				<swiper autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
+					<swiper-item v-for="(item, index) in lunbolist" :key="index">
+						<view><image class="swiper-img" :src="item.url" mode="aspectFill" @click="click(index)"></image></view>
+					</swiper-item>
+				</swiper>
+			</uni-swiper-dot>
+		</view>
+		<view class="setting-data">
+			<image class="setting-heart" src="../../static/myheart.png" mode="aspectFill" @click="navheart"></image>
+			<image class="setting-setting" src="../../static/myset.png" mode="aspectFill" @click="navset"></image>
+			
+		</view>
+		<view class="tab-data">
+			<view class="tab-class">
+				<view v-for="(item, index) in classlist" :key="index">
+					<text class="tab-class-item" :class="[classnum == index ? 'tab-class-item-active' : '']" @click="changeclassnum(index)">{{item[0]}}</text>
+				</view>
+			</view>
+			<view class="tab-time">
+				<view v-for="(item, index) in timelist" :key="index">
+					<text class="tab-time-item" :class="[timenum == index ? 'tab-time-item-active' : '']" @click="changetimenum(index)">{{item[0]}}</text>
+				</view>
+				
+			</view>
+		</view>
+		<view class="data-item" v-for="(item, index) in list" :key="index">
+			<view class="out-item">
+				<view class="tui-list-item" @click="handlerButton(item)">
+					<image :src="item.image" mode="aspectFit" class="item-img"></image>
+					<view class="item-box">
+						<text class="item-title">{{ item.title }}</text>
+						<text class="item-name">来源：{{ item.name }}</text>
+						<text class="item-state">状态：{{ item.state }}</text>
+						<text class="item-userstate">上次观看：{{ item.userState }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+import db from '../../utils/database.js';
+import http from '../../utils/request.js';
+export default {
+	data() {
+		return {
+			classnum:0,
+			timenum:0,
+			search: '',
+			list: [],
+			classlist:[['追剧'],['电影'],['动漫'],['综艺']],
+			timelist:[['最新'],['最热'],['好评']],
+			lunbolist: [],
+			current: 0,
+			notiveImage: '../../static/star.png',
+			dotsStyle: {
+				border: '1px rgba(83, 200, 249,0.3) solid',
+				color: '#fff',
+				selectedBackgroundColor: 'rgba(83, 200, 249,0.9)',
+				selectedBorder: '1px rgba(83, 200, 249,0.9) solid'
+			},
+			fullControlsWidth: null,
+			fullControlsHeigt: null,
+			searchwidth: 200
+		};
+	},
+	created() {
+		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
+		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
+		if (this.fullControlsWidth > this.fullControlsHeigt) {
+			this.searchwidth = (this.fullControlsWidth * 3) / 4;
+		} else {
+			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+		}
+	},
+	methods: {
+		changeclassnum(index){
+			this.classnum=index;
+		},
+		changetimenum(index){
+			this.timenum=index;
+		},
+		navheart(){
+			const url = `/pages/heart/heart`;
+			uni.navigateTo({ url: url });
+		},
+		navset(){
+			const url = `/pages/setting/setting`;
+			uni.navigateTo({ url: url });
+		},
+		changeCurrent(e) {
+			this.current = e.detail.current;
+		},
+		async click(index) {
+			var item = this.lunbolist[index];
+			this.search=item.content;
+			this.searchEvent()
+		},
+		async editYuan() {
+			const url = `/pages/site/site`;
+			uni.navigateTo({ url: url });
+		},
+		async searchEvent() {
+			if (this.search === '') {
+				return false;
+			} else {
+				const urll = `/pages/search/search?search=${this.search}`;
+				uni.navigateTo({ url: urll });
+			}
+		},
+		async searchClearEvent() {
+			this.search = '';
+		},
+		async getSite() {
+			this.lunbolist = [
+				{
+					url: 'https://www-file.huawei.com/-/media/corp2020/home/banner/5/vmall-activity-03-2-2.jpg',
+					content: '1'
+				},
+				{
+					url: 'https://www-file.huawei.com/-/media/corp2020/home/cbg/0402/smart-home-p.jpg',
+					content: '22'
+				}
+			];
+		},
+
+		async updataSite(siteList) {
+			for (let sitelist of siteList) {
+				if (sitelist.isActive) {
+					const res = await http.siteUrl(sitelist.url);
+					if (res && res.length > 0) {
+						for (const i of res) {
+							if (i.name.length > 0) {
+								await db.add('site', i);
+							} else {
+								uni.showToast({
+									title: '${sitelist.name}-导入站源错误!',
+									duration: 1000
+								});
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	onLoad() {
+		var urlList = uni.getStorageSync('urlNotive');
+		if (!urlList) {
+			uni.setStorageSync('urlNotive', []);
+		} else {
+			this.updataSite(urlList);
+		}
+		this.list = [];
+		this.getSite();
+	},
+	onShow() {
+		let isRefresh = uni.getStorageSync('isRefresh');
+		if (isRefresh != 0) {
+			this.list = [];
+			this.tempList = [];
+			this.lunbolist = [];
+			this.lunBo = false;
+			this.getSite();
+		}
+		uni.setStorageSync('isRefresh', 0);
+	}
+	// onTabItemTap() {
+	// 	uni.setStorageSync('isRefresh', 0);
+	// 	this.list=[]
+	// 	this.getSite();
+	// }
+};
+</script>
+
+<style lang="scss" scoped>
+.index {
+}
+.setting-data{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.setting-heart{
+	width: 40px;
+	height: 40px;
+}
+.setting-setting{
+	width: 40px;
+	height: 40px;
+}
+
+.tab-class{
+	margin-bottom: 10px;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-left: 20px;
+	margin-right: 20px;
+	.tab-class-item{
+		color: #000000;
+		font-size: 20px;
+	}
+	.tab-class-item-active{
+		color: #00aa00;
+		font-size: 20px;
+	}
+}
+.tab-time{
+	flex-direction: row;
+	justify-content: space-between;
+	margin-left: 20px;
+	margin-right: 20px;
+	.tab-time-item{
+		color: #000000;
+		font-size: 20px;
+	}
+	.tab-time-item-active{
+		color: #00aa00;
+		font-size: 20px;
+	}
+}
+.header {
+	background-color: #ffffff;
+	display: flex;
+	position: sticky;
+	top: 0px;
+	z-index: 99;
+	flex-direction: column;
+	justify-content: space-between;
+	.header-img {
+		height: 40px;
+		width: 40px;
+		margin-top: 8px;
+		margin-left: 10px;
+	}
+	.search-layout {
+		height: 50px;
+	}
+	.search-text {
+		height: 50px;
+		margin-top: 15px;
+		font-size: 20px;
+		margin-right: 20px;
+	}
+}
+
+.lunbo {
+	font-size: 60px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.data-item {
+	margin-top: 10px;
+	.out-item {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		.tui-list-item {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			.item-img {
+				height: 150px;
+				width: 100px;
+				margin-right: 20px;
+				margin-left: 20px;
+			}
+
+			.item-box {
+				width: 150px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				margin-right: 20px;
+			}
+
+			.item-title {
+				font-size: 20px;
+			}
+			.item-state {
+				color: #999;
+				font-size: 16px;
+			}
+			.item-userstate {
+				color: #999;
+				font-size: 16px;
+			}
+			.item-name {
+				color: #999;
+				font-size: 16px;
+			}
+		}
+	}
+}
+</style>
