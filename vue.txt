@@ -1,3 +1,5 @@
+this.search = item.content.split('---')[0];
+
 async setHistory(name) {
 	let key = this.name + '@@' + this.href;
 	await db.remove('history', key);
