@@ -1,92 +1,19 @@
-<template>
-	<view class="setting" style="margin-left: 10px;margin-right: 10px;">
-		<view class="header">
-			<view style="height: 40px;background-color: #FFFFfF;"></view>
-			<view style="flex-direction: row;justify-content: space-between;">
-				<uni-icons color="#000000" size="40" type="arrow-left" @click="pageBacked" />
-				<view style="margin-top: 8px;font-size: 20px;">设置</view>
-				<view style="width: 40px;"></view>
-			</view>
-		</view>
-		<view class="body">
-			<view @click="deleteurl()" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<text style="font-size: 18px;margin: 10px;">重置订阅</text>
-				<text style="font-size: 18px;color: #b4b4b4;margin: 10px;">删除所有订阅</text>
-			</view>
-			<view @click="deletesite()" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<text style="font-size: 18px;margin: 10px;">重置站源</text>
-				<text style="font-size: 18px;color: #b4b4b4;margin: 10px;">删除所有站源</text>
-			</view>
-			<view @click="deletehistory()" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<text style="font-size: 18px;margin: 10px;">重置历史</text>
-				<text style="font-size: 18px;color: #b4b4b4;margin: 10px;">清空历史记录</text>
-			</view>
-			<view @click="deletenotive()" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<text style="font-size: 18px;margin: 10px;">重置收藏</text>
-				<text style="font-size: 18px;color: #b4b4b4;margin: 10px;">清空收藏内容</text>
-			</view>
-			<view @click="deleteapp()" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<text style="font-size: 18px;margin: 10px;">重置软件</text>
-				<text style="font-size: 18px;color: #b4b4b4;margin: 10px;">清空所有数据</text>
-			</view>
-		</view>
-	</view>
-</template>
-<script>
-import db from '../../utils/database.js';
-export default {
-	data() {
-		return {};
-	},
-
-	methods: {
-		async deleteurl() {
-			uni.setStorageSync('urlNotive', []);
-			uni.showToast({
-				title: '订阅已清空!',
-				duration: '2000'
-			});
-		},
-		async deletesite() {
-			await db.reset('site');
-			uni.showToast({
-				title: '站源已清空!',
-				duration: '2000'
-			});
-		},
-		async deletehistory() {
-			await db.reset('history');
-			uni.showToast({
-				title: '已清空!',
-				duration: '2000'
-			});
-		},
-		async deletenotive() {
-			await db.reset('notive');
-			uni.showToast({
-				title: '已清空!',
-				duration: '2000'
-			});
-		},
-		async deleteapp() {
-			await db.reset('notive');
-			await db.reset('history');
-			await db.reset('site');
-			uni.setStorageSync('urlNotive', []);
-			uni.showToast({
-				title: 'APP已重置!',
-				duration: '2000'
-			});
-		},
-		pageBacked() {
-			// this.$router.go(-1);
-			uni.navigateBack();
-		}
-	},
-	onLoad() {},
-	onShow() {},
-	onUnload() {}
+async setHistory(name) {
+let key = this.name + '@@' + this.href;
+await db.remove('history', key);
+let item = {
+	name: this.name,
+	href: this.href,
+	title: this.title,
+	image: this.image,
+	state: this.state,
+	userState: name
 };
-</script>
+await db.addNotive('history', item);
 
-<style lang="scss" scoped></style>
+if (this.notiveImage == '../../static/star.png') {
+	await db.remove('notive', key);
+	await db.addNotive('notive', item);
+	uni.setStorageSync('isRefresh', 1);
+}
+},
