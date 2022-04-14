@@ -1,3 +1,29 @@
+async setHistory(name) {
+	let key = this.name + '@@' + this.href;
+	await db.remove('history', key);
+	let item = {
+		name: this.name,
+		href: this.href,
+		title: this.title,
+		image: this.image,
+		state: this.state,
+		userState: name
+	};
+	await db.addNotive('history', item);
+	let res = await db.getAllDB('history');
+	if(res.flag){
+		if(res.data.length>50){
+			await db.remove('notive', res.data[0]);
+		}
+	}
+	if (this.notiveImage == '../../static/star.png') {
+		await db.remove('notive', key);
+		await db.addNotive('notive', item);
+		uni.setStorageSync('isRefresh', 1);
+	}
+},
+
+
 <template>
 	<view class="index">
 		<view class="header">
