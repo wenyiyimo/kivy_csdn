@@ -1,1 +1,12 @@
 style="position: sticky;top: 95px;background-color: #FFFFFF;z-index:99;"
+
+
+<uni-load-more :status="status" @clickLoadMore="loadmore"></uni-load-more>
+
+
+status:'more',
+
+loadmore(e){
+			this.status='loading';
+			this.status='nomore'
+		},
