@@ -35,7 +35,7 @@
 			<uni-icons color="#000000" size="50" type="color" @click="navhistory" />
 			<uni-icons color="#000000" size="50" type="gear" @click="navset" />
 		</view>
-		<view class="tab-data" style="position: sticky;top: 95px;z-index:999;">
+		<view class="tab-data">
 			<view class="tab-class">
 				<view v-for="(item, index) in classlist" :key="index">
 					<text class="tab-class-item" :class="[classnum == index ? 'tab-class-item-active' : '']" @click="changeclassnum(index)">{{item[0]}}</text>
