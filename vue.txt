@@ -1,18 +1,461 @@
-
-<uni-load-more :status="status" @clickLoadMore="loadmore"></uni-load-more>
-
-
-status:'more',
-
-loadmore(e){
-	this.status='loading';
-	this.status='nomore'
-},
-
-
-async onReachBottom() {
-    this.loadStatus = "loading";
-    this.startnum=this.startnum+30;
-    await this.addData(this.site.key, this.pageCount, this.type.tid);
-    this.loadStatus = "loadmore";
-  },
+[{
+	"dockey": "film_1138403",
+	"doctype": "3",
+	"name": "一百年",
+	"style": "剧情;短片",
+	"zone": "法国",
+	"year": "2115",
+	"starring": "约翰·马尔科维奇;马克·扎罗;张舒雅",
+	"director": "罗伯特·罗德里格兹",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=5a4cc72c9347b64aa266f48a8bcc75c0&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F100520052%2Fe241fbd8966f8701cb77b3646863cc9b",
+	"v_width": "586",
+	"v_height": "600",
+	"score": "",
+	"hit_count": "6",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geytgobugazqtuv3wdm4j2q.html",
+	"url": "/movie/mzuwy3k7geytgobugazqtuv3wdm4j2q.html",
+	"picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=5a4cc72c9347b64aa266f48a8bcc75c0&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F100520052%2Fe241fbd8966f8701cb77b3646863cc9b"
+}, {
+	"dockey": "film_1408062",
+	"doctype": "3",
+	"name": "可以做到",
+	"style": "剧情",
+	"zone": "中国大陆",
+	"year": "2018",
+	"starring": "王海祥;郑雅文;易阳;佼佼;林宇阳",
+	"director": "张自立",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=dba675a36e2acec8e5bd2bfc502a8d2d&url=http%3A%2F%2Fimg02.sogoucdn.com%2Fapp%2Fa%2F200803%2Fd117d8ef0411a30ca410277ad3119439",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7ge2daobqgyzatp6j2lknp5vvxu.html",
+	"url": "/movie/mzuwy3k7ge2daobqgyzatp6j2lknp5vvxu.html",
+	"picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=dba675a36e2acec8e5bd2bfc502a8d2d&url=http%3A%2F%2Fimg02.sogoucdn.com%2Fapp%2Fa%2F200803%2Fd117d8ef0411a30ca410277ad3119439"
+}, {
+	"dockey": "film_1346063",
+	"doctype": "3",
+	"name": "别墅魅影",
+	"style": "恐怖",
+	"zone": "中国大陆",
+	"year": "2030",
+	"starring": "杨理驰",
+	"director": "黄金",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "82",
+	"v_picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=263c424dbb225df981cf398c63665094&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fbb7d812a945162fcbcb1a2c06ced68b1",
+	"v_width": "270",
+	"v_height": "354",
+	"score": "",
+	"hit_count": "12",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geztinrqgyzqtmpqzl57psgtwa.html",
+	"url": "/movie/mzuwy3k7geztinrqgyzqtmpqzl57psgtwa.html",
+	"picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=263c424dbb225df981cf398c63665094&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fbb7d812a945162fcbcb1a2c06ced68b1"
+}, {
+	"dockey": "film_866131",
+	"doctype": "3",
+	"name": "信息侦探",
+	"style": "剧情;冒险;惊悚;动作;犯罪",
+	"zone": "美国",
+	"year": "2030",
+	"starring": "",
+	"director": "詹姆斯·卡梅隆",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=9a4cc1bcecf254f67867599e0e5a95fe&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fad72b31508a6096e054d0af087c22d66",
+	"v_width": "291",
+	"v_height": "453",
+	"score": "",
+	"hit_count": "10",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7ha3dmmjtgee5bropulk6ztf5.html",
+	"url": "/movie/mzuwy3k7ha3dmmjtgee5bropulk6ztf5.html",
+	"picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=9a4cc1bcecf254f67867599e0e5a95fe&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fad72b31508a6096e054d0af087c22d66"
+}, {
+	"dockey": "film_1355689",
+	"doctype": "3",
+	"name": "口红",
+	"style": "剧情",
+	"zone": "中国大陆",
+	"year": "2020",
+	"starring": "李木乙;方馨蒂莲;蒲萄;林嘉",
+	"director": "陈思铭",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "95",
+	"v_picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=71118123765691d3fefc366d3dd96342&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F67361e376c5351a66de1cad279a54c9e",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geztknjwha4qtp62xlwa.html",
+	"url": "/movie/mzuwy3k7geztknjwha4qtp62xlwa.html",
+	"picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=71118123765691d3fefc366d3dd96342&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F67361e376c5351a66de1cad279a54c9e"
+}, {
+	"dockey": "film_1374256",
+	"doctype": "3",
+	"name": "阿凡达5追寻伊娃",
+	"style": "剧情;惊悚;科幻;动作;冒险",
+	"zone": "美国",
+	"year": "2028",
+	"starring": "萨姆·沃辛顿;佐伊·索尔达娜;西格妮·韦弗;杨紫琼;吉奥瓦尼·瑞比西;杰梅奈·克莱门特;史蒂芬·朗;奥娜·卓别林;克利夫·柯蒂斯;希·庞德;乔·大卫·摩尔;马特·杰拉德;科斯顿·约翰;凯特·温丝莱特",
+	"director": "詹姆斯·卡梅隆",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=f56bb61b12f13131cb3e325e2cf30c36&url=http%3A%2F%2Fimg02.sogoucdn.com%2Fapp%2Fa%2F200803%2Ff4210822e70243f57cc5a3e24ca0fe20",
+	"v_width": "270",
+	"v_height": "270",
+	"score": "",
+	"hit_count": "38",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geztonbsgu3atmfcw6zlj3zv2635dmgsyhg54.html",
+	"url": "/movie/mzuwy3k7geztonbsgu3atmfcw6zlj3zv2635dmgsyhg54.html",
+	"picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=f56bb61b12f13131cb3e325e2cf30c36&url=http%3A%2F%2Fimg02.sogoucdn.com%2Fapp%2Fa%2F200803%2Ff4210822e70243f57cc5a3e24ca0fe20"
+}, {
+	"dockey": "film_1100629",
+	"doctype": "3",
+	"name": "洛克中士",
+	"style": "喜剧;剧情;动作",
+	"zone": "美国",
+	"year": "2027",
+	"starring": "",
+	"director": "",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "153",
+	"v_picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=af16a61537d66047d72d6202ac00121e&url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F200803%2Fb1cf106ac524b13785ad6b41b3800525",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "17",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geytambwgi4qtqxfx7f5nugkx4.html",
+	"url": "/movie/mzuwy3k7geytambwgi4qtqxfx7f5nugkx4.html",
+	"picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=af16a61537d66047d72d6202ac00121e&url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F200803%2Fb1cf106ac524b13785ad6b41b3800525"
+}, {
+	"dockey": "film_1055935",
+	"doctype": "3",
+	"name": "地球继承者",
+	"style": "动作",
+	"zone": "美国",
+	"year": "2023",
+	"starring": "罗兰;孟海;元秋",
+	"director": "凯内尔·穆德卢佐",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=536730074cbe16021c4be4f8f04585de&url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F100520052%2Fa7f6519a30b9d269c08fd0d8b9ccbeb7",
+	"v_width": "431",
+	"v_height": "600",
+	"score": "",
+	"hit_count": "19",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geydknjzgm2qtnoyy7zlztft2dk56.html",
+	"url": "/movie/mzuwy3k7geydknjzgm2qtnoyy7zlztft2dk56.html",
+	"picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=536730074cbe16021c4be4f8f04585de&url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F100520052%2Fa7f6519a30b9d269c08fd0d8b9ccbeb7"
+}, {
+	"dockey": "film_1340653",
+	"doctype": "3",
+	"name": "侠鼠魔途",
+	"style": "动画;奇幻",
+	"zone": "美国",
+	"year": "2025",
+	"starring": "",
+	"director": "亚历山大·阿嘉",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=fd9b3c8d616d87eba966c0185e24e8c3&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2Fae8956dacbed75671cc3b8da3c1adede",
+	"v_width": "270",
+	"v_height": "360",
+	"score": "",
+	"hit_count": "9",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geztimbwguzqtt6azlz4jj6nxy.html",
+	"url": "/movie/mzuwy3k7geztimbwguzqtt6azlz4jj6nxy.html",
+	"picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=fd9b3c8d616d87eba966c0185e24e8c3&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2Fae8956dacbed75671cc3b8da3c1adede"
+}, {
+	"dockey": "film_1409756",
+	"doctype": "3",
+	"name": "未命名x23金刚狼女个人电影",
+	"style": "剧情;科幻;动作",
+	"zone": "美国",
+	"year": "2025",
+	"starring": "达芙妮·基恩",
+	"director": "詹姆斯·曼高德",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=1ba791f9549779f8549dc03d1bc2bd9e&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fc8bdb62793b0dce2a8ba65c954b4b0f0",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "7",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7ge2daojxgu3attvuyp6mh63ygiz334fy2xamprnoxd3mrs5v47j3a.html",
+	"url": "/movie/mzuwy3k7ge2daojxgu3attvuyp6mh63ygiz334fy2xamprnoxd3mrs5v47j3a.html",
+	"picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=1ba791f9549779f8549dc03d1bc2bd9e&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fc8bdb62793b0dce2a8ba65c954b4b0f0"
+}, {
+	"dockey": "film_1405828",
+	"doctype": "3",
+	"name": "soundoffreedom",
+	"style": "剧情;惊悚;动作",
+	"zone": "美国",
+	"year": "2020",
+	"starring": "吉姆·卡维泽;米拉·索维诺;比尔·坎普",
+	"director": "亚历杭德罗·戈麦斯·蒙特维尔德",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=ca4ed194d37889ebc4f5c1dddc27b811&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F65c87970016428e6ba283375b8f77fc0",
+	"v_width": "270",
+	"v_height": "404",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7ge2danjygi4as43povxgi33gmzzgkzlen5wq.html",
+	"url": "/movie/mzuwy3k7ge2danjygi4as43povxgi33gmzzgkzlen5wq.html",
+	"picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=ca4ed194d37889ebc4f5c1dddc27b811&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F65c87970016428e6ba283375b8f77fc0"
+}, {
+	"dockey": "film_1207563",
+	"doctype": "3",
+	"name": "分身人",
+	"style": "科幻;冒险;动作",
+	"zone": "美国",
+	"year": "2019",
+	"starring": "詹姆斯·弗兰科",
+	"director": "西蒙·金伯格",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=8c9f37313e9710dd5e89573ac09618f6&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2F297c7e0a9ab747230c43c0be8c217ea0",
+	"v_width": "270",
+	"v_height": "372",
+	"score": "",
+	"hit_count": "2",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7gezdanzvgyzqtn6wzhw4rsy.html",
+	"url": "/movie/mzuwy3k7gezdanzvgyzqtn6wzhw4rsy.html",
+	"picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=8c9f37313e9710dd5e89573ac09618f6&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2F297c7e0a9ab747230c43c0be8c217ea0"
+}, {
+	"dockey": "film_860563",
+	"doctype": "3",
+	"name": "比扎罗",
+	"style": "科幻;冒险;动作",
+	"zone": "美国",
+	"year": "2020",
+	"starring": "",
+	"director": "",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=12e3aff312a5698340936e73494ffcf0&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fd1c7f186dfd73b123291b1f1ef566404",
+	"v_width": "437",
+	"v_height": "600",
+	"score": "",
+	"hit_count": "2",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7ha3danjwgme3dsgu7lbn4.html",
+	"url": "/movie/mzuwy3k7ha3danjwgme3dsgu7lbn4.html",
+	"picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=12e3aff312a5698340936e73494ffcf0&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fd1c7f186dfd73b123291b1f1ef566404"
+}, {
+	"dockey": "film_1363329",
+	"doctype": "3",
+	"name": "阿尔法",
+	"style": "剧情;惊悚;动作",
+	"zone": "美国",
+	"year": "2020",
+	"starring": "萨姆·沃辛顿",
+	"director": "史蒂文·奎里",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=2961ff57cec77e92a2e4239879d26271&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fe191c0be4d201c72a98bb536b6e5b1dd",
+	"v_width": "270",
+	"v_height": "400",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geztmmztgi4qtmfcw353pka.html",
+	"url": "/movie/mzuwy3k7geztmmztgi4qtmfcw353pka.html",
+	"picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=2961ff57cec77e92a2e4239879d26271&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2Fe191c0be4d201c72a98bb536b6e5b1dd"
+}, {
+	"dockey": "film_1342887",
+	"doctype": "3",
+	"name": "守夜神",
+	"style": "动作",
+	"zone": "美国",
+	"year": "2020",
+	"starring": "",
+	"director": "",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=cbbec67598908c66b6b1b4217803f54f&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F7eb8859921fe34e466c64b157c1e122d",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geztimryha3qtswy2k44t4i.html",
+	"url": "/movie/mzuwy3k7geztimryha3qtswy2k44t4i.html",
+	"picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=cbbec67598908c66b6b1b4217803f54f&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F7eb8859921fe34e466c64b157c1e122d"
+}, {
+	"dockey": "film_1146783",
+	"doctype": "3",
+	"name": "驱魔天团",
+	"style": "剧情;家庭",
+	"zone": "中国大陆",
+	"year": "2025",
+	"starring": "张智焜;陈芏余",
+	"director": "张智焜",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "90",
+	"v_picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=809d603006f706a1f918e3000d10c7a4&url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F200803%2F3d3d41c20a54dc470defefef4046f0ff",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geytinrxhazqtr75yst4z3gnyu.html",
+	"url": "/movie/mzuwy3k7geytinrxhazqtr75yst4z3gnyu.html",
+	"picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=809d603006f706a1f918e3000d10c7a4&url=http%3A%2F%2Fimg04.sogoucdn.com%2Fapp%2Fa%2F200803%2F3d3d41c20a54dc470defefef4046f0ff"
+}, {
+	"dockey": "film_1159191",
+	"doctype": "3",
+	"name": "阿凡达4祖古骑士",
+	"style": "科幻;奇幻;惊悚;动作;冒险",
+	"zone": "美国",
+	"year": "2026",
+	"starring": "萨姆·沃辛顿;佐伊·索尔达娜;凯特·温丝莱特;杨紫琼;西格妮·韦弗;史蒂芬·朗;杰梅奈·克莱门特;吉奥瓦尼·瑞比西;奥娜·卓别林;克利夫·柯蒂斯;乔·大卫·摩尔;希·庞德;马特·杰拉德;科斯顿·约翰;迪利普·劳;杰米·福雷特斯;菲利普·盖廖;贝利·巴斯;BritainDalton",
+	"director": "詹姆斯·卡梅隆",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=ee5a7d18fce4174defcf349bd360fb7c&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F1c2ee227ee5d8e4f73c3499bc5a500e0",
+	"v_width": "270",
+	"v_height": "355",
+	"score": "",
+	"hit_count": "139",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7geytkojrheyqtmfcw6zlj3zu27tltrog57fl6.html",
+	"url": "/movie/mzuwy3k7geytkojrheyqtmfcw6zlj3zu27tltrog57fl6.html",
+	"picurl": "https://img04.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=ee5a7d18fce4174defcf349bd360fb7c&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2F1c2ee227ee5d8e4f73c3499bc5a500e0"
+}, {
+	"dockey": "film_1208505",
+	"doctype": "3",
+	"name": "功夫素食",
+	"style": "家庭;武侠;剧情;爱情;运动",
+	"zone": "中国大陆",
+	"year": "2026",
+	"starring": "张智焜",
+	"director": "张智焜",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "120",
+	"v_picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=ce26da4f5c304e7a3da13a3213c496ba&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2Fd2c1bdee137f3da4c65d483f1c3c9b62",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7gezdaobvga2qtongw7zmxwgkwm.html",
+	"url": "/movie/mzuwy3k7gezdaobvga2qtongw7zmxwgkwm.html",
+	"picurl": "https://img02.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=ce26da4f5c304e7a3da13a3213c496ba&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2Fd2c1bdee137f3da4c65d483f1c3c9b62"
+}, {
+	"dockey": "film_1283831",
+	"doctype": "3",
+	"name": "小丑asdf",
+	"style": "剧情",
+	"zone": "美国",
+	"year": "2012",
+	"starring": "张学友;刘德华",
+	"director": "ttt",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "11",
+	"v_picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=66588479e30fb5b26abc9e63e825c3c4&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2Ff14d3dab80d579a1274d2c7878379ca6",
+	"v_width": "270",
+	"v_height": "404",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7gezdqmzygmyqtufbwpzwc43emy.html",
+	"url": "/movie/mzuwy3k7gezdqmzygmyqtufbwpzwc43emy.html",
+	"picurl": "https://img03.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=66588479e30fb5b26abc9e63e825c3c4&url=http%3A%2F%2Fimg01.sogoucdn.com%2Fapp%2Fa%2F200803%2Ff14d3dab80d579a1274d2c7878379ca6"
+}, {
+	"dockey": "film_1256445",
+	"doctype": "3",
+	"name": "舰队",
+	"style": "科幻;动作",
+	"zone": "美国",
+	"year": "2020",
+	"starring": "",
+	"director": "",
+	"shengyou": "",
+	"emcee": "",
+	"duration": "0",
+	"v_picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=4b8f5e9f23f94a4187a1e0d34b3f291b&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2F410655845ff7f5b0244aa8a7078455b9",
+	"v_width": "270",
+	"v_height": "405",
+	"score": "",
+	"hit_count": "1",
+	"ipad_play_for_list": {
+		"fee": "0"
+	},
+	"tiny_url": "/movie/mzuwy3k7gezdknrugq2qtpncw3jq.html",
+	"url": "/movie/mzuwy3k7gezdknrugq2qtpncw3jq.html",
+	"picurl": "https://img01.sogoucdn.com/v2/thumb/retype_exclude_gif/ext/auto/q/80/crop/xy/ai/w/258/h/360/resize/w/258?appid=201005&sign=4b8f5e9f23f94a4187a1e0d34b3f291b&url=http%3A%2F%2Fimg03.sogoucdn.com%2Fapp%2Fa%2F200803%2F410655845ff7f5b0244aa8a7078455b9"
+}]
