@@ -74,6 +74,7 @@
 				</view>
 			</view>
 		</view>
+		<uni-fab direction="vertical" horizontal="right" vertical='bottom' :pattern="pattern" :content="content" @trigger="trigger"></uni-fab>
 		<uni-load-more :status="status"></uni-load-more>
 	</view>
 </template>
@@ -85,6 +86,15 @@ import ajax from '../../utils/uni-ajax'
 export default {
 	data() {
 		return {
+			content: [{
+				text: '收藏',
+			},
+			{
+				text: '历史',
+			},
+			{
+				text: '设置',
+			}],
 			status:"loadmore",
 			classnum:0,
 			timenum:0,
@@ -95,6 +105,13 @@ export default {
 			timelist:[['最近更新','time'],['近期热门','热门'],['评分最高','score']],
 			lunbolist: [],
 			current: 0,
+			pattern: {
+				color: '#7A7E83',
+				backgroundColor: '#fff',
+				selectedColor: '#007AFF',
+				buttonColor: '#fff',
+				iconColor: '#aaa'
+			},
 			notiveImage: '../../static/star.png',
 			dotsStyle: {
 				color: '#000000',
@@ -119,6 +136,21 @@ export default {
 		}
 	},
 	methods: {
+		trigger(e){
+			if(e.item.text=='收藏'){
+				let url = `/pages/heart/heart`;
+				uni.navigateTo({ url: url });
+			}
+			if(e.item.text=='历史'){
+				let url = `/pages/history/history`;
+				uni.navigateTo({ url: url });
+			}
+			if(e.item.text=='设置'){
+				
+				let url = `/pages/setting/setting`;
+				uni.navigateTo({ url: url });
+			}
+		},
 		async handlerButton(item){
 			this.search = item.name;
 			this.searchEvent()
