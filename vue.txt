@@ -19,3 +19,167 @@ async handlerButton(item){
 	this.search = item.name;
 	this.searchEvent()
 },
+
+
+
+<template>
+	<view class="setting" style="margin-left: 10px;margin-right: 10px;">
+		<view class="header">
+			<view style="height: 40px;background-color: #FFFFfF;"></view>
+			<view style="flex-direction: row;justify-content: space-between;">
+				<uni-icons color="#000000" size="40" type="arrow-left" @click="pageBacked" />
+				<view style="margin-top: 8px;font-size: 20px;">设置</view>
+				<view style="width: 40px;"></view>
+			</view>
+		</view>
+		<view class="body">
+			<view @click="openImpSite()" style="display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="font-size: 20px;margin: 10px;">导入订阅</text>
+				<text style="font-size: 20px;color: #b4b4b4;margin: 10px;">自动更新站源</text>
+			</view>
+			<view class="impSite" v-if="impSite">
+				<input class="inputtext" maxlength="-1" :style="{ width: `${searchwidth}px` }" v-model="url" type="text" placeholder="请导入JSON数据" />
+				<button class="inputbutton" @click="importSiteEvent">导入</button>
+			</view>
+			<view @click="deleteurl()" style="display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="font-size: 20px;margin: 10px;">重置订阅</text>
+				<text style="font-size: 20px;color: #b4b4b4;margin: 10px;">删除所有订阅</text>
+			</view>
+			<view @click="deletesite()" style="display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="font-size: 20px;margin: 10px;">重置站源</text>
+				<text style="font-size: 20px;color: #b4b4b4;margin: 10px;">删除所有站源</text>
+			</view>
+			<view @click="deletehistory()" style="display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="font-size: 20px;margin: 10px;">重置历史</text>
+				<text style="font-size: 20px;color: #b4b4b4;margin: 10px;">清空历史记录</text>
+			</view>
+			<view @click="deletenotive()" style="display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="font-size: 20px;margin: 10px;">重置收藏</text>
+				<text style="font-size: 20px;color: #b4b4b4;margin: 10px;">清空收藏内容</text>
+			</view>
+			<view @click="deleteapp()" style="display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="font-size: 20px;margin: 10px;">重置软件</text>
+				<text style="font-size: 20px;color: #b4b4b4;margin: 10px;">清空所有数据</text>
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+import db from '../../utils/database.js';
+import http from '../../utils/request.js';
+export default {
+	data() {
+		return {
+			impSite: false,
+			searchwidth: 200
+		};
+	},
+	created() {
+		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
+		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
+		if (this.fullControlsWidth > this.fullControlsHeigt) {
+			this.searchwidth = (this.fullControlsWidth * 3) / 4;
+		} else {
+			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+		}
+	},
+	methods: {
+		openImpSite() {
+			this.url = '';
+			this.impSite = !this.impSite;
+		},
+		async importSiteEvent() {
+			if (this.url === '') {
+				return false;
+			}
+			const res = await http.site(this.url);
+			if (res && res.length > 0) {
+				for (const i of res) {
+					if (i.name.length > 0) {
+						await db.add('site', i);
+					} else {
+						uni.showToast({
+							title: '格式错误!',
+							duration: 2000
+						});
+					}
+				}
+
+				this.impSite = false;
+				this.url = '';
+				uni.showToast({ title: '导入成功', type: 'success', duration: '2300' });
+				return false;
+			}
+			uni.showToast({ title: '导入失败', type: 'warning', duration: '2300' });
+		},
+		async deleteurl() {
+			uni.setStorageSync('urlNotive', []);
+			uni.showToast({
+				title: '订阅已清空!',
+				duration: '2000'
+			});
+		},
+		async deletesite() {
+			await db.reset('site');
+			uni.showToast({
+				title: '站源已清空!',
+				duration: '2000'
+			});
+		},
+		async deletehistory() {
+			await db.reset('history');
+			uni.showToast({
+				title: '已清空!',
+				duration: '2000'
+			});
+		},
+		async deletenotive() {
+			await db.reset('notive');
+			uni.showToast({
+				title: '已清空!',
+				duration: '2000'
+			});
+		},
+		async deleteapp() {
+			await db.reset('notive');
+			await db.reset('history');
+			await db.reset('site');
+			uni.setStorageSync('urlNotive', []);
+			uni.showToast({
+				title: 'APP已重置!',
+				duration: '2000'
+			});
+		},
+		pageBacked() {
+			// this.$router.go(-1);
+			let urll = `/pages/index/index`;
+			uni.navigateTo({ url: urll });
+		}
+	},
+	onLoad() {},
+	onShow() {},
+	onUnload() {}
+};
+</script>
+
+<style lang="scss" scoped>
+.impSite {
+	display: flex;
+	margin-top: 5px;
+	flex-direction: row;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+	justify-content: space-between;
+	.inputtext {
+		margin-left: 0px;
+		margin-top: 6px;
+	}
+	.inputbutton {
+		width: 70px;
+
+		margin-left: 10px;
+		height: 35px;
+	}
+}
+</style>
