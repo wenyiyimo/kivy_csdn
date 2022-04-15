@@ -13,3 +13,9 @@
 	<text class="item-name" v-if="classnum == 2 && !item.date">状态：更新至{{ item.ipad_play_for_list }}集(共{{ item.ipad_play_for_list }}集)</text>
 	<text class="item-name" v-if="classnum == 2 && item.date">最后更新：{{ item.date }}</text>
 </view>
+
+
+async handlerButton(item){
+	this.search = item.name;
+	this.searchEvent()
+},
