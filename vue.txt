@@ -1,11 +1,13 @@
 <view class="item-box">
 	<text class="item-title">{{ item.name }}</text>
-	<text class="item-state">类型：{{ item.style }}</text>
+	<text class="item-state">类型:{{ item.style }}</text>
 	<view style="display: flex;flex-direction: row;justify-content: flex-start;">
-		<text class="item-name" v-if="item.starring != ''">导演：{{ item.starring.slice(0, 3) }}</text>
-		<text class="item-name" v-if="item.starring == ''">导演：无</text>
-		<text style="margin-left: 20px;" v-if="item.score != ''" class="item-name">评分：{{ item.score }}</text>
+		<text class="item-name" v-if="item.starring != ''">导演:{{ item.starring.slice(0, 3) }}</text>
+		<text class="item-name" v-if="item.starring == ''">导演:无</text>
+		<text style="margin-left: 20px;" v-if="item.score != ''" class="item-name">评分:{{ item.score }}</text>
 	</view>
-	<text v-if="item.director != ''" class="item-userstate">演员：{{ item.director }}</text>
-	<text v-if="item.director == ''" class="item-userstate">演员：无</text>
+	<text v-if="item.director != ''" class="item-userstate">演员:{{ item.director }}</text>
+	<text v-if="item.director == ''" class="item-userstate">演员:无</text>
+	<text class="item-name" v-if="classnum != 1">状态:更新至{{ item.hit_count }}集(共{{ item.hit_count }}集)</text>
+	<text class="item-name" v-if="classnum == 1">热度:{{ item.hit_count }}</text>
 </view>
