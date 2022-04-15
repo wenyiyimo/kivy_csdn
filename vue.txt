@@ -7,6 +7,12 @@ style="position: sticky;top: 95px;background-color: #FFFFFF;z-index:99;"
 status:'more',
 
 loadmore(e){
-			this.status='loading';
-			this.status='nomore'
-		},
+	this.status='loading';
+	this.status='nomore'
+},
+
+
+
+ async list (key, pg = 1, t) {
+    const site = await this.getSite(key)
+    const url = `${site.api}?ac=videolist${t ? '&t=' + t: ''}&pg=${pg}`
