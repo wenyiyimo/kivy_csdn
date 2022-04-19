@@ -3,7 +3,7 @@
 		<view class="header">
 			<view style="height: 40px;background-color: #FFFFfF;"></view>
 			<view style="flex-direction: row;justify-content: space-between;">
-				<uni-icons style="margin-top: 8px;margin-left: 10px;" color="#000000" size="40" type="compose" @click="editYuan" />
+				<uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="editYuan" />
 				<uni-search-bar
 					class="search-layout"
 					:style="{ width: `${searchwidth}px` }"
@@ -17,37 +17,42 @@
 				></uni-search-bar>
 				<text class="search-text" @click="searchEvent">搜索</text>
 			</view>
+			<view v-if="lunbo">
+			<view class="lunbo" style="height: 150px;">
+				<uni-swiper-dot :info="lunbolist" :current="current" :dotsStyles="dotsStyle" field="content" mode="nav">
+					<swiper style="height: 120px;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
+						<swiper-item v-for="(item, index) in lunbolist" :key="index">
+							<view><image style="height: 120px;" class="swiper-img" :src="item.url" mode="aspectFill" @click="click(index)"></image></view>
+						</swiper-item>
+					</swiper>
+				</uni-swiper-dot>
+			</view>
+			
+			<view class="setting-data">
+				
+				<uni-icons color="#000000" size="40" type="heart" @click="navheart" />
+				
+				<uni-icons color="#000000" size="40" type="color" @click="navhistory" />
+     <uni-icons color="#000000" size="40" type="loop"></uni-icons>
+				<uni-icons color="#000000" size="40" type="gear" @click="navset" />
+			</view>
+			<view class="tab-data">
+				<view class="tab-class">
+					<view v-for="(item, index) in classlist" :key="index">
+						<text class="tab-class-item" :class="[classnum == index ? 'tab-class-item-active' : '']" @click="changeclassnum(index)">{{item[0]}}</text>
+					</view>
+				</view>
+				<view class="tab-time">
+					<view v-for="(item, index) in timelist" :key="index">
+						<text class="tab-time-item" :class="[timenum == index ? 'tab-time-item-active' : '']" @click="changetimenum(index)">{{item[0]}}</text>
+					</view>
+					
+				</view>
+			</view>
+		</view>
 		</view>
 
-		<view class="lunbo" style="height: 200px;">
-			<uni-swiper-dot :info="lunbolist" :current="current" :dotsStyles="dotsStyle" field="content" mode="nav">
-				<swiper style="height: 160px;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
-					<swiper-item v-for="(item, index) in lunbolist" :key="index">
-						<view><image style="height: 160px;" class="swiper-img" :src="item.url" mode="aspectFill" @click="click(index)"></image></view>
-					</swiper-item>
-				</swiper>
-			</uni-swiper-dot>
-		</view>
 		
-		<view class="setting-data">
-			
-			<uni-icons color="#000000" size="50" type="heart" @click="navheart" />
-			<uni-icons color="#000000" size="50" type="color" @click="navhistory" />
-			<uni-icons color="#000000" size="50" type="gear" @click="navset" />
-		</view>
-		<view class="tab-data">
-			<view class="tab-class">
-				<view v-for="(item, index) in classlist" :key="index">
-					<text class="tab-class-item" :class="[classnum == index ? 'tab-class-item-active' : '']" @click="changeclassnum(index)">{{item[0]}}</text>
-				</view>
-			</view>
-			<view class="tab-time">
-				<view v-for="(item, index) in timelist" :key="index">
-					<text class="tab-time-item" :class="[timenum == index ? 'tab-time-item-active' : '']" @click="changetimenum(index)">{{item[0]}}</text>
-				</view>
-				
-			</view>
-		</view>
 		<view class="data-item" v-for="(item, index) in list" :key="index">
 			<view class="out-item">
 				<view class="tui-list-item" @click="handlerButton(item)">
@@ -74,7 +79,6 @@
 				</view>
 			</view>
 		</view>
-		<uni-fab direction="vertical" horizontal="right" vertical='bottom' :pattern="pattern" :content="content" @trigger="trigger"></uni-fab>
 		<uni-load-more :status="status"></uni-load-more>
 	</view>
 </template>
@@ -86,15 +90,6 @@ import ajax from '../../utils/uni-ajax'
 export default {
 	data() {
 		return {
-			content: [{
-				text: '收藏',
-			},
-			{
-				text: '历史',
-			},
-			{
-				text: '设置',
-			}],
 			status:"loadmore",
 			classnum:0,
 			timenum:0,
@@ -105,13 +100,7 @@ export default {
 			timelist:[['最近更新','time'],['近期热门','热门'],['评分最高','score']],
 			lunbolist: [],
 			current: 0,
-			pattern: {
-				color: '#7A7E83',
-				backgroundColor: '#fff',
-				selectedColor: '#007AFF',
-				buttonColor: '#fff',
-				iconColor: '#aaa'
-			},
+			
 			notiveImage: '../../static/star.png',
 			dotsStyle: {
 				color: '#000000',
@@ -119,10 +108,9 @@ export default {
 			},
 			fullControlsWidth: null,
 			fullControlsHeigt: null,
-			searchwidth: 200,
+			searchwidth: 0,
 			startnum:0,
-			orderclass:"time",
-			listTab:"teleplay",
+		
 		};
 	},
 	created() {
@@ -136,21 +124,7 @@ export default {
 		}
 	},
 	methods: {
-		trigger(e){
-			if(e.item.text=='收藏'){
-				let url = `/pages/heart/heart`;
-				uni.navigateTo({ url: url });
-			}
-			if(e.item.text=='历史'){
-				let url = `/pages/history/history`;
-				uni.navigateTo({ url: url });
-			}
-			if(e.item.text=='设置'){
-				
-				let url = `/pages/setting/setting`;
-				uni.navigateTo({ url: url });
-			}
-		},
+		
 		async handlerButton(item){
 			this.search = item.name;
 			this.searchEvent()
@@ -329,20 +303,13 @@ export default {
 }
 .setting-data{
 	
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 	flex-direction: row;
 	justify-content: space-between;
 	margin-left: 20px;
 	margin-right: 20px;
 }
-.setting-heart{
-	width: 40px;
-	height: 40px;
-}
-.setting-setting{
-	width: 40px;
-	height: 40px;
-}
+
 .tab-data{
 	background-color: #fff;
 }
@@ -367,6 +334,7 @@ export default {
 	justify-content: space-between;
 	margin-left: 20px;
 	margin-right: 20px;
+	margin-bottom: 10px;
 	.tab-time-item{
 		color: #000000;
 		font-size: 20px;
@@ -384,18 +352,14 @@ export default {
 	z-index: 99;
 	flex-direction: column;
 	justify-content: space-between;
-	.header-img {
-		height: 40px;
-		width: 40px;
-		margin-top: 8px;
-		margin-left: 10px;
-	}
+	
 	.search-layout {
-		height: 50px;
+		height: 40px;
+		margin-top: 4px;
 	}
 	.search-text {
-		height: 50px;
-		margin-top: 15px;
+		height: 40px;
+		margin-top: 11px;
 		font-size: 20px;
 		margin-right: 20px;
 	}
@@ -407,7 +371,7 @@ export default {
 	margin-right: 20px;
 }
 .data-item {
-	margin-top: 10px;
+	
 	.out-item {
 		display: flex;
 		flex-direction: row;
@@ -450,3 +414,459 @@ export default {
 	}
 }
 </style>
+
+
+
+
+import ajax from './uni-ajax'
+import db from './database'
+const http = {
+		// 获取搜索列表
+		async getSearchList(site, searchKey) {
+			try{
+			const searchLists = []
+			let gethtml = await ajax.get(site.search_href.replace("searchKey", searchKey));
+			let html = gethtml.data;
+			if (typeof html != "string") {
+				html = JSON.stringify(html);
+			}
+			let re = new RegExp(site.search_range, 'g')
+			let t;
+			let rangeResults = [];
+			while ((t = re.exec(html)) != null) {
+				rangeResults.push(t[1]);
+			};
+			re = new RegExp(site.search_list_name, 'g')
+			let nameResults = [];
+			while ((t = re.exec(rangeResults[0])) != null) {
+				nameResults.push(t[1].trim());
+			};
+			let picResults = [];
+			re = new RegExp(site.search_list_src, 'g');
+			while ((t = re.exec(rangeResults[0])) != null) {
+				if (t[1].indexOf('http') == 0) {
+					picResults.push(t[1].replace(new RegExp("\\\\", "g"), ""));
+				} else {
+					let httpurl = [site.pic_url, t[1]].join("")
+					picResults.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
+				}
+			};
+			// console.log(nameResults)
+			let hrefResults = [];
+			re = new RegExp(site.search_list_href, 'g');
+			while ((t = re.exec(rangeResults[0])) != null) {
+				if (t[1].indexOf('http') == 0) {
+					hrefResults.push(t[1].replace(new RegExp("\\\\", "g"), ""));
+				} else {
+					let httpurl = [site.search_url, String(t[1])].join("")
+					hrefResults.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
+				}
+			};
+			// console.log(hrefResults)
+			let stateResults = [];
+			re = new RegExp(site.search_list_state, 'g');
+			while ((t = re.exec(rangeResults[0])) != null) {
+				stateResults.push(t[1].trim());
+			};
+			for (let j = 0; j < nameResults.length; j++) {
+				let pt = [];
+				pt.push(nameResults[j]);
+				pt.push(hrefResults[j]);
+				pt.push(picResults[j]);
+				pt.push(stateResults[j]);
+				searchLists.push(pt);
+			}
+			const lastLists = [site.name, searchLists]
+			return {
+				flag: true,
+				data: lastLists,
+				msg: '搜索完成'
+			}}catch(err){
+				return {
+					flag: false,
+					data: err,
+					msg: '搜索失败'
+				}
+			}
+		},
+		// 通过 json url 导入视频源
+		async siteUrl(jsonUrl) {
+			try {
+				const res = await ajax.get(jsonUrl);
+				return res.data
+			} catch (err) {
+				return err
+			}
+		},
+		// 通过 json url 导入视频源
+		async site(jsonUrl) {
+			try {
+				if (jsonUrl.startsWith("http")) {
+					let urlslices = jsonUrl.split('&&&&');
+					let urlList = uni.getStorageSync('urlNotive');
+					let urldata = {
+						name: urlslices[1],
+						url: urlslices[0],
+						isActive: true
+					}
+					const rre = await db.checkItemNotivre(urldata, urlList);
+					if (rre.flag) {
+						urlList.push(urldata);
+						uni.setStorageSync('urlNotive', urlList)
+					
+					}
+					const res = await ajax.get(urlslices[0]);
+					return res.data
+				}
+				if (jsonUrl.startsWith("{")) {
+					if (JSON.parse(jsonUrl).name != '') {
+						return [JSON.parse(jsonUrl)]
+					}
+				}
+				if (jsonUrl.startsWith("[")) {
+					if (JSON.parse(jsonUrl)[0].name != '') {
+						return JSON.parse(jsonUrl)
+					}
+
+				}
+
+
+
+			} catch (err) {
+				return err
+			}
+		},
+		// 获取更新状态
+		async getState(url, site) {
+			try {
+				let gethtml = await ajax.get(url);
+				let html = gethtml.data;
+				let re = new RegExp(site.play_range, 'g')
+				let t;
+				let rangeResults = [];
+				while ((t = re.exec(html)) != null) {
+					rangeResults.push(t[1]);
+				};
+				re = new RegExp(site.play_state, 'g')
+				let stateResults = [];
+				while ((t = re.exec(rangeResults[0])) != null) {
+					stateResults.push(t[1].trim());
+				};
+				return {
+					flag: true,
+					data: stateResults,
+					msg: '状态更新完成'
+				}
+			} catch (err) {
+				return {
+					flag: false,
+					data: err,
+					msg: '状态获取失败'
+				}
+			}
+		},
+		// 爬剧集
+		async getPlayData(url, site) {
+			try {
+				let gethtml = await ajax.get(url);
+				let html = gethtml.data;
+				let re = new RegExp(site.play_range, 'g')
+				let t;
+				let rangeResults = [];
+				while ((t = re.exec(html)) != null) {
+					rangeResults.push(t[1]);
+				};
+				// console.log(rangeResults)
+				re = new RegExp(site.name_tag_list, 'g')
+				let nameTagRanges = [];
+				while ((t = re.exec(rangeResults[0])) != null) {
+					nameTagRanges.push(t[1]);
+				};
+				re = new RegExp(site.name_tag, 'g')
+				let nameTags = [];
+				while ((t = re.exec(nameTagRanges[0])) != null) {
+					nameTags.push(t[1].trim());
+				};
+				re = new RegExp(site.play_list, 'g')
+				const playLists = [];
+				while ((t = re.exec(rangeResults[0])) != null) {
+					playLists.push(t[1]);
+				};
+				// console.log(playLists)
+				const playdatas = [];
+				for (let j of playLists) {
+					let tt;
+					let re1 = new RegExp(site.play_list_name, 'g')
+					const playListNames = [];
+					while ((tt = re1.exec(j)) != null) {
+						playListNames.push(tt[1].trim());
+					};
+					let re2 = new RegExp(site.play_list_href, 'g')
+					const playListHrefs = [];
+					while ((tt = re2.exec(j)) != null) {
+						if (tt[1].indexOf('http') == 0) {
+							playListHrefs.push(tt[1].replace(new RegExp("\\\\", "g"), ""));
+			
+	} else {
+							let httpurl = [site.url, tt[1]].join("")
+							playListHrefs.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
+						}
+					};
+					playdatas.push([playListNames, playListHrefs])
+				}
+				return {
+					flag: true,
+					data: [nameTags, playdatas],
+					msg: '剧集加载成功'
+				}
+			} catch (err) {
+				return {
+					flag: false,
+					data: err,
+					msg: '剧集获取失败'
+				}
+			}
+		},
+		// app搜索
+		async appSearch(site, searchKey) {
+			searchKey = encodeURI(searchKey);
+			let searchLists = []
+			try {
+				let jsonStringt = await ajax.get(site.search_href.replace("searchKey", searchKey));
+				let rangeslice = site.search_range.split('.');
+				var range_search = jsonStringt.data;
+				for (let slice of rangeslice) {
+		
+		range_search = range_search[slice]
+				}
+				for (let jsondata of range_search) {
+
+					let pt = [];
+					pt.push(jsondata[site.search_list_name]);
+					pt.push(site.search_url + String(jsondata[site.search_list_href]));
+					pt.push(jsondata[site.search_list_src]);
+					pt.push(jsondata[site.search_list_state]);
+					searchLists.push(pt);
+				}
+				const lastLists = [site.name, searchLists];
+				return {
+					flag: true,
+					data: lastLists,
+					msg: '搜索完成'
+				}
+			} catch (err) {
+				return {
+					flag: false,
+					data: err,
+					msg: '搜索失败'
+				}
+			}
+		},
+		//app爬剧集
+		async appPlayData(url, site) {
+			console.log(url)
+			try {
+				let getjson = await ajax.get(url);
+				let jsondata = getjson.data;
+				let rangeslice = site.play_range.split('.');
+				for (let slice of rangeslice) {
+					jsondata = jsondata[slice]
+				}
+				let nameTags = [];
+				let playdatas = [];
+				let tempurl = "";
+				for (let jsoninfo of jsondata) {
+					nameTags.push(jsoninfo[site.name_tag]);
+
+					let playjx = await this.panduanapi(site, jsoninfo)
+
+					let playinfo = jsoninfo[site.play_list];
+
+					const playListNames = [];
+					const playListHrefs = [];
+					for (let playslice of playinfo.split("#")) {
+						let playsliceinfo = playslice.split("$");
+						playListNames.push(playsliceinfo[0]);
+						tempurl = playjx + playsliceinfo[1];
+						if (tempurl.indexOf("url=") != -1 || tempurl.endsWith("m3u8") || tempurl.endsWith("mp4")) {
+							playListHrefs.push(tempurl)
+						} else {
+							tempurl = site.extra_api + tempurl;
+							playListHrefs.push(tempurl)
+						}
+
+					}
+					playdatas.push([playListNames, playListHrefs]);
+				}
+				return {
+					flag: true,
+					data: [nameTags, playdatas],
+					msg: '剧集加载成功'
+				}
+
+
+
+
+
+			} catch (err) {
+				console.log(err)
+				return {
+					flag: false,
+					data: err,
+					msg: '剧集获取失败'
+				}
+			}
+		},
+		async getapi2(site, jsoninfo) {
+			if (site.playapi2 && site.play_api2 != "") {
+				let playjx = jsoninfo;
+				let rangeslice = site.play_api2.split('.');
+				for (let slice of rangeslice) {
+					playjx = playjx[slice];
+
+				}
+
+				playjx = playjx.replace(/../g, ".")
+				if (playjx.indexOf(",") != -1) {
+					playjx = playjx.split(",")[1];
+					if (playjx.indexOf("//") == -1) {
+						playjx = "";
+						return playjx
+					} else {
+						return playjx
+					}
+				} else {
+					if (playjx.indexOf("//") == -1) {
+						playjx = "";
+
+						return playjx
+					} else {
+						return playjx
+					}
+				}
+
+
+			} else {
+				let playjx = "";
+
+				return playjx
+			}
+		
+	},
+	//判断api
+	async panduanapi(site, jsoninfo) {
+			if (site.play_api != "") {
+				let playjx = jsoninfo;
+				let rangeslice = site.play_api.split('.');
+				for (let slice of rangeslice) {
+					playjx = playjx[slice];
+
+				}
+
+				playjx = playjx.replace(/../g, ".")
+				if (playjx.indexOf(",") != -1) {
+					playjx = playjx.split(",")[1];
+					if (playjx.indexOf("//") == -1) {
+						playjx = await this.getapi2(site, jsoninfo);
+						return playjx
+					} else {
+						return playjx
+					}
+				} else {
+					if (playjx.indexOf("//") == -1) {
+						playjx = await this.getapi2(site, jsoninfo);
+
+						return playjx
+					} else {
+						return playjx
+					}
+				}
+
+
+			} else {
+				let playjx = "";
+
+				return playjx
+			}
+		},
+
+		//app 获取真实链接
+		async appTureUrl(url) {
+				console.log(url)
+				if (url.indexOf("url=") === -1) {
+					return url
+				} else {
+					let getjson = await ajax.get(url);
+					// console.log(getjson.data)
+					if (getjson.data.url) {
+						return getjson.data.url
+					} else {
+						return url
+					}
+				}
+			},
+			//app 获取更新
+			async appstate(url, site) {
+					try {
+						let getjson = await ajax.get(url);
+
+						let jsondata = getjson.data;
+						let rangeslice = site.play_state.split('.');
+						for (let slice of rangeslice) {
+							jsondata = jsondata[slice]
+						}
+						let stateResults = [jsondata];
+						return {
+							flag: true,
+							data: stateResults,
+							msg: '状态更新完成'
+						}
+
+
+					} catch (err) {
+						return {
+							flag: false,
+							data: err,
+							msg: '状态获取失败'
+						}
+					}
+				},
+				// 爬m3u8
+				async getMUinfo(url) {
+						let that = this
+						uni.request({
+							url: url,
+							method: 'GET',
+							success(res) {
+
+								that.getDownUrl(res, url)
+								return res
+							},
+							fail(res) {
+								return -1
+							}
+						})
+					},
+					//deal res
+					async getDownUrl(res, host) {
+						var arr = res.data.split("\n");
+						var data = []
+						for (let i = 0; i < arr.length; i++) {
+							if (arr[i] == '') {
+								continue;
+							}
+							let line = arr[i].trim()
+							if (line.startsWith('#EXT')) {
+								continue;
+							}
+							if (line.startsWith('/')) {
+								let url = host + line
+							} else {
+								let url = line
+							}
+							data.push(url)
+						}
+						
+					}
+}
+export default http
