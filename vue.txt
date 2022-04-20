@@ -1,453 +1,701 @@
+
+
 <template>
-	<view class="index">
-		<view class="header">
-			<view style="height: 40px;background-color: #FFFFfF;"></view>
+	<view class="detail">
+		<view class="state">
+			<view style="height: 40px;background-color: #FFFFFF;"></view>
 			<view style="flex-direction: row;justify-content: space-between;">
-				<uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="editYuan" />
-				<uni-search-bar
-					class="search-layout"
-					:style="{ width: `${searchwidth}px` }"
-					v-model="search"
-					placeholder="请输入搜索关键词"
-					bgColor="#EEEEEE"
-					cancelButton="none"
-					@confirm="searchEvent"
-					@clear="searchClearEvent"
-					borderColor="#000000"
-				></uni-search-bar>
-				<text class="search-text" @click="searchEvent">搜索</text>
-			</view>
-			<view v-if="lunbo">
-				<view class="lunbo" style="height: 150px;">
-					<uni-swiper-dot :info="lunbolist" :current="current" :dotsStyles="dotsStyle" field="content" mode="nav">
-						<swiper style="height: 120px;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
-							<swiper-item v-for="(item, index) in lunbolist" :key="index">
-								<view><image style="height: 120px;" class="swiper-img" :src="item.url" mode="aspectFill" @click="click(index)"></image></view>
-							</swiper-item>
-						</swiper>
-					</uni-swiper-dot>
-				</view>
-			</view>
-
-			<view class="setting-data">
-				<text style="font-size: 20px;" @click="navheart()()">收藏</text>
-				<text style="font-size: 20px;" @click="navhistory()">历史</text>
-				<text style="font-size: 20px;" @click="changeindex()">{{ indexname }}</text>
-				<text style="font-size: 20px;" @click="navset()">设置</text>
-				<!-- <uni-icons color="#000000" size="40" type="heart" @click="navheart" />
-
-					<uni-icons color="#000000" size="40" type="color" @click="navhistory" />
-					<uni-icons color="#000000" size="40" type="loop"></uni-icons>
-					<uni-icons color="#000000" size="40" type="gear" @click="navset" /> -->
-			</view>
-			<view class="tab-data" v-if="classdata">
-				<view class="tab-class">
-					<view v-for="(item, index) in classlist" :key="index">
-						<text class="tab-class-item" :class="[classnum == index ? 'tab-class-item-active' : '']" @click="changeclassnum(index)">{{ item[0] }}</text>
-					</view>
-				</view>
-				<view class="tab-time">
-					<view v-for="(item, index) in timelist" :key="index">
-						<text class="tab-time-item" :class="[timenum == index ? 'tab-time-item-active' : '']" @click="changetimenum(index)">{{ item[0] }}</text>
-					</view>
-				</view>
+				<uni-icons style="margin-left: 10px;" color="#000000" size="40" type="arrow-left" @click="pageBacked" />
+				<view class="title" @click="nohideDetail()">播放</view>
+				<uni-icons style="margin-right: 10px;" color="#000000" size="40" :type="downImage" @click="downvideo" />
 			</view>
 		</view>
 
-		<view v-if="classdata">
-			<view class="data-item" v-for="(item, index) in list" :key="index">
-				<view class="out-item">
-					<view class="tui-list-item" @click="handlerButton(item)">
-						<image :src="item.picurl" mode="aspectFit" class="item-img"></image>
-						<view class="item-box">
-							<text class="item-title">{{ item.name }}</text>
-							<text class="item-state">类型：{{ item.style }}</text>
-							<view style="display: flex;flex-direction: row;justify-content: flex-start;">
-								<text class="item-name" v-if="item.starring != ''">导演：{{ item.starring.slice(0, 3).replace(';', '') }}</text>
-								<text class="item-name" v-if="item.starring == ''">导演：无</text>
-								<text style="margin-left: 20px;" v-if="item.score != ''" class="item-name">评分：{{ item.score }}</text>
-							</view>
-							<text v-if="item.director != ''" class="item-userstate">演员：{{ item.director }}</text>
-							<text v-if="item.director == ''" class="item-userstate">演员：无</text>
-							<text class="item-name" v-if="classnum != 1 && classnum != 3 && classnum != 4">
-								状态：更新至{{ item.ipad_play_for_list.episode }}集(共{{ item.ipad_play_for_list.finish_episode }}集)
-							</text>
-							<text class="item-name" v-if="classnum == 1">年份：{{ item.year }}</text>
-							<text class="item-name" v-if="classnum == 3 && item.date">最后更新：{{ item.date }}</text>
-							<text class="item-name" v-if="classnum == 3 && !item.date">
-								状态：更新至{{ item.ipad_play_for_list.episode }}集(共{{ item.ipad_play_for_list.finish_episode }}集)
-							</text>
-							<text class="item-name" v-if="classnum == 4 && item.year != ''">年份：{{ item.year }}</text>
-							<text class="item-name" v-if="classnum == 4 && item.year == ''">地区：{{ item.zone }}</text>
+		<view class="play" maxlength="300" v-if="hidePlay">
+			<video
+				id="myVideo"
+				ref="myVideo"
+				class="player"
+				:autoplay="true"
+				:vslide-gesture-in-fullscreen="volumecontrol"
+				:codec="jiema"
+				:src="url"
+				:controls="showControl"
+				vslide-gesture="true"
+				enable-play-gesture="true"
+				:initial-time="initialtime"
+				play-strategy="3"
+				:header="Header"
+				@error="changeWare()"
+				show-loading="false"
+				@ended="nextVideo"
+				@fullscreenchange="enterFullScreen"
+				@fullscreenclick="changeRatePlay"
+                @controlstoggle="controlShow"
+			>
+				<!-- :title="nowPlay" -->
+				<cover-view class="play-control" v-if="fullscreen && showControlshow&&showControl" >
+					<text class="play-nowtime" @click="getNowTime">{{nowtime}}</text>
+					<text class="play-last" @click="lastVideo()">上一集</text>
+					<text class="play-next" @click="nextVideo()">下一集</text>
+					<text class="play-now">{{ nowPlay }}</text>
+					<text class="play-rate" @click="changePlayRate()">速度:{{ String(playRate) }}</text>
+					<text class="play-direction" @click="changeDirection()">旋转</text>
+					<text class="play-choose" @click="changeshowplay">选集</text>
+				</cover-view>
+				<cover-view class="body" v-if="showplay&&showControlshow&&fullscreen">
+					<view class="tag-lists">
+						<text class="play-nixu" @click="nixu">逆序</text>
+						<view class="tag-data" v-for="(item, index) in tagLists" :key="index">
+							<text class="play-item-title" :class="[current == index ? 'item-title-active' : '']" @click="tagChange(index)">{{ item.slice(0, 2) }}</text>
 						</view>
 					</view>
-				</view>
+					<view class="play-lists">
+						<view class="play-data" v-for="(item, index) in playList[0]" :key="index">
+							<text class="play-playname" :class="[nowPlayNum == index ? 'playname-active' : '']" @click="playTrueUrl(index)">{{ item.slice(0, 25) }}</text>
+						</view>
+						<text class="playname"></text>
+					</view>
+				</cover-view>
+			</video>
+			<view style="margin-bottom: 5px;font-size: 20px;margin-top: 5px;margin-left: 20px;margin-right: 20px;display: flex;flex-direction: row;justify-content: space-between;">
+				<text style="text-align:center;" @click="navigateUrl()">跳转浏览器</text>
+				<text style="text-align:center;" @click="searchdev()">点击投屏</text>
 			</view>
-			<uni-load-more :status="status"></uni-load-more>
+			<view  v-for="dev in devList" :key="dev.id">
+				<text style="font-size: 20px;text-align: center;margin-bottom: 10px;" @click="startdev(dev.id)">{{dev.name}}</text>
+			</view>
 		</view>
-		<view v-if="sitedata" style="flex-wrap: wrap;align-items: center;flex-direction: row;justify-content: flex-start;margin-left: 20px;margin-right: 15px;">
-			<view class="data-item" v-for="(item, index) in sitelists" :key="index">
-				<view class="site-item" :style="{ width: `${(fullControlsWidth - 61) / 5}px`, height: `${(fullControlsWidth - 65) / 5}px` }" @click="navclass(item)">
-					<text style="font-size: 20px;">{{ item.name.slice(0, 2) }}</text>
+		<view class="header">
+			<view class="out-item">
+				<image :src="image" mode="aspectFit" class="item-img"></image>
+				<view class="item-box">
+					<text class="item-title">{{ title }}</text>
+					<text class="item-name">来源：{{ name }}</text>
+					<text class="item-state">状态：{{ state }}</text>
+					<text class="item-userstate">上次观看：{{ userState }}</text>
 				</view>
 			</view>
+			<image :src="notiveImage" mode="aspectFit" class="removeNotice" @click="removeItem()"></image>
+		</view>
+		<view class="tag-lists">
+			<text class="nixu" @click="nixu">逆序</text>
+			<view class="tag-data" v-for="(item, index) in tagLists" :key="index">
+				<text class="item-title" :class="[current == index ? 'item-title-active' : '']" @click="tagChange(index)">{{ item.slice(0, 2) }}</text>
+			</view>
+		</view>
+		<view class="play-lists">
+			<view class="play-data" v-for="(item, index) in playList[0]" :key="index">
+				<text class="playname" :class="[nowPlayNum == index ? 'playname-active' : '']" @click="playTrueUrl(index)">{{ item.slice(0, 25) }}</text>
+			</view>
+			<text class="playname"></text>
 		</view>
 	</view>
 </template>
-
 <script>
 import db from '../../utils/database.js';
 import http from '../../utils/request.js';
-import ajax from '../../utils/uni-ajax';
+const dlna = uni.requireNativePlugin('JX-Dlna')
+// import '../../utils/uni-webview.js'
 export default {
 	data() {
 		return {
-			sitedata: true,
-			classdata: true,
-			sitelists: [
-				{ name: '11', isClass: true },
-				{ name: '22', isClass: true },
-				{ name: '33', isClass: true },
-				{ name: '44', isClass: true },
-				{ name: '11', isClass: true },
-				{ name: '22', isClass: true },
-				{ name: '33', isClass: true },
-				{ name: '44', isClass: true }
-			],
-			indexname: '',
-			status: 'loadmore',
-			classnum: 0,
-			timenum: 0,
-			search: '',
-			lunbo: true,
-			list: [],
-			classlist: [['追剧', 'teleplay'], ['电影', 'film'], ['动漫', 'cartoon'], ['综艺', 'tvshow'], ['记录片', 'documentary']],
-			timelist: [['最近更新', 'time'], ['近期热门', '热门'], ['评分最高', 'score']],
-			lunbolist: [],
-			current: 0,
-			notiveImage: '../../static/star.png',
-			dotsStyle: {
-				color: '#000000'
+			showplay:false,
+			downImage: 'arrow-down',
+			href: '',
+			title: '',
+			devList: [],
+			isdevshow:false,
+			volumecontrol:true,
+			Header: {
+				'User-Agent':
+					'Mozilla/5.0 (Linux; Android 11; M2007J17C Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/94.0.4606.85 Mobile Safari/537.36',
+				'Connection':'keep-alive',
+				'X-Requested-With': 'com.example.hikerview',
+				'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+				'Accept-Encoding': 'gzip, deflate',
+				'Sec-Fetch-Site': 'same-site',
+				'Sec-Fetch-Mode': 'cors',
+				'Sec-Fetch-Dest': 'empty'
 			},
+			image: '',
+			videoContext: null,
+			videoTime:0,
+			state: '',
+			showControl:true,
+			showControlshow:false,
+			userState: '',
+			name: '',
+			hideDetail: true,
+			nowtime:'',
+			notiveImage: '',
+			hidePlay: false,
+			url: '',
+			initialtime: 0,
+			// jiema: 'hardware',
+			jiema: 'software',
+			tagLists: [],
+			playLists: [],
+			playList: [],
+			downList: [],
+			fullscreen: false,
+			playRate: 1.0,
+			nowTag: '',
+			current: 0,
+			nowPlayNum: null,
+			nowPlay: null,
 			fullControlsWidth: null,
 			fullControlsHeigt: null,
-			searchwidth: 0,
-			startnum: 0
+			direction: -90,
+		
+			siteid: 'XT',
+			webv:0
 		};
 	},
+	onShow(){
+		
+	},
 	created() {
-		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
-		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
-
-		if (this.fullControlsWidth > this.fullControlsHeigt) {
-			this.searchwidth = (this.fullControlsWidth * 3) / 4;
-		} else {
-			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+		this.fullControlsWidth = uni.getSystemInfoSync().screenHeight;
+		this.fullControlsHeigt = uni.getSystemInfoSync().screenWidth + 1;
+		if (this.fullscreen && this.fullControlsHeigt > this.fullControlsWidth) {
+			this.fullscreen = true;
+			this.videoContext.requestFullScreen({
+				direction: 0
+			});
+			this.direction = 0;
 		}
 	},
 	methods: {
-		async navclass(site) {
-			uni.setStorageSync('classify', site);
-			let url = `/pages/class/class`;
-			uni.navigateTo({ url: url });
+		startdev(id){
+			dlna.play({'id': id, 'url': this.url, 'title': this.nowPlay}, result => {
+				console.log(result.msg)
+				// this.title = result.msg
+			})
 		},
-		async getAllSite() {
-			const res = await db.getAll('site');
-			if (res.flag) {
-				if (res.data.length <= 0) {
-					return false;
+		searchdev(){
+			this.devList = []
+			dlna.search(result => {
+				//alert(result.type)
+				if(result.type === 'add'){
+					this.devList.push({'id': result.id, 'name': result.name})
+				}else {
+					this.devList = this.devList.filter(x => x.id != result.id)
+				}
+		
+			})
+		},
+		changeshowplay(){
+			this.showplay=!this.showplay;
+			if(this.showplay){
+				
+				this.volumecontrol=false;
+			}else{
+				this.volumecontrol=true;
+			}
+			
+		},
+		controlShow(e){
+			this.showControlshow=e.detail.show;
+			if(this.showControlshow) {
+				this.getNowTime();
+			}else{
+				this.showplay=false;
+				this.volumecontrol=true;
+			}
+			
+		},
+		getNowTime() {
+			var now = new Date();
+			var hh = now.getHours(); //时
+			if (hh < 10) hh = "0" + hh;
+			var mm = now.getMinutes(); //分
+			if (mm < 10) mm = "0" + mm;
+			this.nowtime= `${hh}:${mm}`;
+		},
+		changePlayRate() {
+			if (this.playRate == 1.0) {
+				this.videoContext.playbackRate(1.25);
+				this.playRate = 1.25;
+				return;
+			}
+			if (this.playRate == 1.25) {
+				this.videoContext.playbackRate(1.5);
+				this.playRate = 1.5;
+				return;
+			}
+			if (this.playRate == 1.5) {
+				this.videoContext.playbackRate(2.0);
+				this.playRate = 2.0;
+				return;
+			}
+			if (this.playRate === 2.0) {
+				this.videoContext.playbackRate(1.0);
+				this.playRate = 1.0;
+
+				return;
+			}
+		},
+		changeDirection() {
+			this.videoContext.exitFullScreen();
+			if (this.fullControlsWidth > this.fullControlsHeigt) {
+				if (this.direction == 90) {
+					this.videoContext.requestFullScreen({
+						direction: -90
+					});
+					this.direction = -90;
+					plus.navigator.setFullscreen(true);
 				} else {
-					for (let item of res.data) {
-						if (item.isClass) {
-							this.sitelists.push(item);
+					this.videoContext.requestFullScreen({
+						direction: 90
+					});
+					this.direction = 90;
+					plus.navigator.setFullscreen(true);
+				}
+			} else {
+				this.fullscreen = true;
+				this.videoContext.requestFullScreen({
+					direction: 0
+				});
+				this.direction = 0;
+				plus.navigator.setFullscreen(true);
+			}
+		},
+	
+		nixu() {
+			let temp = this.playList;
+			this.playList = [[], []];
+			let tempLen = temp[0].length;
+			for (let i = 0; i < tempLen; i++) {
+				this.playList[0].push(temp[0][tempLen - i - 1]);
+				this.playList[1].push(temp[1][tempLen - i - 1]);
+			}
+		},
+		promise(time = 0) {
+			let promise = new Promise((resolve, reject) => {
+				setTimeout(() => {
+					resolve()
+				}, time)
+			})
+			return promise
+		},
+		changeRatePlay(e) {
+			var clickW = e.detail.screenX;
+			var clickH = e.detail.screenY;
+			if (this.playRate == 1.0 && 8 * clickW > 7 * this.fullControlsWidth && 5 * clickH > 2 * this.fullControlsHeigt && 5 * clickH < 4 * this.fullControlsHeigt) {
+				this.videoContext.playbackRate(2.0);
+				this.playRate = 2.0;
+				this.showControl=false;
+			
+			} else {
+				if (this.playRate != 1.0 && 8 * clickW > 7 * this.fullControlsWidth && 5 * clickH > 2 * this.fullControlsHeigt && 5 * clickH < 4 * this.fullControlsHeigt) {
+					this.videoContext.playbackRate(1.0);
+					this.playRate = 1.0;
+					this.showControl=false;
+				
+				}else{
+					this.showControl=!this.showControl;
+					
+				}
+			
+			}
+		},
+
+		enterFullScreen() {
+			this.fullscreen = !this.fullscreen;
+			if (this.fullscreen) {
+				plus.navigator.setFullscreen(true);
+			} else {
+				plus.navigator.setFullscreen(false);
+			}
+		},
+
+		navigateUrl() {
+			this.videoContext.pause();
+			plus.runtime.openURL(
+				this.url,
+				err => {
+					uni.setClipboardData({
+						data: this.url,
+						success: function() {
+							uni.showToast({
+								title: '复制成功！',
+								duration: 2000
+							});
+						},
+						fail: function(err) {
+							uni.showToast({
+								title: '复制失败！',
+								duration: 2000
+							});
 						}
-					}
-				}
-			}
-		},
-		async changeindex() {
-			if (this.indexname == '推荐') {
-				uni.setStorageSync('indexname', '站源');
-				this.indexname = '站源';
-				this.classdata = true;
-				this.sitedata = false;
-			} else {
-				uni.setStorageSync('indexname', '推荐');
-				this.indexname = '推荐';
-				this.classdata = false;
-				this.sitedata = true;
-			}
-		},
-		async handlerButton(item) {
-			this.search = item.name;
-			this.searchEvent();
+					});
+				},
+				'com.tencent.mtt'
+			);
 		},
 
-		async getclassdata() {
-			let url = `http://m.v.sogou.com/napi/video/classlist?&order=${this.timelist[this.timenum][1]}&listTab=${this.classlist[this.classnum][1]}&start=${
-				this.startnum
-			}&len=10`;
-			let gethtml = await ajax.get(url);
-			let jsondata = gethtml.data.listData.results;
-			this.list = [...this.list, ...jsondata];
-		},
-		changeclassnum(index) {
-			this.classnum = index;
-			this.startnum = 0;
-			this.list = [];
-			this.getclassdata();
-		},
-		changetimenum(index) {
-			this.timenum = index;
-			this.startnum = 0;
-			this.list = [];
-			this.getclassdata();
-		},
-		navheart() {
-			let url = `/pages/heart/heart`;
-			uni.navigateTo({ url: url });
-		},
-		navhistory() {
-			let url = `/pages/history/history`;
-			uni.navigateTo({ url: url });
-		},
-		navset() {
-			let url = `/pages/setting/setting`;
-			uni.navigateTo({ url: url });
-		},
-		changeCurrent(e) {
-			this.current = e.detail.current;
-		},
-		async click(index) {
-			var item = this.lunbolist[index];
-
-			this.search = item.content.trim();
-			this.searchEvent();
-		},
-		async editYuan() {
-			const url = `/pages/site/site`;
-			uni.navigateTo({ url: url });
-		},
-		async searchEvent() {
-			if (this.search === '') {
-				return false;
+		changeWare() {
+			if (this.jiema === 'software') {
+				this.$refs.uToast.show({ title: '视频源出错', type: 'warning', duration: '2300' });
 			} else {
-				const urll = `/pages/search/search?search=${this.search}`;
-				uni.navigateTo({ url: urll });
+				this.jiema = 'software';
 			}
 		},
-		async searchClearEvent() {
-			this.search = '';
-		},
-		async getSite() {
-			let url = 'https://m.v.qq.com';
-			let gethtml = await ajax.get(url);
-			let html = gethtml.data;
-			if (typeof html != 'string') {
-				html = JSON.stringify(html);
-			}
-			// let re = new RegExp("重磅热播([\\s\\S]*?)打开", 'g');
-			let re = new RegExp('重磅热播([\\s\\S]*?)猜你喜欢', 'g');
-			let t;
-			let rangeResults = [];
-			while ((t = re.exec(html)) != null) {
-				rangeResults.push(t[1]);
-			}
-			re = new RegExp('class="item_content"([\\s\\S]*?)</div></a>', 'g');
-			let listResults = [];
-			while ((t = re.exec(rangeResults[0])) != null) {
-				listResults.push(t[1]);
-			}
-			let nameResults = [];
-			let picResults = [];
-			// let stateResults=[];
-			for (let listr of listResults) {
-				re = new RegExp('<div class="item_title needsclick">([\\s\\S]*?)</div>', 'g');
-				if ((t = re.exec(listr)) != null) {
-					nameResults.push(t[1].trim());
-				} else {
-					re = new RegExp('<div class="item_title two_row needsclick">([\\s\\S]*?)</div>', 'g');
-					t = re.exec(listr);
-					nameResults.push(t[1].trim());
-				}
-				re = new RegExp('<img dsrc="([\\s\\S]*?)" lazyLoad=', 'g');
-				if ((t = re.exec(listr)) != null) {
-					if (t[1].indexOf('http') == 0) {
-						picResults.push(t[1].replace(new RegExp('\\\\', 'g'), ''));
-					} else {
-						let httpurl = ['https:', t[1]].join('');
-						picResults.push(httpurl.replace(new RegExp('\\\\', 'g'), ''));
-					}
-				}
-				// re=new RegExp("item_count needsclick\">([\\s\\S]*?)</div>","g");
-				// if((t = re.exec(listr)) != null) {
-				// 	stateResults.push(t[1].trim());
-				// }
-			}
-			for (let j = 0; j < nameResults.length; j++) {
-				this.lunbolist.push({
-					url: picResults[j],
-					content: ' ' + nameResults[j]
+		nextVideo() {
+			if (this.nowPlayNum + 1 < this.playList[0].length) {
+				// this.videoContext.exitFullScreen();
+				// this.fullscreen=false;
+				// this.hidePlay=false;
+				this.playRate = 1.0;
+				this.playTrueUrl(Number(this.nowPlayNum + 1));
+			} else {
+				uni.showToast({
+					title: '最后一集啦！',
+					duration: 2300
 				});
 			}
-			// console.log(this.lunbolist)
-			this.lunbo = true;
+		},
+		lastVideo() {
+			if (this.nowPlayNum > 0) {
+				// this.videoContext.exitFullScreen();
+				// this.fullscreen=false;
+				// this.hidePlay=false;
+				this.playRate = 1.0;
+				this.playTrueUrl(Number(this.nowPlayNum - 1));
+			} else {
+				uni.showToast({
+					title: '第一集啦！',
+					duration: 2300
+				});
+			}
+		},
+		nohideDetail() {
+			// this.hideDetail=true;
+			// this.hidePlay = false;
 		},
 
-		async updataSite(siteList) {
-			for (let sitelist of siteList) {
-				if (sitelist.isActive) {
-					const res = await http.siteUrl(sitelist.url);
-					if (res && res.length > 0) {
-						for (const i of res) {
-							if (i.name.length > 0) {
-								await db.add('site', i);
-							} else {
-								uni.showToast({
-									title: '${sitelist.name}-导入站源错误!',
-									duration: 1000
-								});
-							}
+		downvideo() {
+			if (this.downImage == 'arrow-down') {
+				this.downImage = 'arrow-up';
+			} else {
+				this.downImage = 'arrow-down';
+				var allDown = uni.getStorageSync('downLists');
+				if (allDown == []) {
+					uni.setStorageSync('downLists', this.downList);
+					uni.switchTab({
+						url: `/pages/download/download`
+					});
+				} else {
+					uni.setStorageSync('downLists', [...allDown, ...this.downList]);
+				}
+				uni.switchTab({
+					url: `/pages/download/download`
+				});
+			}
+		},
+		async tagChange(index) {
+			this.current = index;
+			this.playList = this.playLists[index];
+			this.nowTag = this.tagLists[index];
+		},
+		async getPlayData(url, name) {
+			let res = await db.get('site', name);
+			if (res.flag) {
+				if (res.data.exceptstring.length != 0) {
+					uni.setStorageSync('matchRule', res.data.exceptstring);
+				} else {
+					uni.setStorageSync('matchRule', '!!!!!');
+				}
+				if (res.data.id == 'XT') {
+					let res1 = await http.getPlayData(url, res.data);
+					this.playList = res1.data[1][0];
+					this.playLists = res1.data[1];
+					this.tagLists = res1.data[0];
+					this.nowTag = this.tagLists[0];
+				}
+				if (res.data.id == 'APP') {
+					this.siteid = 'APP';
+					let res1 = await http.appPlayData(url, res.data);
+					this.playList = res1.data[1][0];
+					this.playLists = res1.data[1];
+					this.tagLists = res1.data[0];
+					this.nowTag = this.tagLists[0];
+				}
+			} else {
+				uni.showToast({ title: '视频源出错', type: 'warning', duration: '2300' });
+				return false;
+			}
+		},
+		pageBacked() {
+			this.videoContext.stop();
+			// this.$router.go(-1);
+			uni.navigateBack();
+		},
+		async playTrueUrl(index) {
+			this.videoContext.pause();
+		
+			// this.hidePlay=false;
+			if (this.downImage == 'arrow-down') {
+				//this.hideDetail=false;
+				this.setHistory(this.playList[0][index]);
+				// this.url = '';
+				this.nowPlay = this.playList[0][index];
+				this.nowPlayNum = index;
+				if (this.siteid == 'XT') {
+					this.getPlayUrl(this.playList[1][index]);
+				}
+				if (this.siteid == 'APP') {
+					this.url = await http.appTureUrl(this.playList[1][index]);
+
+					if (this.url && this.url.startsWith('http')) {
+						if (this.url.indexOf('url=') > -1) {
+							this.getPlayUrl(this.url);
+						} else {
+							let that = this;
+							setTimeout(function() {
+								that.hidePlay = true;
+								that.videoContext.play();
+								// setTimeout(function(){
+								// 	that.videoContext.requestFullScreen()
+								// },500)
+							}, 500);
 						}
+					} else {
+						uni.showToast({
+							title: '链接已失效!',
+							duration: 1000
+						});
 					}
 				}
-			}
-		}
-	},
-	onLoad() {
-		var urlList = uni.getStorageSync('urlNotive');
-		if (!urlList) {
-			uni.setStorageSync('urlNotive', []);
-		} else {
-			this.updataSite(urlList);
-		}
-		this.indexname = uni.getStorageSync('indexname');
-		if (!this.indexname) {
-			uni.setStorageSync('indexname', '站源');
-			this.indexname = '站源';
-		}
-	},
-	onShow() {
-		this.list = [];
-		this.lunbolist = [];
-		this.getSite();
+			} else {
+				this.url = '';
+				this.hideDetail = true;
+				this.hidePlay = false;
 
-		if (this.indexname == '推荐') {
-			this.classdata = false;
-			this.sitedata = true;
-			// this.sitelists=[];
-			this.getAllSite();
-		} else {
-			this.getclassdata();
-			this.classdata = true;
-			this.sitedata = false;
+				for (var data of this.downList) {
+					if (data[0] == this.playList[0][index] && data[2] == this.nowTag && data[3] == this.name && data[4] == this.title) {
+						uni.showToast({
+							title: '已添加过该集',
+							duration: 800
+						});
+						return;
+					}
+				}
+				this.downList.push([this.playList[0][index], this.playList[1][index], this.nowTag, this.name, this.title, '开始', uni.getStorageSync('matchRule')]);
+				uni.showToast({
+					title: this.playList[0][index] + '添加成功',
+					duration: 500
+				});
+			}
+		},
+		
+		async setHistory(name) {
+			let key = this.name + '@@' + this.href;
+			await db.remove('history', key);
+			let item = {
+				name: this.name,
+				href: this.href,
+				title: this.title,
+				image: this.image,
+				state: this.state,
+				userState: name
+			};
+			await db.addNotive('history', item);
+			let res = await db.getAllDB('history');
+			if(res.flag){
+				if(res.data.length>50){
+					await db.remove('notive', res.data[0]);
+				}
+			}
+			if (this.notiveImage == '../../static/star.png') {
+				await db.remove('notive', key);
+				await db.addNotive('notive', item);
+				uni.setStorageSync('isRefresh', 1);
+			}
+		},
+	
+		getPlayUrl(url) {
+			if(this.webv!=0){
+				this.webv.close();
+				this.getPlayUrl(url)
+			}else{
+				
+			
+			// uni.showLoading({
+			// 	title: '嗅探中...'
+			// });
+			uni.showToast({
+				title: '嗅探中...',
+				duration: 30000,
+				icon:'loading'
+			});
+			uni.setStorageSync('urlPlay', '');
+			//#ifdef APP-PLUS
+			var wv = plus.webview.create(url);
+			this.webv=wv;
+			wv.overrideUrlLoading({ mode: 'allow', match: '.*(mp4|m3u8|flv|video|url=|php).*' }, function(e) {
+				// console.log(e.url);
+			});
+			// 监听到页面加载图片资源时显示（{match:'.*\.(jpg|png|jpeg|bmp)\b'}）
+			wv.listenResourceLoading({ match: '.*(mp4|video|m3u8|flv).*' }, function(e) {
+				var matchRule = uni.getStorageSync('matchRule');
+				if (
+					e.url.indexOf('51.la/') == -1 &&
+					!e.url.endsWith('.js') &&
+					e.url.indexOf('png') == -1 &&
+					e.url.indexOf('.css') === -1 &&
+					e.url.indexOf('gif') === -1 &&
+					e.url.indexOf('php') == -1 &&
+					!e.url.endsWith('.jpg') &&
+					e.url.indexOf(matchRule) === -1 &&
+					e.url.indexOf('url=') == -1&&
+					e.url.indexOf('umuuid')==-1
+				) {
+					console.log(e.url);
+					uni.setStorageSync('urlPlay', e.url);
+
+					wv.close();
+				}
+			});
+			//#endif
+			let that = this;
+			let alltime = 0;
+			var obj = setInterval(function() {
+				var urlPlay = uni.getStorageSync('urlPlay');
+				alltime = alltime + 2000;
+
+				if (alltime < 30000 && urlPlay != '') {
+					uni.hideToast();
+					that.url = urlPlay;
+					that.hidePlay = true;
+					that.videoContext.play();
+					// 	setTimeout(function(){
+					// 		that.videoContext.requestFullScreen();
+					// 	},500)
+                    that.webv=0;
+					clearInterval(obj);
+				}
+				if (alltime > 30000) {
+					uni.hideToast();
+					uni.showToast({
+						title: '嗅探超时！',
+						duration: 1000
+					});
+					wv.close();
+					that.webv=0;
+					clearInterval(obj);
+				}
+			}, 2000);
+			}
+		},
+		async removeItem() {
+			// data=JSON.stringify(initNotive).replace('null,','')
+			if (this.notiveImage == '../../static/star.png') {
+				let key = this.name + '@@' + this.href;
+				await db.remove('notive', key);
+				this.notiveImage = '../../static/star1.png';
+			} else {
+				this.notiveImage = '../../static/star.png';
+				let item = {
+					name: this.name,
+					href: this.href,
+					title: this.title,
+					image: this.image,
+					state: this.state,
+					userState: this.userState
+				};
+				await db.addNotive('notive', item);
+			}
+			uni.setStorageSync('isRefresh', 1);
 		}
 	},
-	async onReachBottom() {
-		this.status = 'loading';
-		this.startnum = this.startnum + 10;
-		await this.getclassdata();
-		this.status = 'loadmore';
+	onLoad: function(option) {
+		this.href = option.href;
+		this.title = option.title;
+		this.image = option.image;
+		this.state = option.state;
+		this.userState = option.userState;
+		this.name = option.name;
+		this.notiveImage = option.star;
+		// document.write(option.star)
+		this.getPlayData(option.href, option.name);
+		this.videoContext = uni.createVideoContext('myVideo', this);
+	},
+	onUnload: function() {
+		this.videoContext.pause();
+		this.hidePlay = false;
+		plus.navigator.setFullscreen(false);
+		if(this.webv!=0){
+			this.webv.close()
+		}
+		let currentWebview = this.$mp.page.$getAppWebview();
+		currentWebview.close();
 	}
-	// onTabItemTap() {
-	// 	uni.setStorageSync('isRefresh', 0);
-	// 	this.list=[]
-	// 	this.getSite();
-	// }
 };
 </script>
 
 <style lang="scss" scoped>
-.index {
-}
-.setting-data {
-	margin-bottom: 5px;
-	flex-direction: row;
-	justify-content: space-between;
-	margin-left: 20px;
-	margin-right: 20px;
-}
-.site-data {
-	border-radius: 50%;
-	width: 50px;
-	height: 50px;
-	justify-content: center;
-	align-items: center;
-}
-.site-item {
-	align-items: center;
-	border-radius: 50%;
-	justify-content: center;
-	margin-bottom: 5px;
-	margin-right: 5px;
-	background-color: #f0f0f0;
-}
-.tab-data {
-	background-color: #fff;
-}
-.tab-class {
-	margin-bottom: 10px;
-	flex-direction: row;
-	justify-content: space-between;
-	margin-left: 20px;
-	margin-right: 20px;
-	.tab-class-item {
-		color: #000000;
-		font-size: 20px;
-	}
-	.tab-class-item-active {
-		color: #00aa00;
-		font-size: 20px;
-	}
-}
+.detail {
+	.state {
+		position: sticky;
+		top: 0px;
+		z-index: 99;
+		display: flex;
+		background-color: #ffffff;
+		flex-direction: column;
 
-.tab-time {
-	flex-direction: row;
-	justify-content: space-between;
-	margin-left: 20px;
-	margin-right: 20px;
-	margin-bottom: 10px;
-	.tab-time-item {
-		color: #000000;
-		font-size: 20px;
-	}
-	.tab-time-item-active {
-		color: #00aa00;
-		font-size: 20px;
-	}
-}
-.header {
-	background-color: #ffffff;
-	display: flex;
-	position: sticky;
-	top: 0px;
-	z-index: 99;
-	flex-direction: column;
-	justify-content: space-between;
+	
+		.title {
+			margin-top: 8px;
 
-	.search-layout {
-		height: 40px;
-		margin-top: 4px;
+			font-size: 20px;
+		}
+		
 	}
-	.search-text {
-		height: 40px;
-		margin-top: 11px;
-		font-size: 20px;
-		margin-right: 20px;
+	.play {
+		.player {
+			margin-top: 5px;
+			margin-bottom: 5px;
+			
+			.play-control {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-around;
+				color: #ffffff;
+				margin-top: 13x;
+				margin-left: 40px;
+				
+			}
+			.play-choose{
+				color: #ffffff;
+			}
+			.play-nowtime{
+				color: #ffffff;
+			}
+			.play-last {
+				color: #ffffff;
+			}
+			.play-next {
+				color: #ffffff;
+			}
+			.play-now {
+				color: #ffffff;
+			}
+			.play-rate {
+				color: #ffffff;
+			}
+			.play-direction {
+				color: #ffffff;
+			}
+		}
+		
 	}
-}
-
-.lunbo {
-	font-size: 60px;
-	margin-left: 20px;
-	margin-right: 20px;
-}
-.data-item {
-	.out-item {
+	.header {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		.tui-list-item {
+		.out-item {
 			display: flex;
 			flex-direction: row;
 			justify-content: flex-start;
@@ -459,857 +707,121 @@ export default {
 			}
 
 			.item-box {
-				width: 300px;
+				width: 170px;
 				display: flex;
 				flex-direction: column;
 				justify-content: space-around;
-				margin-right: 20px;
+				.item-title {
+					font-size: 20px;
+				}
+				.item-state {
+					color: #999;
+					font-size: 16px;
+					display: flex;
+				}
+				.item-userstate {
+					color: #999;
+					font-size: 16px;
+				}
+				.item-name {
+					color: #999;
+					font-size: 16px;
+				}
 			}
+		}
 
-			.item-title {
-				font-size: 20px;
-			}
-			.item-state {
-				color: #999;
-				font-size: 16px;
-			}
-			.item-userstate {
-				color: #999;
-				font-size: 16px;
-			}
-			.item-name {
-				color: #999;
-				font-size: 16px;
-			}
+		.removeNotice {
+			height: 30px;
+			width: 30px;
+			margin-top: 50px;
+			margin-right: 20px;
 		}
 	}
-}
-</style>
+	.tag-lists {
+		margin-left: 20px;
 
-
-
-
-
-
-
-
-
-
-
-
-
-import ajax from './uni-ajax'
-import db from './database'
-const http = {
-	// 获取搜索列表
-	async getSearchList(site, searchKey) {
-		try {
-			const searchLists = []
-			let gethtml = await ajax.get(site.search_href.replace("searchKey", searchKey));
-			let html = gethtml.data;
-			if (typeof html != "string") {
-				html = JSON.stringify(html);
-			}
-			let re = new RegExp(site.search_range, 'g')
-			let t;
-			let rangeResults = [];
-			while ((t = re.exec(html)) != null) {
-				rangeResults.push(t[1]);
-			};
-			re = new RegExp(site.search_list_name, 'g')
-			let nameResults = [];
-			while ((t = re.exec(rangeResults[0])) != null) {
-				nameResults.push(t[1].trim());
-			};
-			let picResults = [];
-			re = new RegExp(site.search_list_src, 'g');
-			while ((t = re.exec(rangeResults[0])) != null) {
-				if (t[1].indexOf('http') == 0) {
-					picResults.push(t[1].replace(new RegExp("\\\\", "g"), ""));
-				} else {
-					let httpurl = [site.pic_url, t[1]].join("")
-					picResults.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
-				}
-			};
-			// console.log(nameResults)
-			let hrefResults = [];
-			re = new RegExp(site.search_list_href, 'g');
-			while ((t = re.exec(rangeResults[0])) != null) {
-				if (t[1].indexOf('http') == 0) {
-					hrefResults.push(t[1].replace(new RegExp("\\\\", "g"), ""));
-				} else {
-					let httpurl = [site.search_url, String(t[1])].join("")
-					hrefResults.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
-				}
-			};
-			// console.log(hrefResults)
-			let stateResults = [];
-			re = new RegExp(site.search_list_state, 'g');
-			while ((t = re.exec(rangeResults[0])) != null) {
-				stateResults.push(t[1].trim());
-			};
-			for (let j = 0; j < nameResults.length; j++) {
-				let pt = [];
-				pt.push(nameResults[j]);
-				pt.push(hrefResults[j]);
-				pt.push(picResults[j]);
-				pt.push(stateResults[j]);
-				searchLists.push(pt);
-			}
-			const lastLists = [site.name, searchLists]
-			return {
-				flag: true,
-				data: lastLists,
-				msg: '搜索完成'
-			}
-		} catch (err) {
-			return {
-				flag: false,
-				data: err,
-				msg: '搜索失败'
-			}
-		}
-	},
-	// 获取首页列表
-	async getindexlist(site, href) {
-		try {
-			if (site.id == 'XT') {
-				let indexlists = [];
-				let gethtml = await ajax.get(href);
-				let html = gethtml.data;
-				if (typeof html != "string") {
-					html = JSON.stringify(html);
-				}
-				let re = new RegExp(site.class_range, 'g')
-				let t;
-				let rangeResults = [];
-				while ((t = re.exec(html)) != null) {
-					rangeResults.push(t[1]);
-				};
-				re = new RegExp(site.class_list_name, 'g')
-				let nameResults = [];
-				while ((t = re.exec(rangeResults[0])) != null) {
-					nameResults.push(t[1].trim());
-				};
-				let picResults = [];
-				re = new RegExp(site.class_list_src, 'g');
-				while ((t = re.exec(rangeResults[0])) != null) {
-					if (t[1].indexOf('http') == 0) {
-						picResults.push(t[1].replace(new RegExp("\\\\", "g"), ""));
-					} else {
-						let httpurl = [site.pic_url, t[1]].join("")
-						picResults.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
-					}
-				};
-				// console.log(nameResults)
-				let hrefResults = [];
-				re = new RegExp(site.class_list_href, 'g');
-				while ((t = re.exec(rangeResults[0])) != null) {
-					if (t[1].indexOf('http') == 0) {
-						hrefResults.push(t[1].replace(new RegExp("\\\\", "g"), ""));
-					} else {
-						let httpurl = [site.search_url, String(t[1])].join("")
-						hrefResults.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
-					}
-				};
-				// console.log(hrefResults)
-				let stateResults = [];
-				re = new RegExp(site.class_list_state, 'g');
-				while ((t = re.exec(rangeResults[0])) != null) {
-					stateResults.push(t[1].trim());
-				};
-				for (let j = 0; j < nameResults.length; j++) {
-					let pt = [];
-					pt.push(nameResults[j]);
-					pt.push(hrefResults[j]);
-					pt.push(picResults[j]);
-					pt.push(stateResults[j]);
-					indexlists.push(pt);
-				}
-				const lastLists = [site.name, indexlists]
-				return {
-					flag: true,
-					data: lastLists,
-					msg: '获取完成'
-				}
-			} else {
-				let indexlists = [];
-				let jsonStringt = await ajax.get(href);
-				let rangeslice = site.class_range.split('.');
-				var range_search = jsonStringt.data;
-				for (let slice of rangeslice) {
-				
-					range_search = range_search[slice]
-				}
-				for (let jsondata of range_search) {
-				
-					let pt = [];
-					pt.push(jsondata[site.class_list_name]);
-					pt.push(site.search_url + String(jsondata[site.class_list_href]));
-					pt.push(jsondata[site.class_list_src]);
-					pt.push(jsondata[site.class_list_state]);
-					indexlists.push(pt);
-				}
-				const lastLists = [site.name, indexlists];
-				return {
-					flag: true,
-					data: lastLists,
-					msg: '获取完成'
-				}
-			}
-
-		} catch (err) {
-			return {
-				flag: false,
-				data: err,
-				msg: '获取失败'
-			}
-		}
-	},
-	// 通过 json url 导入视频源
-	async siteUrl(jsonUrl) {
-		try {
-			const res = await ajax.get(jsonUrl);
-			return res.data
-		} catch (err) {
-			return err
-		}
-	},
-	// 通过 json url 导入视频源
-	async site(jsonUrl) {
-		try {
-			if (jsonUrl.startsWith("http")) {
-				let urlslices = jsonUrl.split('&&&&');
-				let urlList = uni.getStorageSync('urlNotive');
-				let urldata = {
-					name: urlslices[1],
-					url: urlslices[0],
-					isActive: true
-				}
-				const rre = await db.checkItemNotivre(urldata, urlList);
-				if (rre.flag) {
-					urlList.push(urldata);
-					uni.setStorageSync('urlNotive', urlList)
-
-				}
-				const res = await ajax.get(urlslices[0]);
-				return res.data
-			}
-			if (jsonUrl.startsWith("{")) {
-				if (JSON.parse(jsonUrl).name != '') {
-					return [JSON.parse(jsonUrl)]
-				}
-			}
-			if (jsonUrl.startsWith("[")) {
-				if (JSON.parse(jsonUrl)[0].name != '') {
-					return JSON.parse(jsonUrl)
-				}
-
-			}
-
-
-
-		} catch (err) {
-			return err
-		}
-	},
-	// 获取更新状态
-	async getState(url, site) {
-		try {
-			let gethtml = await ajax.get(url);
-			let html = gethtml.data;
-			let re = new RegExp(site.play_range, 'g')
-			let t;
-			let rangeResults = [];
-			while ((t = re.exec(html)) != null) {
-				rangeResults.push(t[1]);
-			};
-			re = new RegExp(site.play_state, 'g')
-			let stateResults = [];
-			while ((t = re.exec(rangeResults[0])) != null) {
-				stateResults.push(t[1].trim());
-			};
-			return {
-				flag: true,
-				data: stateResults,
-				msg: '状态更新完成'
-			}
-		} catch (err) {
-			return {
-				flag: false,
-				data: err,
-				msg: '状态获取失败'
-			}
-		}
-	},
-	// 爬剧集
-	async getPlayData(url, site) {
-		try {
-			let gethtml = await ajax.get(url);
-			let html = gethtml.data;
-			let re = new RegExp(site.play_range, 'g')
-			let t;
-			let rangeResults = [];
-			while ((t = re.exec(html)) != null) {
-				rangeResults.push(t[1]);
-			};
-			// console.log(rangeResults)
-			re = new RegExp(site.name_tag_list, 'g')
-			let nameTagRanges = [];
-			while ((t = re.exec(rangeResults[0])) != null) {
-				nameTagRanges.push(t[1]);
-			};
-			re = new RegExp(site.name_tag, 'g')
-			let nameTags = [];
-			while ((t = re.exec(nameTagRanges[0])) != null) {
-				nameTags.push(t[1].trim());
-			};
-			re = new RegExp(site.play_list, 'g')
-			const playLists = [];
-			while ((t = re.exec(rangeResults[0])) != null) {
-				playLists.push(t[1]);
-			};
-			// console.log(playLists)
-			const playdatas = [];
-			for (let j of playLists) {
-				let tt;
-				let re1 = new RegExp(site.play_list_name, 'g')
-				const playListNames = [];
-				while ((tt = re1.exec(j)) != null) {
-					playListNames.push(tt[1].trim());
-				};
-				let re2 = new RegExp(site.play_list_href, 'g')
-				const playListHrefs = [];
-				while ((tt = re2.exec(j)) != null) {
-					if (tt[1].indexOf('http') == 0) {
-						playListHrefs.push(tt[1].replace(new RegExp("\\\\", "g"), ""));
-
-					} else {
-						let httpurl = [site.url, tt[1]].join("")
-						playListHrefs.push(httpurl.replace(new RegExp("\\\\", "g"), ""));
-					}
-				};
-				playdatas.push([playListNames, playListHrefs])
-			}
-			return {
-				flag: true,
-				data: [nameTags, playdatas],
-				msg: '剧集加载成功'
-			}
-		} catch (err) {
-			return {
-				flag: false,
-				data: err,
-				msg: '剧集获取失败'
-			}
-		}
-	},
-	// app搜索
-	async appSearch(site, searchKey) {
-		searchKey = encodeURI(searchKey);
-		let searchLists = []
-		try {
-			let jsonStringt = await ajax.get(site.search_href.replace("searchKey", searchKey));
-			let rangeslice = site.search_range.split('.');
-			var range_search = jsonStringt.data;
-			for (let slice of rangeslice) {
-
-				range_search = range_search[slice]
-			}
-			for (let jsondata of range_search) {
-
-				let pt = [];
-				pt.push(jsondata[site.search_list_name]);
-				pt.push(site.search_url + String(jsondata[site.search_list_href]));
-				pt.push(jsondata[site.search_list_src]);
-				pt.push(jsondata[site.search_list_state]);
-				searchLists.push(pt);
-			}
-			const lastLists = [site.name, searchLists];
-			return {
-				flag: true,
-				data: lastLists,
-				msg: '搜索完成'
-			}
-		} catch (err) {
-			return {
-				flag: false,
-				data: err,
-				msg: '搜索失败'
-			}
-		}
-	},
-	//app爬剧集
-	async appPlayData(url, site) {
-		console.log(url)
-		try {
-			let getjson = await ajax.get(url);
-			let jsondata = getjson.data;
-			let rangeslice = site.play_range.split('.');
-			for (let slice of rangeslice) {
-				jsondata = jsondata[slice]
-			}
-			let nameTags = [];
-			let playdatas = [];
-			let tempurl = "";
-			for (let jsoninfo of jsondata) {
-				nameTags.push(jsoninfo[site.name_tag]);
-
-				let playjx = await this.panduanapi(site, jsoninfo)
-
-				let playinfo = jsoninfo[site.play_list];
-
-				const playListNames = [];
-				const playListHrefs = [];
-				for (let playslice of playinfo.split("#")) {
-					let playsliceinfo = playslice.split("$");
-					playListNames.push(playsliceinfo[0]);
-					tempurl = playjx + playsliceinfo[1];
-					if (tempurl.indexOf("url=") != -1 || tempurl.endsWith("m3u8") || tempurl.endsWith("mp4")) {
-						playListHrefs.push(tempurl)
-					} else {
-						tempurl = site.extra_api + tempurl;
-						playListHrefs.push(tempurl)
-					}
-
-				}
-				playdatas.push([playListNames, playListHrefs]);
-			}
-			return {
-				flag: true,
-				data: [nameTags, playdatas],
-				msg: '剧集加载成功'
-			}
-
-
-
-
-
-		} catch (err) {
-			console.log(err)
-			return {
-				flag: false,
-				data: err,
-				msg: '剧集获取失败'
-			}
-		}
-	},
-	async getapi2(site, jsoninfo) {
-		if (site.playapi2 && site.play_api2 != "") {
-			let playjx = jsoninfo;
-			let rangeslice = site.play_api2.split('.');
-			for (let slice of rangeslice) {
-				playjx = playjx[slice];
-
-			}
-
-			playjx = playjx.replace(/../g, ".")
-			if (playjx.indexOf(",") != -1) {
-				playjx = playjx.split(",")[1];
-				if (playjx.indexOf("//") == -1) {
-					playjx = "";
-					return playjx
-				} else {
-					return playjx
-				}
-			} else {
-				if (playjx.indexOf("//") == -1) {
-					playjx = "";
-
-					return playjx
-				} else {
-					return playjx
-				}
-			}
-
-
-		} else {
-			let playjx = "";
-
-			return playjx
-		}
-
-	},
-	//判断api
-	async panduanapi(site, jsoninfo) {
-		if (site.play_api != "") {
-			let playjx = jsoninfo;
-			let rangeslice = site.play_api.split('.');
-			for (let slice of rangeslice) {
-				playjx = playjx[slice];
-
-			}
-
-			playjx = playjx.replace(/../g, ".")
-			if (playjx.indexOf(",") != -1) {
-				playjx = playjx.split(",")[1];
-				if (playjx.indexOf("//") == -1) {
-					playjx = await this.getapi2(site, jsoninfo);
-					return playjx
-				} else {
-					return playjx
-				}
-			} else {
-				if (playjx.indexOf("//") == -1) {
-					playjx = await this.getapi2(site, jsoninfo);
-
-					return playjx
-				} else {
-					return playjx
-				}
-			}
-
-
-		} else {
-			let playjx = "";
-
-			return playjx
-		}
-	},
-
-	//app 获取真实链接
-	async appTureUrl(url) {
-		console.log(url)
-		if (url.indexOf("url=") === -1) {
-			return url
-		} else {
-			let getjson = await ajax.get(url);
-			// console.log(getjson.data)
-			if (getjson.data.url) {
-				return getjson.data.url
-			} else {
-				return url
-			}
-		}
-	},
-	//app 获取更新
-	async appstate(url, site) {
-		try {
-			let getjson = await ajax.get(url);
-
-			let jsondata = getjson.data;
-			let rangeslice = site.play_state.split('.');
-			for (let slice of rangeslice) {
-				jsondata = jsondata[slice]
-			}
-			let stateResults = [jsondata];
-			return {
-				flag: true,
-				data: stateResults,
-				msg: '状态更新完成'
-			}
-
-
-		} catch (err) {
-			return {
-				flag: false,
-				data: err,
-				msg: '状态获取失败'
-			}
-		}
-	},
-	// 爬m3u8
-	async getMUinfo(url) {
-		let that = this
-		uni.request({
-			url: url,
-			method: 'GET',
-			success(res) {
-
-				that.getDownUrl(res, url)
-				return res
-			},
-			fail(res) {
-				return -1
-			}
-		})
-	},
-	//deal res
-	async getDownUrl(res, host) {
-		var arr = res.data.split("\n");
-		var data = []
-		for (let i = 0; i < arr.length; i++) {
-			if (arr[i] == '') {
-				continue;
-			}
-			let line = arr[i].trim()
-			if (line.startsWith('#EXT')) {
-				continue;
-			}
-			if (line.startsWith('/')) {
-				let url = host + line
-			} else {
-				let url = line
-			}
-			data.push(url)
-		}
-
-	}
-}
-export default http
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<template>
-	<view class="class">
-		<view class="header">
-			<view style="height: 40px;background-color: #FFFFfF;"></view>
-			<view style="flex-direction: row;justify-content: space-between;">
-				<uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="editYuan" />
-				<uni-search-bar
-					class="search-layout"
-					:style="{ width: `${searchwidth}px` }"
-					v-model="search"
-					placeholder="请输入搜索关键词"
-					bgColor="#EEEEEE"
-					cancelButton="none"
-					@confirm="searchEvent"
-					@clear="searchClearEvent"
-					borderColor="#000000"
-				></uni-search-bar>
-				<text class="search-text" @click="searchEvent">搜索</text>
-			</view>
-	
-
-			<view class="tab-data">
-				<view class="tab-class">
-					<view v-for="(item, index) in firstlists" :key="index">
-						<text class="tab-class-item" :class="[firstnum == index ? 'tab-class-item-active' : '']" @click="changefirstnum(index)">{{ item[0] }}</text>
-					</view>
-				</view>
-				<view class="tab-time">
-					<view v-for="(item, index) in secondlists" :key="index">
-						<text class="tab-time-item" :class="[secondnum == index ? 'tab-time-item-active' : '']" @click="changesecondnum(index)">{{ item[0] }}</text>
-					</view>
-				</view>
-			</view>
-		</view>
-
-			<view class="detail-item" v-for="(item, index) in indexlists" :key="index">
-				<view class="out-item">
-					<view class="tui-list-item" @click="detailButton(item)">
-						<image :src="item[2]" mode="aspectFit" class="item-img"></image>
-						<view class="item-box">
-							<text class="item-title">{{ item[0] }}</text>
-							<text class="item-name">来源：{{ site.name }}</text>
-							<text class="item-state">状态：{{ item[3] }}</text>
-						</view>
-					</view>
-				</view>
-			</view>
-			<uni-load-more :status="status"></uni-load-more>
-		</view>
-</template>
-
-<script>
-	import http from '../../utils/request.js';
-	export default {
-		data() {
-			return {
-				indexlists:[],
-				firstlists:[],
-				secondlists:[],
-				href:'',
-				firstnum: 0,
-				secondnum: 0,
-				pagenum: 0,
-				site:'',
-				fullControlsWidth: null,
-				fullControlsHeigt: null,
-				searchwidth: 0,
-			}
-		},
-		created() {
-			this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
-			this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
-		
-			if (this.fullControlsWidth > this.fullControlsHeigt) {
-				this.searchwidth = (this.fullControlsWidth * 3) / 4;
-			} else {
-				this.searchwidth = (this.fullControlsWidth * 2) / 3;
-			}
-		},
-		methods: {
-			async detailButton(item) {
-				const targetHref = item[1];
-				const targetImage = item[2];
-				const targetTitle = item[0];
-				const targetState = item[3];
-				const targetName = this.site.name;
-				const key = targetName + '@@' + item[1];
-				const res = await db.get('notive', key);
-				if (res.flag) {
-					const targetStar = '../../static/star.png';
-					const targetUserState = res.data.userState;
-					const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-					uni.navigateTo({ url: urll });
-				} else {
-					const targetStar = '../../static/star1.png';
-					const targetUserState = '无';
-					const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-					uni.navigateTo({ url: urll });
-				}
-			},
-			changefirstnum(index) {
-				this.firstnum = index;
-				this.pagenum = 0;
-				this.indexlists= [];
-				this.getclassdata();
-			},
-			changesecondnum(index) {
-				this.secondnum = index;
-				this.pagenum = 0;
-				this.indexlists = [];
-				this.getclassdata();
-			},
-			async getinit(){
-				this.site = uni.getStorageSync('classify');
-				let firstlists=site.class_first.split('&&&');
-				for(let first of firstlists){
-					this.firstlists.push(first.split("***"))
-				}
-				let secondlists=site.class_second.split('&&&')
-				for(let second of secondlists){
-					this.secondlists.push(second.split('***'))
-				}
-				this.href=site.class_href;
-			},
-			async getclassdata() {
-				let url= this.href.replace('FIRST',this.firstlists[this.firstnum][1]);
-				url = url.replace("SECOND",this.secondlists[this.secondnum][1]);
-				url=url.replace("PAGE",String(this.pagenum))
-				let res = http.getindexlist(this.site,url)
-				if(res.flag){
-					this.indexlists=[...this.indexlists,...res.data[1]]
-				}else{
-					uni.showToast({
-						title:'获取失败',
-						duration:2000
-					})
-				}
-			},
-		},
-		onShow(){
-			this.indexlists=[];
-			this.firstlists=[];
-			this.secondlists=[];
-			this.pagenum=0;
-			this.href='';
-			this.firstnum=0;
-			this.secondnum=0;
-			this.site='',
-			this.getinit();
-			this.getclassdata()
-		},
-		async onReachBottom() {
-			this.status = 'loading';
-			this.pagenum = this.pagenum + 1;
-			await this.getclassdata();
-			this.status = 'loadmore';
-		}
-	}
-</script>
-
-<style lang="scss">
-.header {
-	background-color: #ffffff;
-	display: flex;
-	position: sticky;
-	top: 0px;
-	z-index: 99;
-	flex-direction: column;
-	justify-content: space-between;
-
-	.search-layout {
-		height: 40px;
-		margin-top: 4px;
-	}
-	.search-text {
-		height: 40px;
-		margin-top: 11px;
-		font-size: 20px;
-		margin-right: 20px;
-	}
-}
-.tab-data {
-	background-color: #fff;
-}
-.tab-class {
-	margin-bottom: 10px;
-	flex-direction: row;
-	justify-content: space-between;
-	margin-left: 20px;
-	margin-right: 20px;
-	.tab-class-item {
-		color: #000000;
-		font-size: 20px;
-	}
-	.tab-class-item-active {
-		color: #00aa00;
-		font-size: 20px;
-	}
-}
-.data-item {
-		//    position: fixed;
-		// top: 105px;
-		// left: 70px;
-		margin-top: 0px;
-		margin-left: 5px;
 		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-	}
-	.out-item {
+		flex-direction: row;
+		margin-top: 10px;
 		margin-bottom: 10px;
-		.tui-list-item {
-			display: flex;
-			flex-direction: row;
-			justify-content: flex-start;
-			.item-img {
-				height: 120px;
-				width: 80px;
-				margin-right: 20px;
-				margin-left: 20px;
-			}
-			.item-box {
-				display: flex;
-				flex-direction: column;
-				justify-content: space-around;
-				margin-right: 20px;
-			}
-			.item-title {
-				font-size: 20px;
-			}
-			.item-state {
-				color: #999;
-				font-size: 16px;
-			}
-			.item-userstate {
-				color: #999;
-				font-size: 16px;
-			}
-			.item-name {
-				color: #999;
-				font-size: 16px;
-			}
+		flex-wrap: wrap;
+		.play-nixu{
+			justify-content: center;
+			margin-top: 10px;
+			color: #FFFFFF;
+			margin-right: 20px;
+			font-size: 20px;
+		}
+		.nixu {
+			justify-content: center;
+			margin-top: 10px;
+
+			margin-right: 20px;
+			font-size: 20px;
+		}
+		.play-item-title{
+			margin-left: 10px;
+			color: #FFFFFF;
+			margin-right: 10px;
+			margin-top: 10px;
+			font-size: 20px;
+			flex-wrap: wrap;
+		}
+		.item-title {
+			margin-left: 10px;
+			color: #000;
+			margin-right: 10px;
+			margin-top: 10px;
+			font-size: 20px;
+			flex-wrap: wrap;
+		}
+		.item-title-active {
+			color: #00aa00;
+			flex-wrap: wrap;
+			margin-right: 10px;
+			margin-top: 10px;
+			font-size: 20px;
+			margin-left: 10px;
 		}
 	}
+.play-playname{
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	flex: 1;
+	font-size: 20px;
+	flex-wrap: wrap;
+	color:#FFFFFF;
+}
+	.play-lists {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 50px;
+		margin-left: 10px;
+		margin-right: 10px;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.playname {
+		margin-top: 10px;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-bottom: 10px;
+		flex: 1;
+		font-size: 20px;
+		flex-wrap: wrap;
+	}
+	.playname-active {
+		margin-top: 10px;
+		flex: 1;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-bottom: 10px;
+		font-size: 20px;
+		color: #00aa00;
+		flex-wrap: wrap;
+	}
+}
 </style>
-
