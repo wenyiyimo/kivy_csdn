@@ -13,6 +13,6 @@ https://github.com/xzebin/my-music/blob/614ff9ca97f939431190d291781a66b136fdb901
 https://github.com/WanyueKJ/wanyue_online_education_uniapp/blob/cc64f122fe3ee5774510420fcb7847f3fd2cbc69/packageB/pages/content-detail/content-detail.vue
 https://github.com/minyuanriji/wwwfrontend/blob/cc5eb9abb3957a3ab1f6cca94632b27e92d34cb4/components/com-video/com-video.vue
 https://github.com/MIchaelJier/Yunyun-Study-for-Mobile/blob/0ad3da48e6ea3d9507a5b8a6468bce3bd6fec377/pages/Coursedetails/video/myVideo.vue
-
+https://royqh1979.gitee.io/redpandacpp/
 
 
