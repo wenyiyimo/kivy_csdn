@@ -1,1 +1,220 @@
 https://royqh1979.gitee.io/redpandacpp/
+
+
+
+<template>
+	<view class="search">
+		<view class="header">
+			<view style="height: 40px;background-color: #FFFFfF;"></view>
+			<view style="flex-direction: row;justify-content: space-between;">
+				<uni-icons style="margin-left: 10px;margin-top: 5px;" color="#000000" size="40" type="arrow-left" @click="goBack" />
+				<uni-search-bar
+					v-model="search"
+					class="search-layout"
+					:style="{ width: `${searchwidth}px` }"
+					:value="search"
+					placeholder="请输入搜索关键词"
+					bgColor="#EEEEEE"
+					cancelButton="none"
+					@confirm="searchEvent"
+					@clear="searchClearEvent"
+					borderColor="#000000"
+				></uni-search-bar>
+				<text class="search-text" @click="searchEvent">搜索</text>
+			</view>
+		</view>
+
+		<view class="detail-item" v-for="(item, index) in searchLists" :key="index">
+			
+				<view class="tui-list-item" @click="detailButton(item)">
+					<image :src="item[2]" mode="aspectFit" class="item-img"></image>
+					<view class="item-box">
+						<view style="display: flex;flex-direction: row;justify-content: space-between;">
+							<text class="item-title">{{ item[0].slice(0,12)}}</text>
+						    <text class="item-state">{{ item[3] }}</text>
+						</view>
+						<text class="item-name">来源：{{ item[4] }}</text>
+					</view>
+				</view>
+			
+		</view>
+	</view>
+</template>
+
+<script>
+import db from '../../utils/database.js';
+import http from '../../utils/request.js';
+// const dom = weex.requireModule('dom');
+export default {
+	data() {
+		return {
+			searchwidth: 200,
+			siteLists: [],
+			search: '',
+			searchLists: [],
+
+			fullControlsWidth: null,
+			fullControlsHeigt: null
+		};
+	},
+	created() {
+		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
+		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
+		if (this.fullControlsWidth > this.fullControlsHeigt) {
+			this.searchwidth = (this.fullControlsWidth * 3) / 4;
+		} else {
+			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+		}
+	},
+
+	methods: {
+		async getNameLists() {
+			const res = await db.getAll('site');
+			if (res.flag) {
+				for (let i of res.data) {
+					if (i.isActive) {
+						this.siteLists.push(i);
+					}
+				}
+				this.searchEvent();
+			} else {
+				this.$refs.uToast.show({ title: '读取视频源出错', type: 'warning', duration: '2300' });
+				return false;
+			}
+		},
+		async goBack() {
+			// this.$router.go(-1);
+			// uni.redirectTo({
+			// 	url: `/pages/index/index`
+			// });
+			uni.navigateBack();
+		},
+		async dealSearchLists(site) {
+			let siteName = site.id;
+			if (siteName == 'XT') {
+				const st = await http.getSearchList(site, this.search);
+				if (st.flag) {
+				
+					
+					let siteNamename = st.data[0];
+					for (let data of st.data[1]) {
+						data.push(siteNamename);
+					
+						this.searchLists.push(data);
+					}
+				}
+			}
+			if (siteName == 'APP') {
+				const st = await http.appSearch(site, this.search);
+				if (st.flag) {
+					let siteNamename = st.data[0];
+					for (let data of st.data[1]) {
+						data.push(siteNamename);
+					
+						this.searchLists.push(data);
+					}
+				}
+			}
+			
+			
+		},
+		async searchEvent() {
+			if (this.search === '') {
+				return false;
+			} else {
+				this.searchLists = [];
+
+				for (let site of this.siteLists) {
+				this.dealSearchLists(site)
+				}
+			}
+		},
+		async searchClearEvent() {
+			this.search = '';
+		},
+		async detailButton(item) {
+			const targetHref = item[1];
+			const targetImage = item[2];
+			const targetTitle = item[0];
+			const targetState = item[3];
+			const targetName = item[4];
+			const key = targetName + '@@' + item[1];
+			const res = await db.get('notive', key);
+			if (res.flag) {
+				const targetStar = '../../static/star.png';
+				const targetUserState = res.data.userState;
+				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
+				uni.navigateTo({ url: urll });
+			} else {
+				const targetStar = '../../static/star1.png';
+				const targetUserState = '无';
+				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
+				uni.navigateTo({ url: urll });
+			}
+		}
+	},
+	onLoad: function(option) {
+		this.search = option.search;
+		this.getNameLists();
+	}
+};
+</script>
+
+<style lang="scss" scoped>
+.search {
+	.header {
+		display: flex;
+		position: sticky;
+		top: 0px;
+		z-index: 99;
+		flex-direction: column;
+		background-color: #ffffff;
+		justify-content: space-between;
+
+		.search-layout {
+			height: 50px;
+			margin-top: 10px;
+		}
+		.search-text {
+			height: 50px;
+			margin-top: 15px;
+			font-size: 20px;
+			margin-right: 20px;
+		}
+	}
+	
+	
+		.tui-list-item {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			margin-bottom: 5px;
+			.item-img {
+				height: 60px;
+				width: 40px;
+				margin-right: 10px;
+				margin-left: 20px;
+			}
+			.item-box {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				margin-right: 20px;
+				flex: 1;
+			}
+			.item-title {
+				font-size: 20px;
+			}
+			.item-state {
+				color: #999;
+				font-size: 16px;
+			}
+			
+			.item-name {
+				color: #999;
+				font-size: 16px;
+			}
+		
+	}
+}
+</style>
