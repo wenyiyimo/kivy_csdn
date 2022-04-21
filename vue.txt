@@ -154,9 +154,9 @@ export default {
 .search {
 	.header {
 		display: flex;
-		position: sticky;
-		top: 0px;
-		z-index: 99;
+		// position: sticky;
+		// top: 0px;
+		// z-index: 99;
 		flex-direction: column;
 		background-color: #ffffff;
 		justify-content: space-between;
