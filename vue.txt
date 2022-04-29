@@ -1,1023 +1,432 @@
-{
-    "name": "4K影院",
-    "id": "APP",
-    "search_url": "http://1api.4kdytv.com/api.php/v1.vod/detail?vod_id=",
-    "url": "http://1api.4kdytv.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://1api.4kdytv.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://1api.4kdytv.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "CJT影院",
-    "id": "APP",
-    "search_url": "https://www.cjt521.com/api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.cjt521.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.cjt521.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.cjt521.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "DC影视",
-    "id": "APP",
-    "search_url": "http://chaorenbb.com/api.php/v1.vod/detail?vod_id=",
-    "url": "http://chaorenbb.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://chaorenbb.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://chaorenbb.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "F7高清",
-    "id": "APP",
-    "search_url": "http://bc.haokanju1.cc/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://bc.haokanju1.cc/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://bc.haokanju1.cc/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://bc.haokanju1.cc/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "HG影视",
-    "id": "APP",
-    "search_url": "http://hgyx.vip/api.php/v1.vod/detail?vod_id=",
-    "url": "http://hgyx.vip/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://hgyx.vip/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://hgyx.vip/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "Hi影视",
-    "id": "APP",
-    "search_url": "http://114.132.251.111:999/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://114.132.251.111:999/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://114.132.251.111:999/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://114.132.251.111:999/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "tvip",
-    "id": "APP",
-    "search_url": "http://app.tvip.cc/api.php/v1.vod/detail?vod_id=",
-    "url": "http://app.tvip.cc/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://app.tvip.cc/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://app.tvip.cc/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "爱看美剧",
-    "id": "APP",
-    "search_url": "https://www.uumjw.com/api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.uumjw.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.uumjw.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.uumjw.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "爱酷影视",
-    "id": "APP",
-    "search_url": "https://www.zhanlangbu.com/ruifenglb_api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.zhanlangbu.com/ruifenglb_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.zhanlangbu.com/ruifenglb_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.zhanlangbu.com/ruifenglb_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "嗷呜视频",
-    "id": "APP",
-    "search_url": "http://www.cx99999.cn/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://www.cx99999.cn/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://www.cx99999.cn/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://www.cx99999.cn/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "白嫖影视",
-    "id": "APP",
-    "search_url": "http://zgjxdtg.cn/api.php/v1.vod/detail?vod_id=",
-    "url": "http://zgjxdtg.cn/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://zgjxdtg.cn/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://zgjxdtg.cn/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "初心影视",
-    "id": "APP",
-    "search_url": "https://www.18mv.club/api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.18mv.club/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.18mv.club/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.18mv.club/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "次元动漫",
-    "id": "APP",
-    "search_url": "http://81.68.211.181/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://81.68.211.181/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://81.68.211.181/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://81.68.211.181/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "创意影视",
-    "id": "APP",
-    "search_url": "https://www.30dian.cn/api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.30dian.cn/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.30dian.cn/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.30dian.cn/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "独播社",
-    "id": "APP",
-    "search_url": "http://35ys.cc/api.php/v1.vod/detail?vod_id=",
-    "url": "http://35ys.cc/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://35ys.cc/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://35ys.cc/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "叮当影视",
-    "id": "APP",
-    "search_url": "https://tv.0573wl.com/api.php/v1.vod/detail?vod_id=",
-    "url": "https://tv.0573wl.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://tv.0573wl.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://tv.0573wl.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "段友影视",
-    "id": "APP",
-    "search_url": "http://121.204.249.135:4433/ruifenglb_api.php/v1.vod/detail?vod_id=",
-    "url": "http://121.204.249.135:4433/ruifenglb_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://121.204.249.135:4433/ruifenglb_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://121.204.249.135:4433/ruifenglb_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "饭后电影",
-    "id": "APP",
-    "search_url": "http://yinliub.cn/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://yinliub.cn/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://yinliub.cn/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://yinliub.cn/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "飞捷影视",
-    "id": "APP",
-    "search_url": "https://www.fj6080.com/api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.fj6080.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.fj6080.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.fj6080.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "粉象视界",
-    "id": "APP",
-    "search_url": "http://42.157.129.15:34444/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://42.157.129.15:34444/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://42.157.129.15:34444/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://42.157.129.15:34444/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "狐狸动漫",
-    "id": "APP",
-    "search_url": "http://ak.baicai.buzz/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://ak.baicai.buzz/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://ak.baicai.buzz/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://ak.baicai.buzz/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "飓风影院",
-    "id": "APP",
-    "search_url": "http://yidayy.top/lehailb_api.php/v1.vod/detail?vod_id=",
-    "url": "http://yidayy.top/lehailb_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://yidayy.top/lehailb_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://yidayy.top/lehailb_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "看看影视",
-    "id": "APP",
-    "search_url": "http://kk.ccboke.top/ruifenglb_api.php/v1.vod/detail?vod_id=",
-    "url": "http://kk.ccboke.top/ruifenglb_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://kk.ccboke.top/ruifenglb_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://kk.ccboke.top/ruifenglb_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "六把刀影院",
-    "id": "APP",
-    "search_url": "https://pro.6bd.net/mogai_api.php/v1.vod/detail?vod_id=",
-    "url": "https://pro.6bd.net/mogai_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://pro.6bd.net/mogai_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://pro.6bd.net/mogai_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "绿箭影视",
-    "id": "APP",
-    "search_url": "http://www.69ty.cc/mogai_api.php/v1.vod/detail?vod_id=",
-    "url": "http://www.69ty.cc/mogai_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://www.69ty.cc/mogai_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://www.69ty.cc/mogai_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "零刻影院",
-    "id": "APP",
-    "search_url": "https://ys.ling00.cn/api.php/v1.vod/detail?vod_id=",
-    "url": "https://ys.ling00.cn/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://ys.ling00.cn/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://ys.ling00.cn/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "懒猫电影",
-    "id": "APP",
-    "search_url": "http://lanmao.lanmaoymw.cn/api.php/v1.vod/detail?vod_id=",
-    "url": "http://lanmao.lanmaoymw.cn/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://lanmao.lanmaoymw.cn/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://lanmao.lanmaoymw.cn/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "琅琊影视",
-    "id": "APP",
-    "search_url": "http://fgyuu.top/lehailb_api.php/v1.vod/detail?vod_id=",
-    "url": "http://fgyuu.top/lehailb_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://fgyuu.top/lehailb_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://fgyuu.top/lehailb_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "蜜蜂影视",
-    "id": "APP",
-    "search_url": "http://app.f8tp.com/lvdou_api.php/v1.vod/detail?vod_id=",
-    "url": "http://app.f8tp.com/lvdou_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://app.f8tp.com/lvdou_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://app.f8tp.com/lvdou_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "麻瓜视频",
-    "id": "APP",
-    "search_url": "http://aliyun.k8aa.com/mogai_api.php/v1.vod/detail?vod_id=",
-    "url": "http://aliyun.k8aa.com/mogai_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://aliyun.k8aa.com/mogai_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://aliyun.k8aa.com/mogai_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "美剧虫",
-    "id": "APP",
-    "search_url": "https://meijuchong.com/api.php/v1.vod/detail?vod_id=",
-    "url": "https://meijuchong.com/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://meijuchong.com/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://meijuchong.com/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "美剧范",
-    "id": "APP",
-    "search_url": "http://ttzmz.net/api.php/v1.vod/detail?vod_id=",
-    "url": "http://ttzmz.net/api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "http://ttzmz.net/api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "http://ttzmz.net/api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
-{
-    "name": "迷雾剧场",
-    "id": "APP",
-    "search_url": "https://www.miwu.tv/mogai_api.php/v1.vod/detail?vod_id=",
-    "url": "https://www.miwu.tv/mogai_api.php/v1.vod",
-    "pic_url": "",
-    "search_href": "https://www.miwu.tv/mogai_api.php/v1.vod?wd=searchKey",
-    "search_range": "data.list",
-    "search_list_name": "vod_name",
-    "search_list_href": "vod_id",
-    "search_list_src": "vod_pic",
-    "search_list_state": "vod_remarks",
-    "play_range": "data.vod_play_list",
-    "play_state": "data.vod_remarks",
-    "name_tag": "from",
-    "play_list": "url",
-    "play_api": "player_info.parse",
-    "play_api2": "player_info.parse2",
-    "extra_api": "http://1.117.152.239:39000/?url=",
-    "exceptstring": "muxm3u8",
-    "isActive": true,
-    "isClass": true,
-    "class_href": "https://www.miwu.tv/mogai_api.php/v1.vod?type=FIRST&by=SECOND&limit=18&page=PAGE",
-    "class_first": "电视剧***2&&&电影***1&&&动漫***4&&&综艺***3",
-    "class_second": "最新***time&&&人气***hits&&&评分***score",
-    "class_range": "data.list",
-    "class_list_name": "vod_name",
-    "class_list_href": "vod_id",
-    "class_list_src": "vod_pic",
-    "class_list_state": "vod_remarks"
-},
+<template>
+	<view class="download">
+		<view class="header">
+			<view style="height: 40px;background-color: #FFFFFF;"></view>
+			<view style="flex-direction: row;justify-content: center;background-color: #FFFFFF;"><text class="head" style="justify-content: center;">下载</text></view>
+		</view>
+		<view class="play" maxlength="300" v-if="hidePlay"><video id="myVideo" ref="myVideo" :autoplay="true" :src="url" play-strategy="3"></video></view>
+		<view class="body">
+			<view class="tag-data" v-for="(item, index) in downloadLists" :key="index">
+				<view class="out-item">
+					<view class="item-box" @click="playvideo(index)">
+						<text class="item-title">{{ item[4] }}-{{ item[0] }}</text>
+						<text class="item-name">来源：{{ item[3] }}-{{ item[2] }}</text>
+					</view>
+
+					<view class="item-state">
+						<view class="down-state">{{ index == nowDownNum ? progress : item[5] }}</view>
+						<!-- <view class="down-state" @click="startDown">{{ item[5] }}</view> -->
+						<image :src="removeImage" mode="aspectFit" class="removeNotice" @click="removeItem(index)"></image>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+export default {
+	data() {
+		return {
+			url: '',
+			videoContext: null,
+			hidePlay:false;
+			nowDown: 0, //当前下载的视频
+			nowDownNum: -1, //当前下载的序号
+			downloadLists: [],
+			numLen: 0, //m3u8长度
+			hasDownNum: 0, //已经下载的长度
+			hasDown: [], //已经下载完成的片段路径
+			progress: '嗅探中...',
+			removeImage: '../../static/delete.png',
+			data: [] //m3u8片段信息
+		};
+	},
+	methods: {
+		playvideo(index){
+			this.videoContext.pause()
+			if (this.downloadLists[index][5] != '已完成') {
+				uni.showToast({
+					title:"该集未下载！",
+					duration:2000
+				})
+			} else {
+			this.url=this.downloadLists[index][7];
+			this.hidePlay=true;
+			this.videoContext.play()
+			}
+		},
+		async startDown() {
+			this.preitem();
+		},
+		//删除项目
+		removeItem(item) {
+			if (this.downloadLists[item][5] != '已完成') {
+				let that = this;
+				setTimeout(function() {
+					console.log(that.downloadLists.splice(item, 1));
+					uni.setStorageSync('downLists', that.downloadLists);
+				}, 1000);
+			} else {
+				for (let localpath of this.downloadLists[item][8]) {
+					uni.removeSavedFile({
+						filePath: localpath,
+						complete: function(res) {
+							console.log(res);
+						}
+					});
+				}
+				this.downloadLists.splice(item, 1);
+				uni.setStorageSync('downLists', this.downloadLists);
+			}
+		},
+		//更新下载列表
+		updateItem() {
+			this.downloadLists.splice(this.nowDownNum, 1);
+			this.downloadLists.push(this.nowDown);
+			uni.setStorageSync('downLists', this.downloadLists);
+
+			for (let i = 0; i < this.downloadLists.length; i++) {
+				let item = this.downloadLists[i];
+				if (item[5] != '已完成') {
+					this.startDown();
+					return;
+				}
+			}
+		},
+		//开始下载
+		async preitem() {
+			for (let i = 0; i < this.downloadLists.length; i++) {
+				let item = this.downloadLists[i];
+				if (item[5] != '已完成') {
+					item[5] = '下载中';
+
+					this.nowDown = item;
+					this.nowDownNum = i;
+					this.getPlayUrl(item[1], item[6]);
+					return;
+				}
+			}
+		},
+		//判断m3u8还是MP4，删除上次中断的残留
+		gethHefRes(url) {
+			if (this.hasDownNum != 0) {
+				for (let localpath of this.hasDown) {
+					uni.removeSavedFile({
+						filePath: localpath,
+						complete: function(res) {
+							console.log(res);
+						}
+					});
+				}
+			}
+			this.hasDown = [];
+			this.progress = '解析中...';
+			this.numLen = 0;
+			this.hasDownNum = 0;
+			this.data = [];
+			if (url.indexOf('mp4') != -1) {
+				this.downMP4(url);
+			} else {
+				let that = this;
+				console.log(url);
+				uni.request({
+					url: url,
+					method: 'GET',
+					timeout: 10000,
+					success(res) {
+						that.getDownUrl(res, '', res.header);
+					},
+					fail(res) {
+						console.log(res);
+					}
+				});
+			}
+		},
+		//获取m3u8片段信息
+		async getDownUrl(res, host, header) {
+			let num = 0;
+			let urlNum = 0;
+			var arr = res.data.split('\n');
+			for (let line of arr) {
+				line = line.trim();
+				if (line == '') {
+					continue;
+				}
+				if (line.startsWith('#EXT')) {
+					this.data.push(line);
+					num = num + 1;
+				} else {
+					if (line.startsWith('/')) {
+						var url = host + line;
+					}
+					if (line.indexOf('://') != -1) {
+						var url = line;
+					}
+					this.downFile(url, num, header);
+					this.data.push(url);
+					num = num + 1;
+					urlNum = urlNum + 1;
+				}
+			}
+			this.numLen = urlNum;
+		},
+		//下载m3u8片段
+		async downFile(url, num, header) {
+			let that = this;
+			const downloadTask = uni.downloadFile({
+				url: url,
+				header: header,
+				timeout: 15,
+				success: res => {
+					that.hasDownNum = that.hasDownNum + 1;
+					that.progress = `${that.hasDownNum}/${that.numLen}`;
+					if (res.statusCode == 200) {
+						uni.saveFile({
+							tempFilePath: res.tempFilePath,
+							success: function(res) {
+								that.data[num] = res.savedFilePath;
+								that.hasDown.push(res.savedFilePath);
+							}
+						});
+					}
+					if (that.hasDownNum == that.numLen) {
+						that.progress = '已完成';
+						that.nowDown[5] = '已完成';
+						that.writeFile();
+					}
+				},
+				fail: () => {
+					that.hasDownNum = that.hasDownNum + 1;
+					that.progress = `${that.hasDownNum}/${that.numLen}`;
+					if (that.hasDownNum == that.numLen) {
+						that.progress = '已完成';
+						that.nowDown[5] = '已完成';
+						that.writeFile();
+					}
+				}
+			});
+		},
+		//下载MP4
+		async downMP4(url) {
+			let that = this;
+			const downloadTask = uni.downloadFile({
+				url: url,
+				success: res => {
+					if (res.statusCode === 200) {
+						that.progress = '已完成';
+						uni.saveFile({
+							tempFilePath: res.tempFilePath,
+							success: function(res) {
+								console.log(that.nowDown);
+								that.nowDown[5] = '已完成';
+								that.nowDown.push(res.savedFilePath);
+								that.nowDown.push([res.savedFilePath]);
+
+								that.updateItem();
+							},
+							fail: () => {
+								that.nowDown[5] = '下载失败';
+
+								that.updateItem();
+							}
+						});
+					} else {
+						that.nowDown[5] = '下载失败';
+
+						that.updateItem();
+					}
+				},
+				fail: () => {
+					that.nowDown[5] = '下载失败';
+
+					that.updateItem();
+				}
+			});
+
+			downloadTask.onProgressUpdate(res => {
+				that.progress = `${res.progress}%`;
+			});
+		},
+		writeFile() {
+			let text = '';
+			for (let line of this.data) {
+				text = text + line + '\n';
+			}
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fobject) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fobject.root.getDirectory(
+					'_doc/',
+					{
+						create: true
+					},
+					function(fileEntry) {
+						console.log(fileEntry.toLocalURL());
+					}
+				);
+			});
+			let that = this;
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fobject) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fobject.root.getFile(
+					'_doc/' + that.nowDown[1].replace(RegExp('/', 'g'), '-') + '.m3u8',
+					{
+						create: true
+					},
+					function(fileEntry) {
+						console.log(fileEntry.toLocalURL());
+						that.nowDown.push(fileEntry.toLocalURL());
+						that.nowDown.push(that.hasDown);
+						that.hasDown = [];
+						that.hasDownNum = 0;
+
+						that.updateItem();
+
+						fileEntry.createWriter(
+							function(writer) {
+								writer.seek(0);
+								writer.write(text);
+							},
+							function(e) {}
+						);
+					},
+					function(e) {
+						console.log(e);
+					}
+				);
+			});
+		},
+		getPlayUrl(url, key) {
+			uni.setStorageSync('urlPlay', '');
+			//#ifdef APP-PLUS
+			var wv = plus.webview.create(url);
+			wv.overrideUrlLoading({ mode: 'allow', match: '.*(mp4|flv|m3u8).*' }, function(e) {
+				console.log(e.url);
+			});
+			// 监听到页面加载图片资源时显示（{match:'.*\.(jpg|png|jpeg|bmp)\b'}）
+			wv.listenResourceLoading({ match: '.*(mp4|video|m3u8).*' }, function(e) {
+				var matchRule = key;
+				if (
+					e.url.indexOf('?url=') == -1 &&
+					e.url.indexOf('beiyong') == -1 &&
+					e.url.indexOf('SVG') == -1 &&
+					e.url.indexOf('update') == -1 &&
+					e.url.indexOf('51.la/') == -1 &&
+					!e.url.endsWith('.js') &&
+					e.url.indexOf('.png') == -1 &&
+					e.url.indexOf('.css') === -1 &&
+					e.url.indexOf('gif') === -1 &&
+					e.url.indexOf('.php') == -1 &&
+					!e.url.endsWith('.jpg') &&
+					e.url.indexOf(matchRule) === -1 &&
+					e.url.indexOf('umuuid') == -1
+				) {
+					console.log(e.url);
+					uni.setStorageSync('urlPlay', e.url);
+
+					wv.close();
+				}
+			});
+			//#endif
+			let that = this;
+			let alltime = 0;
+			var obj = setInterval(function() {
+				var urlPlay = uni.getStorageSync('urlPlay');
+				alltime = alltime + 2000;
+
+				if (alltime < 60000 && urlPlay != '') {
+					that.gethHefRes(urlPlay);
+					// 	setTimeout(function(){
+					// 		that.videoContext.requestFullScreen();
+					// 	},500)
+					clearInterval(obj);
+				}
+				if (alltime > 60000) {
+					that.nowDown[5] = '嗅探失败';
+
+					that.updateItem();
+
+					wv.close();
+					clearInterval(obj);
+				}
+			}, 2000);
+		}
+	},
+	onLoad() {
+		this.downloadLists = uni.getStorageSync('downLists');
+		this.startDown();
+	},
+	onShow() {this.videoContext = uni.createVideoContext('myVideo', this);}
+};
+</script>
+
+<style lang="scss" scoped>
+.download {
+	.header {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		position: sticky;
+		top: 0px;
+		z-index: 99;
+	}
+	.tab-data {
+		margin-top: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+	.tab-item {
+		font-size: 20px;
+		color: #000;
+
+		margin-bottom: 10px;
+	}
+	.tab-item-active {
+		font-size: 20px;
+		color: #00aa00;
+
+		margin-bottom: 10px;
+	}
+	.tag-data {
+		margin-top: 20px;
+	}
+	.out-item {
+		display: flex;
+		margin-left: 20px;
+		margin-right: 20px;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.item-state {
+		margin-top: 10px;
+		margin-left: 25px;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.item-box {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+	}
+
+	.item-title {
+		font-size: 20px;
+	}
+
+	.item-name {
+		color: #999;
+		font-size: 16px;
+	}
+	.down-state {
+		font-size: 20px;
+	}
+	.removeNotice {
+		margin-left: 20px;
+		height: 30px;
+		width: 35px;
+		margin-bottom: 20px;
+	}
+}
+</style>
