@@ -23,7 +23,7 @@
 				:controls="showControl"
 				vslide-gesture="true"
 				enable-play-gesture="true"
-				play-strategy="3"
+				play-strategy="0"
 				:header="Header"
 				@error="changeWare()"
 				show-loading="false"
