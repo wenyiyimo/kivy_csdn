@@ -1,23 +1,98 @@
 <template>
-	<view class="download">
+	<view class="index">
 		<view class="header">
-			<view style="height: 40px;background-color: #FFFFFF;"></view>
-			<view style="flex-direction: row;justify-content: center;background-color: #FFFFFF;"><text class="head" style="justify-content: center;">下载</text></view>
-		</view>
-		<view class="play" maxlength="300" v-if="hidePlay"><video id="myVideo" ref="myVideo" :autoplay="true" :src="url" play-strategy="3"></video></view>
-		<view class="body">
-			<view class="tag-data" v-for="(item, index) in downloadLists" :key="index">
-				<view class="out-item">
-					<view class="item-box" @click="playvideo(index)">
-						<text class="item-title">{{ item[4] }}-{{ item[0] }}</text>
-						<text class="item-name">来源：{{ item[3] }}-{{ item[2] }}</text>
-					</view>
+			<view style="height: 40px;background-color: #FFFFfF;"></view>
+			<view style="flex-direction: row;justify-content: space-between;">
+				<!-- <uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="showDrawer('showLeft')" /> -->
+				<uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="editYuan" />
+				<uni-search-bar
+					class="search-layout"
+					:style="{ width: `${searchwidth}px` }"
+					v-model="search"
+					placeholder="请输入搜索关键词"
+					bgColor="#EEEEEE"
+					cancelButton="none"
+					@confirm="searchEvent"
+					@clear="searchClearEvent"
+					borderColor="#000000"
+				></uni-search-bar>
+				<text class="search-text" @click="searchEvent">搜索</text>
+			</view>
+			<view v-if="lunbo">
+				<view class="lunbo" style="height: 150px;">
+					<uni-swiper-dot :info="lunbolist" :current="current" :dotsStyles="dotsStyle" field="content" mode="nav">
+						<swiper style="height: 120px;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
+							<swiper-item v-for="(item, index) in lunbolist" :key="index">
+								<view><image style="height: 120px;" class="swiper-img" :src="item.url" mode="aspectFill" @click="click(index)"></image></view>
+							</swiper-item>
+						</swiper>
+					</uni-swiper-dot>
+				</view>
+			</view>
 
-					<view class="item-state">
-						<view class="down-state">{{ index == nowDownNum ? progress : item[5] }}</view>
-						<!-- <view class="down-state" @click="startDown">{{ item[5] }}</view> -->
-						<image :src="removeImage" mode="aspectFit" class="removeNotice" @click="removeItem(index)"></image>
+			<view class="setting-data">
+				<text style="font-size: 20px;" @click="navheart()()">收藏</text>
+				<text style="font-size: 20px;" @click="navhistory()">历史</text>
+				<text style="font-size: 20px;" @click="changeindex()">{{ indexname }}</text>
+				<text style="font-size: 20px;" @click="navdown()">下载</text>
+				<text style="font-size: 20px;" @click="navset()">设置</text>
+				<!-- <uni-icons color="#000000" size="40" type="heart" @click="navheart" />
+			
+					<uni-icons color="#000000" size="40" type="color" @click="navhistory" />
+					<uni-icons color="#000000" size="40" type="loop"></uni-icons>
+					<uni-icons color="#000000" size="40" type="gear" @click="navset" /> -->
+			</view>
+			<view class="tab-data" v-if="classdata">
+				<view class="tab-class">
+					<view v-for="(item, index) in classlist" :key="index">
+						<text class="tab-class-item" :class="[classnum == index ? 'tab-class-item-active' : '']" @click="changeclassnum(index)">{{ item[0] }}</text>
 					</view>
+				</view>
+				<view class="tab-time">
+					<view v-for="(item, index) in timelist" :key="index">
+						<text class="tab-time-item" :class="[timenum == index ? 'tab-time-item-active' : '']" @click="changetimenum(index)">{{ item[0] }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
+		<view v-if="classdata">
+			<list show-scrollbar="false">
+				<cell class="data-item" v-for="(item, index) in list" :key="index">
+					<view class="out-item">
+						<view class="tui-list-item" @click="handlerButton(item)">
+							<image :src="item.picurl" mode="aspectFit" class="item-img"></image>
+							<view class="item-box">
+								<text class="item-title">{{ item.name }}</text>
+								<text class="item-state">类型：{{ item.style }}</text>
+								<view style="display: flex;flex-direction: row;justify-content: flex-start;">
+									<text class="item-name" v-if="item.starring != ''">导演：{{ item.starring.slice(0, 3).replace(';', '') }}</text>
+									<text class="item-name" v-if="item.starring == ''">导演：无</text>
+									<text style="margin-left: 20px;" v-if="item.score != ''" class="item-name">评分：{{ item.score }}</text>
+								</view>
+								<text v-if="item.director != ''" class="item-userstate">演员：{{ item.director }}</text>
+								<text v-if="item.director == ''" class="item-userstate">演员：无</text>
+								<text class="item-name" v-if="classnum != 1 && classnum != 3 && classnum != 4">
+									状态：更新至{{ item.ipad_play_for_list.episode }}集(共{{ item.ipad_play_for_list.finish_episode }}集)
+								</text>
+								<text class="item-name" v-if="classnum == 1">年份：{{ item.year }}</text>
+								<text class="item-name" v-if="classnum == 3 && item.date">最后更新：{{ item.date }}</text>
+								<text class="item-name" v-if="classnum == 3 && !item.date">
+									状态：更新至{{ item.ipad_play_for_list.episode }}集(共{{ item.ipad_play_for_list.finish_episode }}集)
+								</text>
+								<text class="item-name" v-if="classnum == 4 && item.year != ''">年份：{{ item.year }}</text>
+								<text class="item-name" v-if="classnum == 4 && item.year == ''">地区：{{ item.zone }}</text>
+							</view>
+						</view>
+					</view>
+				</cell>
+			</list>
+			<uni-load-more :status="status"></uni-load-more>
+		</view>
+		<view v-if="sitedata" style="flex-wrap: wrap;align-items: center;flex-direction: row;justify-content: flex-start;margin-left: 20px;margin-right: 15px;">
+			<view class="data-item" v-for="(item, index) in sitelists" :key="index">
+				<view class="site-item" :style="{ width: `${(fullControlsWidth - 65) / 5}px`, height: `${(fullControlsWidth - 65) / 5}px` }" @click="navclass(item)">
+					<text style="font-size: 20px;">{{ item.name.slice(0, 2) }}</text>
 				</view>
 			</view>
 		</view>
@@ -25,408 +100,415 @@
 </template>
 
 <script>
+import db from '../../utils/database.js';
+import http from '../../utils/request.js';
+import ajax from '../../utils/uni-ajax';
 export default {
 	data() {
 		return {
-			url: '',
-			videoContext: null,
-			hidePlay:false;
-			nowDown: 0, //当前下载的视频
-			nowDownNum: -1, //当前下载的序号
-			downloadLists: [],
-			numLen: 0, //m3u8长度
-			hasDownNum: 0, //已经下载的长度
-			hasDown: [], //已经下载完成的片段路径
-			progress: '嗅探中...',
-			removeImage: '../../static/delete.png',
-			data: [] //m3u8片段信息
+			sitedata: true,
+			classdata: true,
+			sitelists: [],
+			indexname: '',
+			status: 'loading',
+			classnum: 0,
+			timenum: 0,
+			search: '',
+			lunbo: false,
+			list: [],
+			classlist: [['追剧', 'teleplay'], ['电影', 'film'], ['动漫', 'cartoon'], ['综艺', 'tvshow'], ['记录片', 'documentary']],
+			timelist: [['最近更新', 'time'], ['近期热门', '热门'], ['评分最高', 'score']],
+			lunbolist: [],
+			current: 0,
+			notiveImage: '../../static/star.png',
+			dotsStyle: {
+				color: '#000000'
+			},
+			fullControlsWidth: null,
+			fullControlsHeigt: null,
+			searchwidth: 0,
+			startnum: 0
 		};
 	},
+	created() {
+		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
+		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
+
+		if (this.fullControlsWidth > this.fullControlsHeigt) {
+			this.searchwidth = (this.fullControlsWidth * 3) / 4;
+		} else {
+			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+		}
+	},
 	methods: {
-		playvideo(index){
-			this.videoContext.pause()
-			if (this.downloadLists[index][5] != '已完成') {
-				uni.showToast({
-					title:"该集未下载！",
-					duration:2000
-				})
-			} else {
-			this.url=this.downloadLists[index][7];
-			this.hidePlay=true;
-			this.videoContext.play()
-			}
+		async navdown() {
+			uni.navigateTo({
+				url: `/pages/download/download`
+			});
 		},
-		async startDown() {
-			this.preitem();
+		async navclass(site) {
+			uni.setStorageSync('classify', site);
+			let url = `/pages/class/class`;
+			uni.navigateTo({ url: url });
 		},
-		//删除项目
-		removeItem(item) {
-			if (this.downloadLists[item][5] != '已完成') {
-				let that = this;
-				setTimeout(function() {
-					console.log(that.downloadLists.splice(item, 1));
-					uni.setStorageSync('downLists', that.downloadLists);
-				}, 1000);
-			} else {
-				for (let localpath of this.downloadLists[item][8]) {
-					uni.removeSavedFile({
-						filePath: localpath,
-						complete: function(res) {
-							console.log(res);
+		async getAllSite() {
+			const res = await db.getAll('site');
+			if (res.flag) {
+				if (res.data.length <= 0) {
+					return false;
+				} else {
+					for (let item of res.data) {
+						if (item.isClass) {
+							this.sitelists.push(item);
 						}
-					});
-				}
-				this.downloadLists.splice(item, 1);
-				uni.setStorageSync('downLists', this.downloadLists);
-			}
-		},
-		//更新下载列表
-		updateItem() {
-			this.downloadLists.splice(this.nowDownNum, 1);
-			this.downloadLists.push(this.nowDown);
-			uni.setStorageSync('downLists', this.downloadLists);
-
-			for (let i = 0; i < this.downloadLists.length; i++) {
-				let item = this.downloadLists[i];
-				if (item[5] != '已完成') {
-					this.startDown();
-					return;
-				}
-			}
-		},
-		//开始下载
-		async preitem() {
-			for (let i = 0; i < this.downloadLists.length; i++) {
-				let item = this.downloadLists[i];
-				if (item[5] != '已完成') {
-					item[5] = '下载中';
-
-					this.nowDown = item;
-					this.nowDownNum = i;
-					this.getPlayUrl(item[1], item[6]);
-					return;
-				}
-			}
-		},
-		//判断m3u8还是MP4，删除上次中断的残留
-		gethHefRes(url) {
-			if (this.hasDownNum != 0) {
-				for (let localpath of this.hasDown) {
-					uni.removeSavedFile({
-						filePath: localpath,
-						complete: function(res) {
-							console.log(res);
-						}
-					});
-				}
-			}
-			this.hasDown = [];
-			this.progress = '解析中...';
-			this.numLen = 0;
-			this.hasDownNum = 0;
-			this.data = [];
-			if (url.indexOf('mp4') != -1) {
-				this.downMP4(url);
-			} else {
-				let that = this;
-				console.log(url);
-				uni.request({
-					url: url,
-					method: 'GET',
-					timeout: 10000,
-					success(res) {
-						that.getDownUrl(res, '', res.header);
-					},
-					fail(res) {
-						console.log(res);
 					}
+				}
+			}
+		},
+		async changeindex() {
+			if (this.indexname == '推荐') {
+				uni.setStorageSync('indexname', '站源');
+				this.indexname = '站源';
+				this.classdata = true;
+				this.sitedata = false;
+				this.lunbo = true;
+				this.list = [];
+				this.getclassdata();
+			} else {
+				uni.setStorageSync('indexname', '推荐');
+				this.indexname = '推荐';
+				this.classdata = false;
+				this.sitedata = true;
+				this.sitelists = [];
+				this.getAllSite();
+				this.lunbo = false;
+			}
+		},
+		async handlerButton(item) {
+			this.search = item.name;
+			this.searchEvent();
+		},
+
+		async getclassdata() {
+			let url = `http://m.v.sogou.com/napi/video/classlist?&order=${this.timelist[this.timenum][1]}&listTab=${this.classlist[this.classnum][1]}&start=${
+				this.startnum
+			}&len=10`;
+			let gethtml = await ajax.get(url);
+			let jsondata = gethtml.data.listData.results;
+			this.list = [...this.list, ...jsondata];
+			if (jsondata.length < 2) {
+				this.status = 'no-more';
+			}
+		},
+		changeclassnum(index) {
+			this.classnum = index;
+			this.startnum = 0;
+			this.list = [];
+			this.getclassdata();
+		},
+		changetimenum(index) {
+			this.timenum = index;
+			this.startnum = 0;
+			this.list = [];
+			this.getclassdata();
+		},
+		navheart() {
+			let url = `/pages/heart/heart`;
+			uni.navigateTo({ url: url });
+		},
+		navhistory() {
+			let url = `/pages/history/history`;
+			uni.navigateTo({ url: url });
+		},
+		navset() {
+			let url = `/pages/setting/setting`;
+			uni.navigateTo({ url: url });
+		},
+		changeCurrent(e) {
+			this.current = e.detail.current;
+		},
+		async click(index) {
+			var item = this.lunbolist[index];
+
+			this.search = item.content.trim();
+			this.searchEvent();
+		},
+		async editYuan() {
+			const url = `/pages/site/site`;
+			uni.navigateTo({ url: url });
+		},
+		async searchEvent() {
+			if (this.search === '') {
+				return false;
+			} else {
+				const urll = `/pages/search/search?search=${this.search}`;
+				uni.navigateTo({ url: urll });
+			}
+		},
+		async searchClearEvent() {
+			this.search = '';
+		},
+		async getSite() {
+			let url = 'https://m.v.qq.com';
+			let gethtml = await ajax.get(url);
+			let html = gethtml.data;
+			if (typeof html != 'string') {
+				html = JSON.stringify(html);
+			}
+			// let re = new RegExp("重磅热播([\\s\\S]*?)打开", 'g');
+			let re = new RegExp('重磅热播([\\s\\S]*?)猜你喜欢', 'g');
+			let t;
+			let rangeResults = [];
+			while ((t = re.exec(html)) != null) {
+				rangeResults.push(t[1]);
+			}
+			re = new RegExp('class="item_content"([\\s\\S]*?)</div></a>', 'g');
+			let listResults = [];
+			while ((t = re.exec(rangeResults[0])) != null) {
+				listResults.push(t[1]);
+			}
+			let nameResults = [];
+			let picResults = [];
+			// let stateResults=[];
+			for (let listr of listResults) {
+				re = new RegExp('<div class="item_title needsclick">([\\s\\S]*?)</div>', 'g');
+				if ((t = re.exec(listr)) != null) {
+					nameResults.push(t[1].trim());
+				} else {
+					re = new RegExp('<div class="item_title two_row needsclick">([\\s\\S]*?)</div>', 'g');
+					t = re.exec(listr);
+					nameResults.push(t[1].trim());
+				}
+				re = new RegExp('<img dsrc="([\\s\\S]*?)" lazyLoad=', 'g');
+				if ((t = re.exec(listr)) != null) {
+					if (t[1].indexOf('http') == 0) {
+						picResults.push(t[1].replace(new RegExp('\\\\', 'g'), ''));
+					} else {
+						let httpurl = ['https:', t[1]].join('');
+						picResults.push(httpurl.replace(new RegExp('\\\\', 'g'), ''));
+					}
+				}
+				// re=new RegExp("item_count needsclick\">([\\s\\S]*?)</div>","g");
+				// if((t = re.exec(listr)) != null) {
+				// 	stateResults.push(t[1].trim());
+				// }
+			}
+			for (let j = 0; j < nameResults.length; j++) {
+				this.lunbolist.push({
+					url: picResults[j],
+					content: ' ' + nameResults[j]
 				});
 			}
+			// console.log(this.lunbolist)
 		},
-		//获取m3u8片段信息
-		async getDownUrl(res, host, header) {
-			let num = 0;
-			let urlNum = 0;
-			var arr = res.data.split('\n');
-			for (let line of arr) {
-				line = line.trim();
-				if (line == '') {
-					continue;
-				}
-				if (line.startsWith('#EXT')) {
-					this.data.push(line);
-					num = num + 1;
-				} else {
-					if (line.startsWith('/')) {
-						var url = host + line;
+
+		async updataSite(siteList) {
+			for (let sitelist of siteList) {
+				if (sitelist.isActive) {
+					const res = await http.siteUrl(sitelist.url);
+					if (res && res.length > 0) {
+						for (const i of res) {
+							if (i.name.length > 0) {
+								await db.add('site', i);
+							} else {
+								uni.showToast({
+									title: '${sitelist.name}-导入站源错误!',
+									duration: 1000
+								});
+							}
+						}
 					}
-					if (line.indexOf('://') != -1) {
-						var url = line;
-					}
-					this.downFile(url, num, header);
-					this.data.push(url);
-					num = num + 1;
-					urlNum = urlNum + 1;
 				}
 			}
-			this.numLen = urlNum;
-		},
-		//下载m3u8片段
-		async downFile(url, num, header) {
-			let that = this;
-			const downloadTask = uni.downloadFile({
-				url: url,
-				header: header,
-				timeout: 15,
-				success: res => {
-					that.hasDownNum = that.hasDownNum + 1;
-					that.progress = `${that.hasDownNum}/${that.numLen}`;
-					if (res.statusCode == 200) {
-						uni.saveFile({
-							tempFilePath: res.tempFilePath,
-							success: function(res) {
-								that.data[num] = res.savedFilePath;
-								that.hasDown.push(res.savedFilePath);
-							}
-						});
-					}
-					if (that.hasDownNum == that.numLen) {
-						that.progress = '已完成';
-						that.nowDown[5] = '已完成';
-						that.writeFile();
-					}
-				},
-				fail: () => {
-					that.hasDownNum = that.hasDownNum + 1;
-					that.progress = `${that.hasDownNum}/${that.numLen}`;
-					if (that.hasDownNum == that.numLen) {
-						that.progress = '已完成';
-						that.nowDown[5] = '已完成';
-						that.writeFile();
-					}
-				}
-			});
-		},
-		//下载MP4
-		async downMP4(url) {
-			let that = this;
-			const downloadTask = uni.downloadFile({
-				url: url,
-				success: res => {
-					if (res.statusCode === 200) {
-						that.progress = '已完成';
-						uni.saveFile({
-							tempFilePath: res.tempFilePath,
-							success: function(res) {
-								console.log(that.nowDown);
-								that.nowDown[5] = '已完成';
-								that.nowDown.push(res.savedFilePath);
-								that.nowDown.push([res.savedFilePath]);
-
-								that.updateItem();
-							},
-							fail: () => {
-								that.nowDown[5] = '下载失败';
-
-								that.updateItem();
-							}
-						});
-					} else {
-						that.nowDown[5] = '下载失败';
-
-						that.updateItem();
-					}
-				},
-				fail: () => {
-					that.nowDown[5] = '下载失败';
-
-					that.updateItem();
-				}
-			});
-
-			downloadTask.onProgressUpdate(res => {
-				that.progress = `${res.progress}%`;
-			});
-		},
-		writeFile() {
-			let text = '';
-			for (let line of this.data) {
-				text = text + line + '\n';
-			}
-			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fobject) {
-				// fs.root是根目录操作对象DirectoryEntry
-				fobject.root.getDirectory(
-					'_doc/',
-					{
-						create: true
-					},
-					function(fileEntry) {
-						console.log(fileEntry.toLocalURL());
-					}
-				);
-			});
-			let that = this;
-			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fobject) {
-				// fs.root是根目录操作对象DirectoryEntry
-				fobject.root.getFile(
-					'_doc/' + that.nowDown[1].replace(RegExp('/', 'g'), '-') + '.m3u8',
-					{
-						create: true
-					},
-					function(fileEntry) {
-						console.log(fileEntry.toLocalURL());
-						that.nowDown.push(fileEntry.toLocalURL());
-						that.nowDown.push(that.hasDown);
-						that.hasDown = [];
-						that.hasDownNum = 0;
-
-						that.updateItem();
-
-						fileEntry.createWriter(
-							function(writer) {
-								writer.seek(0);
-								writer.write(text);
-							},
-							function(e) {}
-						);
-					},
-					function(e) {
-						console.log(e);
-					}
-				);
-			});
-		},
-		getPlayUrl(url, key) {
-			uni.setStorageSync('urlPlay', '');
-			//#ifdef APP-PLUS
-			var wv = plus.webview.create(url);
-			wv.overrideUrlLoading({ mode: 'allow', match: '.*(mp4|flv|m3u8).*' }, function(e) {
-				console.log(e.url);
-			});
-			// 监听到页面加载图片资源时显示（{match:'.*\.(jpg|png|jpeg|bmp)\b'}）
-			wv.listenResourceLoading({ match: '.*(mp4|video|m3u8).*' }, function(e) {
-				var matchRule = key;
-				if (
-					e.url.indexOf('?url=') == -1 &&
-					e.url.indexOf('beiyong') == -1 &&
-					e.url.indexOf('SVG') == -1 &&
-					e.url.indexOf('update') == -1 &&
-					e.url.indexOf('51.la/') == -1 &&
-					!e.url.endsWith('.js') &&
-					e.url.indexOf('.png') == -1 &&
-					e.url.indexOf('.css') === -1 &&
-					e.url.indexOf('gif') === -1 &&
-					e.url.indexOf('.php') == -1 &&
-					!e.url.endsWith('.jpg') &&
-					e.url.indexOf(matchRule) === -1 &&
-					e.url.indexOf('umuuid') == -1
-				) {
-					console.log(e.url);
-					uni.setStorageSync('urlPlay', e.url);
-
-					wv.close();
-				}
-			});
-			//#endif
-			let that = this;
-			let alltime = 0;
-			var obj = setInterval(function() {
-				var urlPlay = uni.getStorageSync('urlPlay');
-				alltime = alltime + 2000;
-
-				if (alltime < 60000 && urlPlay != '') {
-					that.gethHefRes(urlPlay);
-					// 	setTimeout(function(){
-					// 		that.videoContext.requestFullScreen();
-					// 	},500)
-					clearInterval(obj);
-				}
-				if (alltime > 60000) {
-					that.nowDown[5] = '嗅探失败';
-
-					that.updateItem();
-
-					wv.close();
-					clearInterval(obj);
-				}
-			}, 2000);
 		}
 	},
 	onLoad() {
-		this.downloadLists = uni.getStorageSync('downLists');
-		this.startDown();
+		var urlList = uni.getStorageSync('urlNotive');
+		if (!urlList) {
+			uni.setStorageSync('urlNotive', []);
+		} else {
+			this.updataSite(urlList);
+		}
+		this.indexname = uni.getStorageSync('indexname');
+		if (!this.indexname) {
+			uni.setStorageSync('indexname', '站源');
+			this.indexname = '站源';
+		}
+		// this.list = [];
+		// this.lunbolist = [];
+		// this.getSite();
+
+		// if (this.indexname == '推荐') {
+		// 	this.classdata = false;
+		// 	this.lunbo=true;
+		// 	this.sitedata = true;
+		// 	this.sitelists=[];
+		// 	this.getAllSite();
+		// } else {
+		// 	this.getclassdata();
+		// 	this.classdata = true;
+		// 	this.sitedata = false;
+		// 	this.lunbo=false;
+		// }
 	},
-	onShow() {this.videoContext = uni.createVideoContext('myVideo', this);}
+	onShow() {
+		this.list = [];
+		this.lunbolist = [];
+		this.getSite();
+
+		if (this.indexname == '推荐') {
+			this.classdata = false;
+			this.sitedata = true;
+			this.sitelists = [];
+			this.lunbo = false;
+			this.getAllSite();
+		} else {
+			this.getclassdata();
+			this.classdata = true;
+			this.sitedata = false;
+			this.lunbo = true;
+		}
+	},
+	async onReachBottom() {
+		this.status = 'loading';
+		this.lunbo = false;
+		this.startnum = this.startnum + 10;
+		await this.getclassdata();
+	}
+	// onTabItemTap() {
+	// 	uni.setStorageSync('isRefresh', 0);
+	// 	this.list=[]
+	// 	this.getSite();
+	// }
 };
 </script>
 
 <style lang="scss" scoped>
-.download {
-	.header {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		position: sticky;
-		top: 0px;
-		z-index: 99;
-	}
-	.tab-data {
-		margin-top: 20px;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-around;
-	}
-	.tab-item {
+.index {
+}
+.setting-data {
+	margin-bottom: 5px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.site-data {
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	justify-content: center;
+	align-items: center;
+}
+.site-item {
+	align-items: center;
+	border-radius: 50%;
+	justify-content: center;
+	margin-bottom: 5px;
+	margin-right: 5px;
+	background-color: #f0f0f0;
+}
+.tab-data {
+	background-color: #fff;
+}
+.tab-class {
+	margin-bottom: 5px;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-left: 20px;
+	margin-right: 20px;
+	.tab-class-item {
+		color: #000000;
 		font-size: 20px;
-		color: #000;
-
-		margin-bottom: 10px;
 	}
-	.tab-item-active {
-		font-size: 20px;
+	.tab-class-item-active {
 		color: #00aa00;
+		font-size: 20px;
+	}
+}
 
-		margin-bottom: 10px;
+.tab-time {
+	flex-direction: row;
+	justify-content: space-between;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+	.tab-time-item {
+		color: #000000;
+		font-size: 20px;
 	}
-	.tag-data {
-		margin-top: 20px;
+	.tab-time-item-active {
+		color: #00aa00;
+		font-size: 20px;
 	}
+}
+.header {
+	background-color: #ffffff;
+	display: flex;
+	position: sticky;
+	top: 0px;
+	z-index: 99;
+	flex-direction: column;
+	justify-content: space-between;
+
+	.search-layout {
+		height: 40px;
+		margin-top: 4px;
+	}
+	.search-text {
+		height: 40px;
+		margin-top: 11px;
+		font-size: 20px;
+		margin-right: 20px;
+	}
+}
+
+.lunbo {
+	font-size: 60px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.data-item {
 	.out-item {
 		display: flex;
-		margin-left: 20px;
-		margin-right: 20px;
 		flex-direction: row;
 		justify-content: space-between;
-	}
-	.item-state {
-		margin-top: 10px;
-		margin-left: 25px;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-	}
-	.item-box {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-	}
+		.tui-list-item {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			.item-img {
+				height: 150px;
+				width: 100px;
+				margin-right: 20px;
+				margin-left: 20px;
+			}
 
-	.item-title {
-		font-size: 20px;
-	}
+			.item-box {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-around;
+				margin-right: 20px;
+			}
 
-	.item-name {
-		color: #999;
-		font-size: 16px;
-	}
-	.down-state {
-		font-size: 20px;
-	}
-	.removeNotice {
-		margin-left: 20px;
-		height: 30px;
-		width: 35px;
-		margin-bottom: 20px;
+			.item-title {
+				font-size: 20px;
+			}
+			.item-state {
+				color: #999;
+				font-size: 16px;
+			}
+			.item-userstate {
+				color: #999;
+				font-size: 16px;
+			}
+			.item-name {
+				color: #999;
+				font-size: 16px;
+			}
+		}
 	}
 }
 </style>
