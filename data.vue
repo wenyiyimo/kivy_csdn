@@ -21,7 +21,44 @@
 			<button class="inputbutton" @click="importSiteEvent">导入</button>
 		</view>
 		<view class="play" maxlength="300" v-if="hidePlay">
-			<video id="myVideo" ref="myVideo" class="player" autoplay="true" :src="url" play-strategy="3"></video>
+			<video
+				id="myVideo"
+				ref="myVideo"
+				class="player"
+				autoplay="true"
+				:src="url"
+				:codec="jiema"
+				:object-fit="objectfit"
+				play-strategy="3"
+				vslide-gesture="true"
+				enable-play-gesture="true"
+				:vslide-gesture-in-fullscreen="volumecontrol"
+				show-loading="false"
+				@error="changeWare()"
+				@controlstoggle="controlShow"
+				@fullscreenclick="changeRatePlay"
+				@fullscreenchange="enterFullScreen"
+				@ended="nextVideo"
+			>
+				<cover-view class="play-control" v-if="fullscreen && showControlshow && showControl">
+					<text class="play-nowtime" @click="getNowTime">{{ nowtime }}</text>
+					<text class="play-last" @click="lastVideo()">上一集</text>
+					<text class="play-next" @click="nextVideo()">下一集</text>
+					<text class="play-now">{{ nowPlay }}</text>
+					<text class="play-rate" @click="changePlayRate()">速度:{{ String(playRate) }}</text>
+					<text class="play-direction" @click="changeDirection()">旋转</text>
+					<text class="play-choose" @click="changeshowplay">选集</text>
+					<text class="play-choose" @click="changeobjectfit">{{ objectfittext }}</text>
+				</cover-view>
+				<cover-view class="body" v-if="showplay && showControlshow && fullscreen">
+					<view class="play-lists">
+						<view class="play-data" v-for="(item, index) in livelists" :key="index">
+							<text class="play-playname" :class="[nowPlayNum == index ? 'playname-active' : '']" @click="playlive(item, index)">{{ item.slice(0, 25) }}</text>
+						</view>
+						<text class="playname"></text>
+					</view>
+				</cover-view>
+			</video>
 			<view style="margin-bottom: 5px;font-size: 20px;margin-top: 5px;margin-left: 20px;margin-right: 20px;display: flex;flex-direction: row;justify-content: space-between;">
 				<text style="text-align:center;" @click="navigateUrl()">跳转浏览器</text>
 				<text style="text-align:center;" @click="searchdev()">点击投屏</text>
@@ -32,7 +69,7 @@
 		</view>
 		<view class="body">
 			<view v-for="(i, j) in livelists" :key="j" class="item-group">
-				<view class="name-group" @click="playlive(i)">{{ i.name }}</view>
+				<view class="name-group" @click="playlive(i, j)">{{ i.name }}</view>
 				<view class="deal-name">
 					<button class="delete" size="mini" :ripple="true" @click="deleteEvent(j)">删除</button>
 					<button class="pushpin" size="mini" :ripple="true" @click="pushpinEvent(i, j)">置顶</button>
@@ -59,7 +96,18 @@ export default {
 			devList: [],
 			url: '',
 			nowPlay: '',
-			videoContext: null
+			videoContext: null,
+			showControlshow: false,
+			volumecontrol: true,
+			nowtime: '',
+			direction: -90,
+			fullscreen: false,
+			jiema: 'hardware',
+			nowPlayNum: 0,
+			playRate: 1.0,
+			objectfit: 'contain',
+			objectfittext: '拉伸',
+			showplay: false
 		};
 	},
 	created() {
@@ -69,6 +117,13 @@ export default {
 			this.searchwidth = (this.fullControlsWidth * 3) / 4;
 		} else {
 			this.searchwidth = (this.fullControlsWidth * 2) / 3;
+			if (this.fullscreen) {
+				this.fullscreen = true;
+				this.videoContext.requestFullScreen({
+					direction: 0
+				});
+				this.direction = 0;
+			}
 		}
 	},
 	onReady: function() {
@@ -84,6 +139,145 @@ export default {
 	},
 	onShow() {},
 	methods: {
+		changeshowplay() {
+			this.showplay = !this.showplay;
+			if (this.showplay) {
+				this.volumecontrol = false;
+			} else {
+				this.volumecontrol = true;
+			}
+		},
+		changeobjectfit() {
+			if (this.objectfit == 'contain') {
+				this.objectfittext = '还原';
+				this.objectfit = 'fill';
+			} else {
+				this.objectfittext = '拉伸';
+				this.objectfit = 'contain';
+			}
+		},
+		changeDirection() {
+			this.videoContext.exitFullScreen();
+			if (this.fullControlsWidth > this.fullControlsHeigt) {
+				if (this.direction == 90) {
+					this.videoContext.requestFullScreen({
+						direction: -90
+					});
+					this.direction = -90;
+					plus.navigator.setFullscreen(true);
+				} else {
+					this.videoContext.requestFullScreen({
+						direction: 90
+					});
+					this.direction = 90;
+					plus.navigator.setFullscreen(true);
+				}
+			} else {
+				this.fullscreen = true;
+				this.videoContext.requestFullScreen({
+					direction: 0
+				});
+				this.direction = 0;
+				plus.navigator.setFullscreen(true);
+			}
+		},
+		changePlayRate() {
+			if (this.playRate == 1.0) {
+				this.videoContext.playbackRate(1.25);
+				this.playRate = 1.25;
+				return;
+			}
+			if (this.playRate == 1.25) {
+				this.videoContext.playbackRate(1.5);
+				this.playRate = 1.5;
+				return;
+			}
+			if (this.playRate == 1.5) {
+				this.videoContext.playbackRate(2.0);
+				this.playRate = 2.0;
+				return;
+			}
+			if (this.playRate === 2.0) {
+				this.videoContext.playbackRate(1.0);
+				this.playRate = 1.0;
+
+				return;
+			}
+		},
+		lastVideo() {
+			if (this.nowPlayNum > 0) {
+				this.playRate = 1.0;
+				this.playlive(this.livelists[Number(this.nowPlayNum - 1)], Number(this.nowPlayNum - 1));
+			} else {
+				uni.showToast({
+					title: '第一个啦！',
+					duration: 2300
+				});
+			}
+		},
+		nextVideo() {
+			if (this.nowPlayNum + 1 < this.livelists.length) {
+				this.playRate = 1.0;
+				this.playlive(this.livelists[Number(this.nowPlayNum + 1)], Number(this.nowPlayNum + 1));
+			} else {
+				uni.showToast({
+					title: '没有啦！',
+					duration: 2300
+				});
+			}
+		},
+		changeRatePlay(e) {
+			var clickW = e.detail.screenX;
+			var clickH = e.detail.screenY;
+			if (this.playRate == 1.0 && 8 * clickW > 7 * this.fullControlsWidth && 5 * clickH > 2 * this.fullControlsHeigt && 5 * clickH < 4 * this.fullControlsHeigt) {
+				this.videoContext.playbackRate(2.0);
+				this.playRate = 2.0;
+				this.showControl = false;
+			} else {
+				if (this.playRate != 1.0 && 8 * clickW > 7 * this.fullControlsWidth && 5 * clickH > 2 * this.fullControlsHeigt && 5 * clickH < 4 * this.fullControlsHeigt) {
+					this.videoContext.playbackRate(1.0);
+					this.playRate = 1.0;
+					this.showControl = false;
+				} else {
+					this.showControl = true;
+				}
+			}
+		},
+		changeWare() {
+			if (this.jiema === 'hardware') {
+				this.jiema = 'software';
+			} else {
+				uni.showToast({
+					title: '播放失败！',
+					duration: 2000
+				});
+			}
+		},
+		enterFullScreen() {
+			this.fullscreen = !this.fullscreen;
+			if (this.fullscreen) {
+				plus.navigator.setFullscreen(true);
+			} else {
+				plus.navigator.setFullscreen(false);
+			}
+		},
+		getNowTime() {
+			var now = new Date();
+			var hh = now.getHours(); //时
+			if (hh < 10) hh = '0' + hh;
+			var mm = now.getMinutes(); //分
+			if (mm < 10) mm = '0' + mm;
+			this.nowtime = `${hh}:${mm}`;
+		},
+		controlShow(e) {
+			this.showControlshow = e.detail.show;
+			if (this.showControlshow) {
+				this.getNowTime();
+			} else {
+				this.showplay = false;
+				this.volumecontrol = true;
+			}
+		},
 		async pushpinEvent(i, index) {
 			if (index === 0) {
 				return false;
@@ -99,10 +293,13 @@ export default {
 			uni.setStorageSync('livelists', this.livelists);
 			plus.nativeUI.toast('删除成功!', { align: 'center', verticalAlign: 'center' });
 		},
-		playlive(i) {
+		playlive(i, j) {
+			this.videoContext.pause();
 			this.url = i.url;
 			this.hidePlay = true;
 			this.nowPlay = i.name;
+			this.nowPlayNum = j;
+			this.videoContext.play();
 		},
 		startdev(id) {
 			dlna.play({ id: id, url: this.url, title: this.nowPlay }, result => {
@@ -231,6 +428,64 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tag-lists {
+	margin-left: 20px;
+
+	display: flex;
+	flex-direction: row;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	flex-wrap: wrap;
+	.item-title {
+		margin-left: 10px;
+		color: #000;
+		margin-right: 10px;
+		margin-top: 10px;
+		font-size: 20px;
+		flex-wrap: wrap;
+	}
+	.item-title-active {
+		color: #00aa00;
+		flex-wrap: wrap;
+		margin-right: 10px;
+		margin-top: 10px;
+		font-size: 20px;
+		margin-left: 10px;
+	}
+}
+.player {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	.play-control {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		color: #ffffff;
+		margin-top: 13x;
+		margin-left: 40px;
+	}
+	.play-choose {
+		color: #ffffff;
+	}
+	.play-nowtime {
+		color: #ffffff;
+	}
+	.play-last {
+		color: #ffffff;
+	}
+	.play-next {
+		color: #ffffff;
+	}
+	.play-now {
+		color: #ffffff;
+	}
+	.play-rate {
+		color: #ffffff;
+	}
+	.play-direction {
+		color: #ffffff;
+	}
+}
 .live {
 	margin-left: 10px;
 	margin-right: 10px;
