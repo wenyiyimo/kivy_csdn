@@ -58,7 +58,7 @@
 						<text class="item-name">来源：{{ item[3] }}-{{ item[2] }}</text>
 						<!-- <image :src="removeImage" mode="aspectFit" class="removeNotice" @click="removeItem(index)"></image> -->
 
-						<view style="flex-direction: row;">
+						<view style="flex-direction: row;margin-top: 5px;">
 							<text class="item-name" style="margin-right: 20px;">{{ index == nowDownNum ? progress : item[5] }}</text>
 							<text class="item-name" @click="removeItem(index)">删除</text>
 						</view>
@@ -116,6 +116,10 @@ export default {
 		}
 	},
 	methods: {
+		pageBacked() {
+			this.videoContext.stop();
+			uni.navigateBack();
+		},
 		changeshowplay() {
 			this.showplay = !this.showplay;
 			if (this.showplay) {
@@ -297,13 +301,10 @@ export default {
 		},
 		//更新下载列表
 		updateItem() {
-			this.downloadLists.splice(this.nowDownNum, 1);
-			this.downloadLists.push(this.nowDown);
-			uni.setStorageSync('downLists', this.downloadLists);
-
+			this.downloadLists = uni.getStorageSync('downLists');
 			for (let i = 0; i < this.downloadLists.length; i++) {
 				let item = this.downloadLists[i];
-				if (item[5] != '已完成') {
+				if (item[5] != '已完成' && item[5] != '嗅探失败') {
 					this.startDown();
 					return;
 				}
@@ -313,11 +314,11 @@ export default {
 		async preitem() {
 			for (let i = 0; i < this.downloadLists.length; i++) {
 				let item = this.downloadLists[i];
-				if (item[5] != '已完成') {
-					item[5] = '下载中';
-
+				if (item[5] != '已完成' && item[5] != '嗅探失败') {
+					item[5] = '嗅探中...';
 					this.nowDown = item;
 					this.nowDownNum = i;
+					uni.setStorageSync('nowDownNum', this.nowDownNum);
 					this.getPlayUrl(item[1], item[6]);
 					return;
 				}
@@ -340,7 +341,7 @@ export default {
 			this.numLen = 0;
 			this.hasDownNum = 0;
 			this.data = [];
-			if (url.indexOf('mp4') != -1) {
+			if (url.indexOf('m3u8') == -1) {
 				this.downMP4(url);
 			} else {
 				let that = this;
@@ -353,7 +354,11 @@ export default {
 						that.getDownUrl(res, '', res.header);
 					},
 					fail(res) {
-						console.log(res);
+						let downloadLists = uni.getStorageSync('downLists');
+						let nowDownNum = uni.getStorageSync('nowDownNum');
+						downloadLists[nowDownNum][5] = '嗅探失败';
+						uni.setStorageSync('downLists', downloadLists);
+						that.updateItem();
 					}
 				});
 			}
@@ -400,7 +405,7 @@ export default {
 						uni.saveFile({
 							tempFilePath: res.tempFilePath,
 							success: function(res) {
-								let savepath = res.savedFilePath.replace('_doc/', 'file:///storage/emulated/0/Android/data/io.dcloud.HBuilder/apps/HBuilder/doc/');
+								let savepath = res.savedFilePath.replace('_doc/', 'file:///storage/emulated/0/Android/data/uni.sousou/apps/__UNI__sousou/doc/');
 								// let savepath=res.savedFilePath
 								that.data[num] = savepath;
 								that.hasDown.push(savepath);
@@ -409,7 +414,6 @@ export default {
 					}
 					if (that.hasDownNum == that.numLen) {
 						that.progress = '已完成';
-						that.nowDown[5] = '已完成';
 						that.writeFile();
 					}
 				},
@@ -418,7 +422,6 @@ export default {
 					that.progress = `${that.hasDownNum}/${that.numLen}`;
 					if (that.hasDownNum == that.numLen) {
 						that.progress = '已完成';
-						that.nowDown[5] = '已完成';
 						that.writeFile();
 					}
 				}
@@ -435,28 +438,36 @@ export default {
 						uni.saveFile({
 							tempFilePath: res.tempFilePath,
 							success: function(res) {
-								console.log(that.nowDown);
-								that.nowDown[5] = '已完成';
-								let savepath = res.savedFilePath.replace('_doc/', 'file:///storage/emulated/0/Android/data/io.dcloud.HBuilder/apps/HBuilder/doc/');
-								that.nowDown.push(savepath);
-								that.nowDown.push([savepath]);
+								let downloadLists = uni.getStorageSync('downLists');
+								let nowDownNum = uni.getStorageSync('nowDownNum');
+								downloadLists[nowDownNum][5] = '已完成';
+								let savepath = res.savedFilePath.replace('_doc/', 'file:///storage/emulated/0/Android/data/uni.sousou/apps/__UNI__sousou/doc/');
+								downloadLists[nowDownNum].push(savepath);
+								downloadLists[nowDownNum].push([savepath]);
+								uni.setStorageSync('downLists', downloadLists);
 								that.updateItem();
 							},
 							fail: () => {
-								that.nowDown[5] = '下载失败';
-
+								let downloadLists = uni.getStorageSync('downLists');
+								let nowDownNum = uni.getStorageSync('nowDownNum');
+								downloadLists[nowDownNum][5] = '嗅探失败';
+								uni.setStorageSync('downLists', downloadLists);
 								that.updateItem();
 							}
 						});
 					} else {
-						that.nowDown[5] = '下载失败';
-
+						let downloadLists = uni.getStorageSync('downLists');
+						let nowDownNum = uni.getStorageSync('nowDownNum');
+						downloadLists[nowDownNum][5] = '嗅探失败';
+						uni.setStorageSync('downLists', downloadLists);
 						that.updateItem();
 					}
 				},
 				fail: () => {
-					that.nowDown[5] = '下载失败';
-
+					let downloadLists = uni.getStorageSync('downLists');
+					let nowDownNum = uni.getStorageSync('nowDownNum');
+					downloadLists[nowDownNum][5] = '嗅探失败';
+					uni.setStorageSync('downLists', downloadLists);
 					that.updateItem();
 				}
 			});
@@ -492,13 +503,16 @@ export default {
 					},
 					function(fileEntry) {
 						console.log(fileEntry.toLocalURL());
-						that.nowDown.push(fileEntry.toLocalURL());
-						that.nowDown.push(that.hasDown);
 						that.hasDown = [];
 						that.hasDownNum = 0;
 
+						let downloadLists = uni.getStorageSync('downLists');
+						let nowDownNum = uni.getStorageSync('nowDownNum');
+						downloadLists[nowDownNum][5] = '已完成';
+						downloadLists[nowDownNum].push(fileEntry.toLocalURL());
+						downloadLists[nowDownNum].push(that.hasDown);
+						uni.setStorageSync('downLists', downloadLists);
 						that.updateItem();
-
 						fileEntry.createWriter(
 							function(writer) {
 								writer.seek(0);
@@ -553,7 +567,10 @@ export default {
 					clearInterval(obj);
 				}
 				if (alltime > 60000) {
-					that.nowDown[5] = '嗅探失败';
+					let downloadLists = uni.getStorageSync('downLists');
+					let nowDownNum = uni.getStorageSync('nowDownNum');
+					downloadLists[nowDownNum][5] = '嗅探失败';
+					uni.setStorageSync('downLists', downloadLists);
 					that.updateItem();
 					that.webv.close();
 					that.preweb();
@@ -581,10 +598,12 @@ export default {
 			uni.setStorageSync('initialtime', 0);
 		}
 	},
+	onShow() {
+		if (this.progress.indexOf('嗅探') != -1) this.startDown();
+	},
 	onReady: function() {
 		this.videoContext = uni.createVideoContext('myVideo', this);
 		this.preweb();
-		this.startDown();
 	},
 	onUnload: function() {
 		this.videoContext.pause();
