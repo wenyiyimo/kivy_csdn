@@ -1,10 +1,19 @@
-import App from './App'
-
-
-import Vue from 'vue'
-Vue.config.productionTip = false
-App.mpType = 'app'
-const app = new Vue({
-    ...App
-})
-app.$mount()
+const ajax = {
+	async get(url, header = {}) {
+		return new Promise((resolve, reject) => {
+			uni.request({
+				url: url,
+				method: 'GET',
+				header: header,
+				timeout: 3000,
+				success(response) {
+					resolve(response.data);
+				},
+				fail(error) {
+					reject(error)
+				}
+			})
+		})
+	}
+}
+export default ajax
