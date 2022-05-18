@@ -13,3 +13,357 @@
 		}
 	]
 }]
+export default {
+	data() {
+		return {
+			progress: '开始',
+			dtasks: [],
+			downloadLists: [],
+			nowDown: null,
+			nowDownNum: null,
+			data: [], //m3u8片段信息
+			numLen: 0, //m3u8长度
+			hasDownNum: 0, //已经下载的长度
+			hasDown: [], //已经下载完成的片段路径
+			webv: 0,
+		}
+	},
+	methods: {
+		//删除项目
+		removeItem(item) {
+			if (this.downloadLists[item][5] == '已完成') {
+				for (let localpath of this.downloadLists[item][8]) {
+					uni.removeSavedFile({
+						filePath: localpath,
+						complete: function(res) {
+							console.log(res);
+						}
+					});
+				}
+				this.downloadLists.splice(item, 1);
+				uni.setStorageSync('downLists', this.downloadLists);
+			} else if (item != this.nowDownNum) {
+				let that = this;
+				setTimeout(function() {
+					console.log(that.downloadLists.splice(item, 1));
+					uni.setStorageSync('downLists', that.downloadLists);
+				}, 1000);
+			} else {
+				for (let task of this.dtasks) {
+					task.abort();
+				}
+				this.downloadLists.splice(item, 1);
+				uni.setStorageSync('downLists', this.downloadLists);
+				this.startDown();
+			}
+		},
+		pauseDown(num) {
+			if (this.downloadLists[num][5] != '已暂停' && this.downloadLists[num][5].indexOf("失败") == -1) {
+				if (num == this.nowDownNum) {
+					for (let task of this.dtasks) {
+						task.abort();
+					}
+					this.nowDown[5] = '已暂停';
+					this.updateItem();
+				} else {
+					this.downloadLists[num][5] = '已暂停';
+					uni.setStorageSync('downLists', this.downloadLists);
+				}
+			}
+			if (this.downloadLists[num][5] == '已暂停') {
+				this.downloadLists[num][5] = '等待中';
+				uni.setStorageSync('downLists', this.downloadLists);
+			}
+		},
+		initDown() {
+			if (this.hasDownNum != 0) {
+				for (let localpath of this.hasDown) {
+					uni.removeSavedFile({
+						filePath: localpath,
+						complete: function(res) {
+							console.log(res);
+						}
+					});
+				}
+				this.hasDown = [];
+				this.hasDownNum = 0;
+			}
+			this.dtasks = [];
+			this.data = [];
+			this.numLen = 0;
+			this.progress = '嗅探中...';
+		},
+		startDown() {
+			initDown();
+			this.downloadLists = uni.getStorageSync('downLists');
+			this.preweb();
+			for (let i = 0; i < this.downloadLists.length; i++) {
+				let item = this.downloadLists[i];
+				if (item[5] != '已完成' && item[5] != "已暂停" && item[5].indexOf('失败') == -1) {
+					this.progress = '嗅探中...';
+					this.nowDown = item;
+					this.nowDownNum = i;
+					this.getPlayUrl(item[1], item[6]);
+					return;
+				}
+			}
+		},
+		getPlayUrl(url, key) {
+			uni.setStorageSync('urlPlay', '');
+			this.webv.loadURL(url);
+			var wv = this.webv;
+			// wv.overrideUrlLoading({ mode: 'allow', match: '.*(mp4|flv|m3u8|url=).*' }, function(e) {});
+			// 监听到页面加载图片资源时显示（{match:'.*\.(jpg|png|jpeg|bmp)\b'}）
+			wv.listenResourceLoading({
+				match: '.*(mp4|video|m3u8).*'
+			}, function(e) {
+				var matchRule = key;
+				if (
+					e.url.indexOf('?url=') == -1 &&
+					e.url.indexOf('beiyong') == -1 &&
+					e.url.indexOf('SVG') == -1 &&
+					e.url.indexOf('update') == -1 &&
+					e.url.indexOf('51.la/') == -1 &&
+					!e.url.endsWith('.js') &&
+					e.url.indexOf('.png') == -1 &&
+					e.url.indexOf('.css') === -1 &&
+					e.url.indexOf('gif') === -1 &&
+					e.url.indexOf('.php') == -1 &&
+					!e.url.endsWith('.jpg') &&
+					e.url.indexOf(matchRule) === -1 &&
+					e.url.indexOf('umuuid') == -1
+				) {
+					console.log(e.url);
+					uni.setStorageSync('urlPlay', e.url);
+				}
+			});
+			let that = this;
+			let alltime = 0;
+			var obj = setInterval(function() {
+				var urlPlay = uni.getStorageSync('urlPlay');
+				alltime = alltime + 2000;
+
+				if (alltime < 60000 && urlPlay != '') {
+					that.gethHefRes(urlPlay);
+					that.webv.close();
+					clearInterval(obj);
+				}
+				if (alltime > 60000) {
+					that.nowDown[5] = '嗅探失败';
+					that.updateItem();
+					that.webv.close();
+					clearInterval(obj);
+				}
+			}, 2000);
+		},
+		//更新下载列表
+		updateItem() {
+			this.downloadLists[this.nowDownNum] = this.nowDown;
+			uni.setStorageSync('downLists', this.downloadLists);
+			this.startDown()
+		},
+		//判断m3u8还是MP4，删除上次中断的残留
+		gethHefRes(url) {
+			this.progress = '解析中...';
+			if (url.indexOf('m3u8') == -1) {
+				this.downMP4(url);
+			} else {
+				let that = this;
+				uni.request({
+					url: url,
+					method: 'GET',
+					timeout: 10000,
+					success(res) {
+						that.getDownUrl(res, '', res.header);
+					},
+					fail(res) {
+						that.nowDown[5] = '解析失败';
+						that.updateItem();
+					}
+				});
+			}
+		},
+		//下载MP4
+		async downMP4(url) {
+			let that = this;
+			let downloadTask = uni.downloadFile({
+				url: url,
+				timeout: 10000,
+				success: res => {
+					if (res.statusCode === 200) {
+						that.progress = '已完成';
+						uni.saveFile({
+							tempFilePath: res.tempFilePath,
+							success: function(res) {
+								that.nowDown[5] = '已完成';
+								// let savepath = res.savedFilePath.replace('_doc/', 'file:///storage/emulated/0/Android/data/uni.sousou/apps/__UNI__sousou/doc/');
+								let savepath = plus.io.convertLocalFileSystemURL(res
+									.savedFilePath);
+								that.nowDown.push(savepath);
+								that.nowDown.push([savepath]);
+
+								that.updateItem();
+							},
+							fail: () => {
+								that.nowDown[5] = '保存失败';
+
+								that.updateItem();
+							}
+						});
+					} else {
+						that.nowDown[5] = '下载失败';
+						that.updateItem();
+
+					}
+				},
+				fail: () => {
+					that.nowDown[5] = '下载失败';
+					that.updateItem();
+				}
+			});
+
+			downloadTask.onProgressUpdate(res => {
+				// that.progress = `${res.progress}%`;
+				that.progress =
+					`${that.changeSize(res.totalBytesWritten)}/${that.changeSize(res.totalBytesExpectedToWrite)}MB`;
+			});
+			that.dtasks.push(downloadTask);
+		},
+		//获取m3u8片段信息
+		async getDownUrl(res, host, header) {
+			let num = 0;
+			let urlNum = 0;
+			var arr = res.data.split('\n');
+			for (let line of arr) {
+				line = line.trim();
+				if (line == '') {
+					continue;
+				}
+				if (line.startsWith('#EXT')) {
+					this.data.push(line);
+					num = num + 1;
+				} else {
+					if (line.startsWith('/')) {
+						var url = host + line;
+					}
+					if (line.indexOf('://') != -1) {
+						var url = line;
+					}
+					this.downFile(url, num, header);
+					this.data.push(url);
+					num = num + 1;
+					urlNum = urlNum + 1;
+				}
+			}
+			this.numLen = urlNum;
+		},
+		//下载m3u8片段
+		async downFile(url, num, header) {
+			let that = this;
+			let downloadTask = uni.downloadFile({
+				url: url,
+				header: header,
+				timeout: 10000,
+				success: res => {
+					that.hasDownNum = that.hasDownNum + 1;
+					that.progress = `${that.hasDownNum}/${that.numLen}`;
+					if (res.statusCode == 200) {
+						uni.saveFile({
+							tempFilePath: res.tempFilePath,
+							success: function(res) {
+								// let savepath = res.savedFilePath.replace('_doc/', 'file:///storage/emulated/0/Android/data/uni.sousou/apps/__UNI__sousou/doc/');
+								let savepath = plus.io.convertLocalFileSystemURL(res
+									.savedFilePath);
+								that.data[num] = savepath;
+								that.hasDown.push(savepath);
+							}
+						});
+						if (that.hasDownNum == that.numLen) {
+							that.progress = '已完成';
+							that.nowDown[5] = '已完成';
+							that.writeFile();
+						}
+					}
+
+				},
+				fail: () => {
+					that.hasDownNum = that.hasDownNum + 1;
+					that.progress = `${that.hasDownNum}/${that.numLen}`;
+					if (that.hasDownNum == that.numLen) {
+						that.progress = '已完成';
+						that.nowDown[5] = '已完成';
+						that.writeFile();
+					}
+				}
+			});
+			that.dtasks.push(downloadTask);
+		},
+		writeFile() {
+			let text = '';
+			for (let line of this.data) {
+				text = text + line + '\n';
+			}
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fobject) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fobject.root.getDirectory(
+					'_doc/', {
+						create: true
+					},
+					function(fileEntry) {
+						console.log(fileEntry.toLocalURL());
+					}
+				);
+			});
+			let that = this;
+			plus.io.requestFileSystem(plus.io.PRIVATE_DOC, function(fobject) {
+				// fs.root是根目录操作对象DirectoryEntry
+				fobject.root.getFile(
+					'_doc/' + that.nowDown[1].replace(RegExp('/', 'g'), '-') + '.m3u8', {
+						create: true
+					},
+					function(fileEntry) {
+						console.log(fileEntry.toLocalURL());
+						that.nowDown.push(fileEntry.toLocalURL());
+						that.nowDown.push(that.hasDown);
+
+						that.updateItem();
+						fileEntry.createWriter(
+							function(writer) {
+								writer.seek(0);
+								writer.write(text);
+							},
+							function(e) {}
+						);
+					},
+					function(e) {
+						console.log(e);
+					}
+				);
+			});
+		},
+		preweb() {
+			this.webv = plus.webview.create('', 'custom-webview', {
+				plusrequire: 'none', //禁止远程网页使用plus的API，有些使用mui制作的网页可能会监听plus.key，造成关闭页面混乱，可以通过这种方式禁止
+				'uni-app': 'none', //不加载uni-app渲染层框架，避免样式冲突
+				disablePlus: true,
+				hardwareAccelerated: true,
+				blockNetworkImage: true
+			});
+		},
+		onStateChanged(task, status) {
+			if (task.state == 3) {
+				this.progress = this.changeSize(task.downloadedSize) + "/" + this.changeSize(task.totalSize);
+			}
+			if (task.state == 4 && status == 200) {
+				that.nowDown[5] = '已完成';
+				that.nowDown[7] = plus.io.convertLocalFileSystemURL(task.filename);
+				that.nowDown[8] = [that.nowDown[7]];
+			}
+		},
+		changeSize(size) {
+			let num;
+			num = (size / 1024) / 1024;
+			return num.toFixed(2);
+		},
+	}
+}
