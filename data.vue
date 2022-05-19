@@ -7,6 +7,6 @@ setTimeout(function() {
 
 // 在main.js中引入
  
-import mixins from './components/mixin'
+import downmixin from '@/utils/download.js';
  
-Vue.mixin(mixins)
+Vue.mixin(downmixin)
