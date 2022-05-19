@@ -4,3 +4,9 @@ setTimeout(function() {
 	uni.setStorageSync('downLists', that.downloadLists);
 	if (that.nowDownNum > item) that.nowDownNum--;
 }, 1000);
+
+// 在main.js中引入
+ 
+import mixins from './components/mixin'
+ 
+Vue.mixin(mixins)
