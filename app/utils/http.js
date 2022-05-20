@@ -1,39 +1,82 @@
-import http from '@/utils/http.js'
-const db = {
-	// 初始化 db 数据库
-	async initdb() {
-		// 站源
-		let sites = uni.getStorageSync("sites");
-		if (!sites) {
-			uni.setStorageSync('sites', [])
-		}
-		// 历史记录
-		let historys = uni.getStorageSync("historys");
-		if (!historys) {
-			uni.setStorageSync('historys', [])
-		}
-		// 收藏
-		let hearts = uni.getStorageSync("hearts");
-		if (!hearts) {
-			uni.setStorageSync('hearts', [])
-		}
-		// 直播
-		let livelists = uni.getStorageSync('livelists');
-		if (!livelists) {
-			uni.setStorageSync('livelists', []);
-		}
-		// 订阅
-		let urlList = uni.getStorageSync('urlNotive');
-		if (!urlList) {
-			uni.setStorageSync('urlNotive', []);
-		}
-		return {
-			flag: true,
-			data: null,
-			msg: '初始化成功'
+const http = {
+	// 网络请求
+	async get(url, header = {}) {
+		return new Promise((resolve, reject) => {
+			uni.request({
+				url: url,
+				method: 'GET',
+				header: header,
+				timeout: 3000,
+				success(response) {
+					resolve(response.data);
+				},
+				fail(error) {
+					reject(error)
+				}
+			})
+		})
+	},
+	// 匹配一次
+	async matchOnce(key, html) {
+		try {
+			let re = new RegExp(key, 'g')
+			let t = re.exec(html);
+			return {
+				flag: true,
+				data: t[1],
+				msg: '匹配完成！'
+			}
+		} catch (e) {
+			return {
+				flag: false,
+				data: String(e),
+				msg: '匹配失败！'
+			}
 		}
 	},
-
-
+	// 匹配所有
+	async matchAll(key, html) {
+		try {
+			let re = new RegExp(key, 'g')
+			let t;
+			let results = [];
+			while ((t = re.exec(html)) != null) {
+				results.push(t[1]);
+			};
+			return {
+				flag: true,
+				data: results,
+				msg: '匹配完成！'
+			}
+		} catch (e) {
+			//TODO handle the exception
+			return {
+				flag: false,
+				data: String(e),
+				msg: '匹配失败！'
+			}
+		}
+	},
+	// json处理
+	async matchjson(key, json) {
+		try {
+			let matchslice = key.split('.');
+			let results = json;
+			for (let slice of matchslice) {
+				results = results[slice]
+			}
+			return {
+				flag: true,
+				data: results,
+				msg: '匹配完成！'
+			}
+		} catch (e) {
+			return {
+				flag: false,
+				data: String(e),
+				msg: '获取失败！'
+			}
+		}
+	}
 }
-export default db
+export default http
