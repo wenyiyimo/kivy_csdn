@@ -29,7 +29,7 @@
 				<swiper-item v-for="(item, index) in lunbolist" :key="index">
 					<view style="display: flex;flex-direction: column;">
 						<image style="height: 200rpx;width: 100%;" :src="item.pic" mode="aspectFill" @click="click(index)"></image>
-						<text class="first-text" style="margin-top: -50rpx;z-index: 2;display: flex;justify-content: center;">{{ item.title }}</text>
+						<text class="first-text" style="margin-top: -50rpx;z-index: 2;display: flex;justify-content: center;background-color: #f0f0f0;">{{ item.title }}</text>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -116,8 +116,8 @@ export default {
 	components: { uniIcons, uniSearchBar, uniGridItem, uniGrid },
 	data() {
 		return {
-			src: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg',
 			lunbolist: [],
+			search:'',
 			current: 0,
 			settings: ['收藏', '历史', '直播', '下载', '设置'],
 			showsetting: false,
@@ -163,7 +163,9 @@ export default {
 			]
 		};
 	},
-	onLoad() {},
+	onLoad() {
+		this.getlunbolist()
+	},
 	methods: {
 		changeCurrent(e) {
 			this.current = e.detail.current;
@@ -178,10 +180,11 @@ export default {
 				let listres = await http.matchAll('class="item_content"([\\s\\S]*?)</div></a>', rangeres.data);
 				if (listres.flag) {
 					for (let listr of listres.data) {
-						let titleres = await http.matchOnce('needsclick">([\\s\\S]*?)</div>', listr);
+						let titleres = await http.matchOnce('div class="item_title needsclick">([\\s\\S]*?)</div>', listr);
 						let picres = await http.matchOnce('<img dsrc="([\\s\\S]*?)" lazyLoad=', listr);
+				
 						if (titleres.flag && picres.flag) {
-							this.lunbolist.push({ pic: picres.data, title: titleres.data });
+							this.lunbolist.push({ pic: picres.data, title: titleres.data.trim() });
 						}
 					}
 				} else {
