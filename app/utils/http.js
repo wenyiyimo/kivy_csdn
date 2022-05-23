@@ -77,6 +77,54 @@ const http = {
 				msg: '获取失败！'
 			}
 		}
+	},
+	// 获取XT源搜索结果
+	async getxtsearchlist(site, searchurl) {
+		try {
+			let searchLists = []
+			let html = await this.get(searchurl);
+			let rangeres = await http.matchOnce(site.search_range, html);
+			if (rangeres.flag) {
+				let titleres = await http.matchAll(site.search_list_name, rangeres.data);
+				let picres = await http.matchAll(site.search_list_src, rangeres.data);
+				let stateres = await http.matchAll(site.search_list_state, rangeres.data);
+				let hrefres = await http.matchAll(site.search_list_href, rangeres.data);
+				if (titleres.flag && hrefres.flag && titleres.data.length == hrefres.data.length) {
+					for (let i = 0; i < titleres.data.length; i++) {
+						searchLists.push({
+							name: site.name,
+							pic: picres.data[i] | '',
+							title: titleres.data[i],
+							href: hrefres.data[i],
+							state: stateres.data[i] | ''
+						});
+					}
+					return {
+						flag: true,
+						data: lastLists,
+						msg: '搜索完成'
+					}
+				} else {
+					return {
+						flag: false,
+						data: 'error!',
+						msg: '搜索失败'
+					}
+				}
+			} else {
+				return {
+					flag: false,
+					data: 'error!',
+					msg: '搜索失败'
+				}
+			}
+		} catch (e) {
+			return {
+				flag: false,
+				data: e,
+				msg: '搜索失败'
+			}
+		}
 	}
 }
 export default http
