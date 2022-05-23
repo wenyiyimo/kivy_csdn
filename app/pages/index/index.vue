@@ -29,7 +29,9 @@
 				<swiper-item v-for="(item, index) in lunbolist" :key="index">
 					<view style="display: flex;flex-direction: column;">
 						<image style="height: 200rpx;width: 100%;" :src="item.pic" mode="aspectFill" @click="click(index)"></image>
-						<text class="first-text" style="margin-top: -50rpx;z-index: 2;display: flex;justify-content: center;background-color: #f0f0f0;">{{ item.title }}</text>
+						<text class="first-text" style="margin-top: -50rpx;z-index: 2;display: flex;justify-content: center;background-color: rgba(255, 255, 255, 0.3);">
+							{{ item.title }}
+						</text>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -48,11 +50,11 @@
 					<text class="first-text">更多</text>
 				</view>
 				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-					<view style="display: flex;flex-direction: row;">
+					<view style="display: flex;flex-direction: row;flex-wrap: nowrap;">
 						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
 							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
 							<text class="first-text">{{ item.title }}</text>
-							<text class="second-text">{{ item.state }}</text>
+							<text class="second-text">{{ item.state.slice(0, 10) }}</text>
 						</view>
 					</view>
 				</scroll-view>
@@ -63,11 +65,11 @@
 					<text class="first-text">更多</text>
 				</view>
 				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-					<view style="display: flex;flex-direction: row;">
+					<view style="display: flex;flex-direction: row;flex-wrap: nowrap;">
 						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
 							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
 							<text class="first-text">{{ item.title }}</text>
-							<text class="second-text">{{ item.state }}</text>
+							<text class="second-text">{{ item.state.slice(0, 10) }}</text>
 						</view>
 					</view>
 				</scroll-view>
@@ -78,11 +80,11 @@
 					<text class="first-text">更多</text>
 				</view>
 				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-					<view style="display: flex;flex-direction: row;">
+					<view style="display: flex;flex-direction: row;flex-wrap: nowrap;">
 						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
 							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
 							<text class="first-text">{{ item.title }}</text>
-							<text class="second-text">{{ item.state }}</text>
+							<text class="second-text">{{ item.state.slice(0, 10) }}</text>
 						</view>
 					</view>
 				</scroll-view>
@@ -93,11 +95,11 @@
 					<text class="first-text">更多</text>
 				</view>
 				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-					<view style="display: flex;flex-direction: row;">
+					<view style="display: flex;flex-direction: row;flex-wrap: nowrap;">
 						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
 							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
 							<text class="first-text">{{ item.title }}</text>
-							<text class="second-text">{{ item.state }}</text>
+							<text class="second-text">{{ item.state.slice(0, 10) }}</text>
 						</view>
 					</view>
 				</scroll-view>
@@ -116,13 +118,22 @@ export default {
 	components: { uniIcons, uniSearchBar, uniGridItem, uniGrid },
 	data() {
 		return {
-			lunbolist: [],
-			search:'',
+			lunbolist: [
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '44444444444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' }
+			],
+			search: '',
 			current: 0,
 			settings: ['收藏', '历史', '直播', '下载', '设置'],
 			showsetting: false,
 			tvlist: [
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '44444444444444' },
 				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
 				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
 				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
@@ -164,7 +175,7 @@ export default {
 		};
 	},
 	onLoad() {
-		this.getlunbolist()
+		this.getlunbolist();
 	},
 	methods: {
 		changeCurrent(e) {
@@ -182,7 +193,7 @@ export default {
 					for (let listr of listres.data) {
 						let titleres = await http.matchOnce('div class="item_title needsclick">([\\s\\S]*?)</div>', listr);
 						let picres = await http.matchOnce('<img dsrc="([\\s\\S]*?)" lazyLoad=', listr);
-				
+
 						if (titleres.flag && picres.flag) {
 							this.lunbolist.push({ pic: picres.data, title: titleres.data.trim() });
 						}
