@@ -117,10 +117,7 @@ export default {
 	data() {
 		return {
 			src: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg',
-			lunbolist: [
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222' }
-			],
+			lunbolist: [],
 			current: 0,
 			settings: ['收藏', '历史', '直播', '下载', '设置'],
 			showsetting: false,
