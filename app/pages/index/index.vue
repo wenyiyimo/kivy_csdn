@@ -37,6 +37,31 @@
 					<text class="first-text">{{ item }}</text>
 				</view>
 			</view>
+			<view class="data-new">
+				<view class="data-header">
+					<text class="first-text">追剧</text>
+					<text class="first-text">更多</text>
+				</view>
+				
+			</view>
+			<view class="data-new">
+				<view class="data-header">
+					<text class="first-text">电影</text>
+					<text class="first-text">更多</text>
+				</view>
+			</view>
+			<view class="data-new">
+				<view class="data-header">
+					<text class="first-text">动漫</text>
+					<text class="first-text">更多</text>
+				</view>
+			</view>
+			<view class="data-new">
+				<view class="data-header">
+					<text class="first-text">综艺</text>
+					<text class="first-text">更多</text>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -69,4 +94,13 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+	.data-new{
+		
+	}
+	.data-header{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+</style>
