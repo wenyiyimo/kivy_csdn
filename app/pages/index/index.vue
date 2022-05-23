@@ -175,14 +175,17 @@ export default {
 			this.showsetting = !this.showsetting;
 		},
 		async getlunbolist() {
-			let html = await http.get('');
-			let rangeres = await http.matchOnce(key, html);
+			let html = await http.get('https://m.v.qq.com');
+			let rangeres = await http.matchOnce('重磅热播([\\s\\S]*?)猜你喜欢', html);
 			if (rangeres.flag) {
-				let titleres = await http.matchAll(key, rangeres.data);
-				let picres = await http.matchAll(key, rangeres.data);
-				if (titleres.flag && picres.flag && titleres.data.length == picres.data.length) {
-					for (let i = 0; i < titleres.data.length; i++) {
-						this.lunbolist.push({ pic: picres.data[i], title: titleres.data[i] });
+				let listres = await http.matchAll('class="item_content"([\\s\\S]*?)</div></a>', rangeres.data);
+				if (listres.flag) {
+					for (let listr of listres.data) {
+						let titleres = await http.matchOnce('needsclick">([\\s\\S]*?)</div>', listr);
+						let picres = await http.matchOnce('<img dsrc="([\\s\\S]*?)" lazyLoad=', listr);
+						if (titleres.flag && picres.flag) {
+							this.lunbolist.push({ pic: picres.data, title: titleres.data });
+						}
 					}
 				} else {
 					uni.showToast({
