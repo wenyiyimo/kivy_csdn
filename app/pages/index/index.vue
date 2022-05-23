@@ -4,7 +4,7 @@
 			<view class="header-top"></view>
 			<view class="search-style">
 				<!-- <uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="showDrawer('showLeft')" /> -->
-				<uni-icons class="icon-style" color="#000000" size="40" type="compose" @click="editYuan" />
+				<uni-icons class="icon-style" color="#000000" size="40" type="compose" @click="showset" />
 				<uni-search-bar
 					class="search-layout"
 					v-model="search"
@@ -18,12 +18,17 @@
 				></uni-search-bar>
 				<text class="first-text" @click="searchEvent">搜索</text>
 			</view>
+			<view class="setting" v-if="showsetting">
+				<view class="setting-item" v-for="(item, index) in settings" :key="index">
+					<text class="first-text">{{ item }}</text>
+				</view>
+			</view>
 		</view>
 		<view class="body">
 			<swiper style="height: 200rpx;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
 				<swiper-item v-for="(item, index) in lunbolist" :key="index">
 					<view style="display: flex;flex-direction: column;">
-						<image style="height: 200rpx;width: 100%;" :src="item.url" mode="aspectFill" @click="click(index)"></image>
+						<image style="height: 200rpx;width: 100%;" :src="item.pic" mode="aspectFill" @click="click(index)"></image>
 						<text class="first-text" style="margin-top: -50rpx;z-index: 2;display: flex;justify-content: center;">{{ item.title }}</text>
 					</view>
 				</swiper-item>
@@ -42,25 +47,60 @@
 					<text class="first-text">追剧</text>
 					<text class="first-text">更多</text>
 				</view>
-				
+				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
+					<view style="display: flex;flex-direction: row;">
+						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
+							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
+							<text class="first-text">{{ item.title }}</text>
+							<text class="second-text">{{ item.state }}</text>
+						</view>
+					</view>
+				</scroll-view>
 			</view>
 			<view class="data-new">
 				<view class="data-header">
 					<text class="first-text">电影</text>
 					<text class="first-text">更多</text>
 				</view>
+				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
+					<view style="display: flex;flex-direction: row;">
+						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
+							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
+							<text class="first-text">{{ item.title }}</text>
+							<text class="second-text">{{ item.state }}</text>
+						</view>
+					</view>
+				</scroll-view>
 			</view>
 			<view class="data-new">
 				<view class="data-header">
 					<text class="first-text">动漫</text>
 					<text class="first-text">更多</text>
 				</view>
+				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
+					<view style="display: flex;flex-direction: row;">
+						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
+							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
+							<text class="first-text">{{ item.title }}</text>
+							<text class="second-text">{{ item.state }}</text>
+						</view>
+					</view>
+				</scroll-view>
 			</view>
 			<view class="data-new">
 				<view class="data-header">
 					<text class="first-text">综艺</text>
 					<text class="first-text">更多</text>
 				</view>
+				<scroll-view style="white-space: nowrap;" scroll-x="true" show-scrollbar="false" scroll-left="120">
+					<view style="display: flex;flex-direction: row;">
+						<view style="display: flex;flex-direction: column;margin-right: 20rpx;" v-for="(item, index) in tvlist" :key="index">
+							<image :src="item.pic" mode="aspectFill" style="width: 200rpx;height: 300rpx;"></image>
+							<text class="first-text">{{ item.title }}</text>
+							<text class="second-text">{{ item.state }}</text>
+						</view>
+					</view>
+				</scroll-view>
 			</view>
 		</view>
 	</view>
@@ -78,29 +118,97 @@ export default {
 		return {
 			src: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg',
 			lunbolist: [
-				{ url: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111' },
-				{ url: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222' }
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222' }
 			],
 			current: 0,
-			settings: ['收藏', '历史', '直播', '下载', '设置']
+			settings: ['收藏', '历史', '直播', '下载', '设置'],
+			showsetting: false,
+			tvlist: [
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' }
+			],
+			cartoonlist: [
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' }
+			],
+			filmlist: [
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' }
+			],
+			variety: [
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
+				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' }
+			]
 		};
 	},
 	onLoad() {},
 	methods: {
 		changeCurrent(e) {
 			this.current = e.detail.current;
+		},
+		showset() {
+			this.showsetting = !this.showsetting;
+		},
+		async getlunbolist() {
+			let html = await http.get('');
+			let rangeres = await http.matchOnce(key, html);
+			if (rangeres.flag) {
+				let titleres = await http.matchAll(key, rangeres.data);
+				let picres = await http.matchAll(key, rangeres.data);
+				if (titleres.flag && picres.flag && titleres.data.length == picres.data.length) {
+					for (let i = 0; i < titleres.data.length; i++) {
+						this.lunbolist.push({ pic: picres.data[i], title: titleres.data[i] });
+					}
+				} else {
+					uni.showToast({
+						title: '轮播图获取失败！',
+						duration: 2000,
+						icon: 'error'
+					});
+				}
+			} else {
+				uni.showToast({
+					title: '轮播图获取失败！',
+					duration: 2000,
+					icon: 'error'
+				});
+			}
 		}
 	}
 };
 </script>
 
 <style lang="scss">
-	.data-new{
-		
-	}
-	.data-header{
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-	}
+.data-new {
+}
+.data-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
 </style>
