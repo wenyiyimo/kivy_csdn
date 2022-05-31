@@ -4,12 +4,12 @@
 			<view class="header-top"></view>
 			<view style="display: flex;flex-direction: row;justify-content: space-between;">
 				<uni-icons class="icon-style" color="#000000" size="40" type="arrow-left" @click="pageBacked" />
-				<text class="first-text" style="margin-top: 15rpx;" @click="openImpSite()">站源管理</text>
-				<text class="first-text" style="margin-top: 15rpx;margin-right: 20rpx;" @click="changeState">{{ urlNotive }}</text>
+				<text class="first-text" style="margin-top: 5rpx;" @click="openImpSite()">站源管理</text>
+				<text class="first-text" style="margin-top: 5rpx;margin-right: 20rpx;" @click="changeState">{{ urlNotive }}</text>
 			</view>
 			<view v-if="impSite" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<input maxlength="-1" style="width: 80%;" v-model="url" type="text" placeholder="请导入JSON数据" />
-				<text class="first-text" @click="importSiteEvent">导入</text>
+				<input maxlength="-1" style="width: 80%;height: 40rpx;" v-model="url" type="text" placeholder="请导入JSON数据" />
+				<text class="first-text" style="margin-right: 20rpx;" @click="importSiteEvent">导入</text>
 			</view>
 		</view>
 		<view class="body" v-if="bodyshow">
