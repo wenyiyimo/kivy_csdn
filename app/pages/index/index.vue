@@ -3,7 +3,6 @@
     <view class="header">
       <view class="header-top"></view>
       <view class="search-style">
-        <!-- <uni-icons style="margin-top: 0px;margin-left: 15px;" color="#000000" size="40" type="compose" @click="showDrawer('showLeft')" /> -->
         <uni-icons
           class="icon-style"
           color="#000000"
@@ -23,15 +22,6 @@
           style="width: 500rpx"
         ></uni-search-bar>
         <text class="first-text" @click="searchEvent">搜索</text>
-      </view>
-      <view class="setting" v-if="showsetting">
-        <view
-          class="setting-item"
-          v-for="(item, index) in settings"
-          :key="index"
-        >
-          <text class="first-text">{{ item }}</text>
-        </view>
       </view>
     </view>
     <view class="body">
@@ -66,30 +56,42 @@
           </view>
         </swiper-item>
       </swiper>
-      <view
-        style="
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          margin-top: 10rpx;
-        "
+      <scroll-view
+        style="white-space: nowrap"
+        scroll-x="true"
+        show-scrollbar="false"
+        scroll-left="120"
       >
         <view
           style="
-            height: 100rpx;
-            width: 100rpx;
-            border-radius: 50%;
-            background-color: #f0f0f0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin-top: 10rpx;
           "
-          v-for="(item, index) in settings"
-          :key="index"
         >
-          <text class="first-text">{{ item }}</text>
+          <view
+            v-for="(item, index) in settings"
+            :key="index"
+            v-if="showsetting"
+          >
+            <view
+              style="
+                height: 100rpx;
+                width: 100rpx;
+                border-radius: 50%;
+                background-color: #f0f0f0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 20rpx;
+              "
+            >
+              <text class="first-text">{{ item }}</text>
+            </view>
+          </view>
         </view>
-      </view>
+      </scroll-view>
       <view class="data-new">
         <view class="data-header">
           <text class="first-text">追剧</text>
@@ -219,7 +221,7 @@ export default {
       lunbolist: [],
       search: "",
       current: 0,
-      settings: ["收藏", "历史", "直播", "下载", "设置"],
+      settings: ["站源", "收藏", "历史", "直播", "下载", "设置"],
       showsetting: false,
       tvlist: [],
       cartoonlist: [],
@@ -288,24 +290,20 @@ export default {
       };
       let html = await http.get(url, header);
       let rangeres = await http.matchOnce(site.search_range, html);
-	  // console.log(rangeres.data);
+      // console.log(rangeres.data);
       if (rangeres.flag) {
         let titleres = await http.matchAll(
           site.search_list_name,
           rangeres.data
-		  
         );
         let picres = await http.matchAll(site.search_list_src, rangeres.data);
         // console.log(picres.data)
-		let stateres = await http.matchAll(
+        let stateres = await http.matchAll(
           site.search_list_state,
           rangeres.data
         );
-		// console.log(stateres.data)
-        if (
-          titleres.flag &&
-          picres.flag
-        ) {
+        // console.log(stateres.data)
+        if (titleres.flag && picres.flag) {
           for (let i = 0; i < titleres.data.length; i++) {
             if (picres.data[i] && picres.data[i].indexOf("//") == -1) {
               picres.data[i] = [site.pic_url, picres.data[i]].join("");
@@ -341,15 +339,19 @@ export default {
     async getbodydata() {
       let cartoonsite = {
         pic_url: "",
-        search_range:
-          '新番周更表([\\s\\S]*?)lz_next',
-        search_list_name:'<img loading="lazy" class="figure_pic".*?src=".*?" alt="([\\s\\S]*?)" onerror=',
-        search_list_src:'<img loading="lazy" class="figure_pic".*?src="([\\s\\S]*?)" alt=".*?" onerror="picerr',
+        search_range: "新番周更表([\\s\\S]*?)lz_next",
+        search_list_name:
+          '<img loading="lazy" class="figure_pic".*?src=".*?" alt="([\\s\\S]*?)" onerror=',
+        search_list_src:
+          '<img loading="lazy" class="figure_pic".*?src="([\\s\\S]*?)" alt=".*?" onerror="picerr',
         search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
       };
-      let cartoonres = await this.gethtmldata("https://v.qq.com/channel/cartoon", cartoonsite);
-     // console.log(cartoonres.data)
-	  if (cartoonres.flag) {
+      let cartoonres = await this.gethtmldata(
+        "https://v.qq.com/channel/cartoon",
+        cartoonsite
+      );
+      // console.log(cartoonres.data)
+      if (cartoonres.flag) {
         this.cartoonlist = cartoonres.data;
       }
       let tvsite = {
@@ -367,15 +369,17 @@ export default {
       }
       let filmsite = {
         pic_url: "",
-        search_range:
-          '排行榜([\\s\\S]*?)data-rowcount="8" data-rowlen="1">',
+        search_range: '排行榜([\\s\\S]*?)data-rowcount="8" data-rowlen="1">',
         search_list_name:
           '<img loading="lazy" class="figure_pic" alt="([\\s\\S]*?)" src=',
         search_list_src:
           '<img loading="lazy" class="figure_pic" alt=".*?" src="([\\s\\S]*?)" style=',
         search_list_state: '<div class="figure_score">([\\s\\S]*?)</div>',
       };
-      let filmres = await this.gethtmldata("https://v.qq.com/channel/movie", filmsite);
+      let filmres = await this.gethtmldata(
+        "https://v.qq.com/channel/movie",
+        filmsite
+      );
       if (filmres.flag) {
         this.filmlist = filmres.data;
       }
