@@ -8,13 +8,13 @@
 				<text class="first-text" style="margin-top: 5rpx;margin-right: 20rpx;" @click="changeState">{{ urlNotive }}</text>
 			</view>
 			<view v-if="impSite" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<input maxlength="-1" style="width: 80%;height: 40rpx;" v-model="url" type="text" placeholder="请导入JSON数据" />
+				<input maxlength="-1" style="width: 80%;font-size: 40rpx;" v-model="url" type="text" placeholder="请导入JSON数据" />
 				<text class="first-text" style="margin-right: 20rpx;" @click="importSiteEvent">导入</text>
 			</view>
 		</view>
-		<view class="body" v-if="bodyshow">
+		<view class="body">
 			<view v-for="(i, j) in siteList" :key="j" class="item-group">
-				<text class="name-group" style="font-size:20px;">{{ i.name }}</text>
+				<text class="first-text">{{ i.name }}</text>
 				<view class="deal-name">
 					<button class="delete" size="mini" :ripple="true" @click="deleteEvent(i)">删除</button>
 					<button class="pushpin" size="mini" :ripple="true" @click="pushpinEvent(i, j)">置顶</button>
@@ -39,20 +39,10 @@ export default {
 			impSite: false,
 			url: '',
 			bodyshow: true,
-			urlNotive: '订阅',
-			fullControlsWidth: null,
-			fullControlsHeigt: null
+			urlNotive: '订阅'
 		};
 	},
-	created() {
-		this.fullControlsHeigt = uni.getSystemInfoSync().screenHeight;
-		this.fullControlsWidth = uni.getSystemInfoSync().screenWidth + 1;
-		if (this.fullControlsWidth > this.fullControlsHeigt) {
-			this.searchwidth = (this.fullControlsWidth * 3) / 4;
-		} else {
-			this.searchwidth = (this.fullControlsWidth * 2) / 3;
-		}
-	},
+
 	methods: {
 		async changeState() {
 			if (this.urlNotive == '订阅') {
