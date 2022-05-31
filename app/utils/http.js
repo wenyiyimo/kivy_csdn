@@ -80,10 +80,10 @@ const http = {
 		}
 	},
 	// 获取XT源搜索结果
-	async xtSearch(site, searchurl) {
+	async xtSearch(site, searchurl, header = {}) {
 		try {
 			let searchLists = []
-			let html = await this.get(searchurl);
+			let html = await this.get(searchurl, header);
 			let rangeres = await http.matchOnce(site.search_range, html);
 			if (rangeres.flag) {
 				let titleres = await http.matchAll(site.search_list_name, rangeres.data);
