@@ -25,7 +25,7 @@
 			</view>
 		</view>
 		<view class="body">
-			<swiper style="height: 200rpx;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
+			<swiper style="height: 200rpx;margin-top:10rpx;" autoplay="true" circular="true" interval="3000" duration="1000" @change="changeCurrent">
 				<swiper-item v-for="(item, index) in lunbolist" :key="index">
 					<view style="display: flex;flex-direction: column;">
 						<image style="height: 200rpx;width: 100%;" :src="item.pic" mode="aspectFill" @click="click(index)"></image>
@@ -118,16 +118,7 @@ export default {
 	components: { uniIcons, uniSearchBar, uniGridItem, uniGrid },
 	data() {
 		return {
-			lunbolist: [
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '44444444444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '111111', state: '4444' },
-				{ pic: 'https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg', title: '222222', state: '4444' }
-			],
+			lunbolist: [		],
 			search: '',
 			current: 0,
 			settings: ['收藏', '历史', '直播', '下载', '设置'],
@@ -176,6 +167,7 @@ export default {
 	},
 	onLoad() {
 		this.getlunbolist();
+
 	},
 	methods: {
 		changeCurrent(e) {
@@ -186,6 +178,7 @@ export default {
 		},
 		async getlunbolist() {
 			let html = await http.get('https://m.v.qq.com');
+			
 			let rangeres = await http.matchOnce('重磅热播([\\s\\S]*?)猜你喜欢', html);
 			if (rangeres.flag) {
 				let listres = await http.matchAll('class="item_content"([\\s\\S]*?)</div></a>', rangeres.data);
@@ -212,6 +205,10 @@ export default {
 					icon: 'error'
 				});
 			}
+		},
+		async getbodydata(){
+			let html2=await http.get('https://v.qq.com/channel/cartoon',{"User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"})
+		
 		}
 	}
 };
