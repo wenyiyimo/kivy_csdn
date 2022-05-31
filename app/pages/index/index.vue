@@ -132,7 +132,7 @@
           <view style="display: flex; flex-direction: row; flex-wrap: nowrap">
             <view
               style="display: flex; flex-direction: column; margin-right: 20rpx"
-              v-for="(item, index) in tvlist"
+              v-for="(item, index) in filmlist"
               :key="index"
             >
               <image
@@ -160,7 +160,7 @@
           <view style="display: flex; flex-direction: row; flex-wrap: nowrap">
             <view
               style="display: flex; flex-direction: column; margin-right: 20rpx"
-              v-for="(item, index) in tvlist"
+              v-for="(item, index) in cartoonlist"
               :key="index"
             >
               <image
@@ -188,7 +188,7 @@
           <view style="display: flex; flex-direction: row; flex-wrap: nowrap">
             <view
               style="display: flex; flex-direction: column; margin-right: 20rpx"
-              v-for="(item, index) in tvlist"
+              v-for="(item, index) in varietylist"
               :key="index"
             >
               <image
@@ -221,39 +221,10 @@ export default {
       current: 0,
       settings: ["收藏", "历史", "直播", "下载", "设置"],
       showsetting: false,
-      tvlist: [
-        {
-          pic: "https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg",
-          title: "111111",
-          state: "4444",
-        },
-        {
-          pic: "https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg",
-          title: "222222",
-          state: "4444",
-        },
-      ],
-      cartoonlist: [
-        {
-          pic: "https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg",
-          title: "222222",
-          state: "4444",
-        },
-      ],
-      filmlist: [
-        {
-          pic: "https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg",
-          title: "222222",
-          state: "4444",
-        },
-      ],
-      variety: [
-        {
-          pic: "https://res.vmallres.com/pimages//promotion/enterprise/97399325205612399379.jpg",
-          title: "222222",
-          state: "4444",
-        },
-      ],
+      tvlist: [],
+      cartoonlist: [],
+      filmlist: [],
+      varietylist: [],
     };
   },
   onLoad() {
@@ -317,20 +288,23 @@ export default {
       };
       let html = await http.get(url, header);
       let rangeres = await http.matchOnce(site.search_range, html);
+	  // console.log(rangeres.data);
       if (rangeres.flag) {
         let titleres = await http.matchAll(
           site.search_list_name,
           rangeres.data
+		  
         );
-        let picres = await this.matchAll(site.search_list_src, rangeres.data);
-        let stateres = await this.matchAll(
+        let picres = await http.matchAll(site.search_list_src, rangeres.data);
+        // console.log(picres.data)
+		let stateres = await http.matchAll(
           site.search_list_state,
           rangeres.data
         );
+		// console.log(stateres.data)
         if (
           titleres.flag &&
-          picres.flag &&
-          titleres.data.length == picres.data.length
+          picres.flag
         ) {
           for (let i = 0; i < titleres.data.length; i++) {
             if (picres.data[i] && picres.data[i].indexOf("//") == -1) {
@@ -340,7 +314,7 @@ export default {
               searchLists.push({
                 pic: picres.data[i],
                 title: titleres.data[i],
-                state: stateres.data[i] | "",
+                state: stateres.data[i],
               });
             }
           }
@@ -368,27 +342,26 @@ export default {
       let cartoonsite = {
         pic_url: "",
         search_range:
-          '新番周更表([\\s\\S]*?)data-rowcount="8" data-rowlen="1">',
-        search_list_name:
-          '<img loading="lazy" class="figure_pic" src=".*?" alt="([\\s\\S]*?)">',
-        search_list_src:
-          '<img loading="lazy" class="figure_pic" src="([\\s\\S]*?)" alt=',
+          '新番周更表([\\s\\S]*?)lz_next',
+        search_list_name:'<img loading="lazy" class="figure_pic".*?src=".*?" alt="([\\s\\S]*?)" onerror=',
+        search_list_src:'<img loading="lazy" class="figure_pic".*?src="([\\s\\S]*?)" alt=".*?" onerror="picerr',
         search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
       };
-      let cartoonres = await this.gethtmldata("", cartoonsite);
-      if (cartoonres.flag) {
+      let cartoonres = await this.gethtmldata("https://v.qq.com/channel/cartoon", cartoonsite);
+     // console.log(cartoonres.data)
+	  if (cartoonres.flag) {
         this.cartoonlist = cartoonres.data;
       }
       let tvsite = {
         pic_url: "",
         search_range: "热剧精选([\\s\\S]*?)热点短视频",
         search_list_name:
-          '<img loading="lazy" class="figure_pic" src=".*?" alt="([\\s\\S]*?)">',
+          '<img loading="lazy" class="figure_pic".*?src=".*?" alt="([\\s\\S]*?)" onerror="picerr',
         search_list_src:
-          '<img loading="lazy" class="figure_pic" src="([\\s\\S]*?)" alt=',
+          '<img loading="lazy" class="figure_pic".*?src="([\\s\\S]*?)" alt=.*?onerror="picerr',
         search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
       };
-      let tvres = await this.gethtmldata("", tvsite);
+      let tvres = await this.gethtmldata("https://v.qq.com/channel/tv", tvsite);
       if (tvres.flag) {
         this.tvlist = tvres.data;
       }
@@ -402,23 +375,23 @@ export default {
           '<img loading="lazy" class="figure_pic" alt=".*?" src="([\\s\\S]*?)" style=',
         search_list_state: '<div class="figure_score">([\\s\\S]*?)</div>',
       };
-      let filmres = await this.gethtmldata("", filmsite);
+      let filmres = await this.gethtmldata("https://v.qq.com/channel/movie", filmsite);
       if (filmres.flag) {
         this.filmlist = filmres.data;
       }
-      let varietysite = {
-        pic_url: "",
-        search_range: '热播周榜([\\s\\S]*?)真人秀节目嗨翻天',
-        search_list_name:
-          '<img loading="lazy" class="figure_pic" alt="([\\s\\S]*?)" src=',
-        search_list_src:
-          '<img loading="lazy" class="figure_pic" alt=".*?" src="([\\s\\S]*?)" style=',
-        search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
-      };
-      let varietyres = await this.gethtmldata("", varietysite);
-      if (varietyres.flag) {
-        this.varietylist = varietyres.data;
-      }
+      // let varietysite = {
+      //   pic_url: "",
+      //   search_range: '热播周榜([\\s\\S]*?)真人秀节目嗨翻天',
+      //   search_list_name:
+      //     '<img loading="lazy" class="figure_pic" alt="([\\s\\S]*?)" src=',
+      //   search_list_src:
+      //     '<img loading="lazy" class="figure_pic" alt=".*?" src="([\\s\\S]*?)" style=',
+      //   search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
+      // };
+      // let varietyres = await this.gethtmldata("https://v.qq.com/channel/variety", varietysite);
+      // if (varietyres.flag) {
+      //   this.varietylist = varietyres.data;
+      // }
     },
   },
 };
