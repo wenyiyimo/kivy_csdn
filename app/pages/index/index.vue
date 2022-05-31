@@ -258,7 +258,7 @@ export default {
   },
   onLoad() {
     this.getlunbolist();
-	this.getbodydata();
+    this.getbodydata();
   },
   methods: {
     changeCurrent(e) {
@@ -367,10 +367,13 @@ export default {
     async getbodydata() {
       let cartoonsite = {
         pic_url: "",
-        search_range: "",
-        search_list_name: "",
-        search_list_src: "",
-        search_list_state: "",
+        search_range:
+          '新番周更表([\\s\\S]*?)data-rowcount="8" data-rowlen="1">',
+        search_list_name:
+          '<img loading="lazy" class="figure_pic" src=".*?" alt="([\\s\\S]*?)">',
+        search_list_src:
+          '<img loading="lazy" class="figure_pic" src="([\\s\\S]*?)" alt=',
+        search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
       };
       let cartoonres = await this.gethtmldata("", cartoonsite);
       if (cartoonres.flag) {
@@ -378,10 +381,12 @@ export default {
       }
       let tvsite = {
         pic_url: "",
-        search_range: "",
-        search_list_name: "",
-        search_list_src: "",
-        search_list_state: "",
+        search_range: "热剧精选([\\s\\S]*?)热点短视频",
+        search_list_name:
+          '<img loading="lazy" class="figure_pic" src=".*?" alt="([\\s\\S]*?)">',
+        search_list_src:
+          '<img loading="lazy" class="figure_pic" src="([\\s\\S]*?)" alt=',
+        search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
       };
       let tvres = await this.gethtmldata("", tvsite);
       if (tvres.flag) {
@@ -389,10 +394,13 @@ export default {
       }
       let filmsite = {
         pic_url: "",
-        search_range: "",
-        search_list_name: "",
-        search_list_src: "",
-        search_list_state: "",
+        search_range:
+          '排行榜([\\s\\S]*?)data-rowcount="8" data-rowlen="1">',
+        search_list_name:
+          '<img loading="lazy" class="figure_pic" alt="([\\s\\S]*?)" src=',
+        search_list_src:
+          '<img loading="lazy" class="figure_pic" alt=".*?" src="([\\s\\S]*?)" style=',
+        search_list_state: '<div class="figure_score">([\\s\\S]*?)</div>',
       };
       let filmres = await this.gethtmldata("", filmsite);
       if (filmres.flag) {
@@ -400,10 +408,12 @@ export default {
       }
       let varietysite = {
         pic_url: "",
-        search_range: "",
-        search_list_name: "",
-        search_list_src: "",
-        search_list_state: "",
+        search_range: '热播周榜([\\s\\S]*?)真人秀节目嗨翻天',
+        search_list_name:
+          '<img loading="lazy" class="figure_pic" alt="([\\s\\S]*?)" src=',
+        search_list_src:
+          '<img loading="lazy" class="figure_pic" alt=".*?" src="([\\s\\S]*?)" style=',
+        search_list_state: '<div class="figure_caption">([\\s\\S]*?)</div>',
       };
       let varietyres = await this.gethtmldata("", varietysite);
       if (varietyres.flag) {
