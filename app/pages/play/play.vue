@@ -34,7 +34,7 @@ import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-ico
 
 export default {
 	components: {
-		UniIcons,
+		UniIcons
 	},
 	data() {
 		return {
@@ -56,6 +56,24 @@ export default {
 			let tempLen = temp.length;
 			for (let i = 0; i < tempLen; i++) {
 				this.playdatas[this.tagcurrent]['data'][i] = temp[tempLen - i - 1];
+			}
+		},
+		async getplaydata() {
+			let site = this.searchlists[this.sitecurrent];
+			if (res.data.id == 'XT') {
+				let res1 = await http.getPlayData(url, res.data);
+				this.playList = res1.data[1][0];
+				this.playLists = res1.data[1];
+				this.tagLists = res1.data[0];
+				this.nowTag = this.tagLists[0];
+			}
+			if (res.data.id == 'APP') {
+				this.siteid = 'APP';
+				let res1 = await http.appPlayData(url, res.data);
+				this.playList = res1.data[1][0];
+				this.playLists = res1.data[1];
+				this.tagLists = res1.data[0];
+				this.nowTag = this.tagLists[0];
 			}
 		}
 	},
