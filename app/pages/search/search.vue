@@ -10,7 +10,7 @@
           display: flex;
         "
 			>
-				<uni-icons style="margin-left: 10px; margin-top: 5px" color="#000000" size="40" type="arrow-left" @click="goback" />
+				<uni-icons color="#000000" size="40" type="arrow-left" @click="goback" />
 				<uni-search-bar
 					v-model="search"
 					style="width: 70%;"
@@ -26,19 +26,11 @@
 			</view>
 		</view>
 		<view class="body">
-			<view v-for="(i, index) in searchLists" :key="index">
-				<view>
+			<view v-for="(i, index) in searchlists" :key="index">
+				<view style="display: flex;flex-direction: column;justify-content: flex-start;">
 					<text class="first-text">{{ i[0] }}</text>
 					<text class="second-text">共获取到{{ i[1].length }}条结果</text>
-					<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;">
-							<view v-for="(j, key) in i[1]" :key="key">
-								<view>
-									<text class="second-text" style="background-color: #ebebeb;border-radius: 20%;">{{ j[0].state }}</text>
-								</view>
-							</view>
-						</view>
-					</scroll-view>
+					
 				</view>
 			</view>
 		</view>
@@ -76,9 +68,10 @@ export default {
 			uni.navigateBack();
 		},
 		async getsearchlists(site) {
-			let searchurl = site.search_href.replace('searchKey', encodeURI(this.search));
+			let searchurl = site.search_href.replace('searchKey',this.search);
 			if (site.id == 'XT') {
 				let res = await http.xtSearch(site, searchurl);
+				// console.log(res.data)
 				if (res.flag) {
 					for (let data of res.data) {
 						await this.judgelist(data, site);
@@ -87,6 +80,7 @@ export default {
 			}
 			if (site.id == 'APP') {
 				let res = await http.appSearch(site, searchurl);
+				// console.log(res.data)
 				if (res.flag) {
 					for (let data of res.data) {
 						await this.judgelist(data, site);
@@ -100,6 +94,7 @@ export default {
 				for (let i = 0; i < num; i++) {
 					if (data.title == this.searchlists[i][0]) {
 						this.searchlists[i][1].push([data, site]);
+						// console.log(this.searchlists)
 						return;
 					}
 				}
@@ -115,6 +110,7 @@ export default {
 				this.searchlists = [];
 				for (let site of this.sitelists) {
 					this.getsearchlists(site);
+					// console.log(site)
 				}
 			}
 		},
@@ -143,6 +139,7 @@ export default {
 		}
 	},
 	onLoad: function(option) {
+		console.log(111)
 		this.search = option.search;
 		this.getsitelists();
 	}
