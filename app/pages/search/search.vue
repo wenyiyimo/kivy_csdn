@@ -28,14 +28,12 @@
 		<view class="body">
 			<view v-for="(i, index) in searchlists" :key="index">
 				<view style="display: flex;flex-direction: column;justify-content: flex-start;">
-					<text class="first-text" @click="navplay(0)">{{ i[0] }}</text>
-					<text class="second-text" @click="navplay(0)">共获取到{{ i[1].length }}条结果</text>
+					<text class="first-text" @click="navplay(i[1],0)">{{ i[0] }}</text>
+					<text class="second-text" @click="navplay(i[1],0)">共获取到{{ i[1].length }}条结果</text>
 					<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;">
+						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
 							<view v-for="(j, key) in i[1]" :key="key">
-								<view>
-									<text class="second-text" @click="navplay(key)" style="background-color: #ebebeb;border-radius: 20%;">{{ j[0].state }}</text>
-								</view>
+								<view class="first-text" @click="navplay(i[1],key)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">{{ j[0].state }}</view>
 							</view>
 						</view>
 					</scroll-view>
@@ -63,8 +61,8 @@ export default {
 		};
 	},
 	methods: {
-		async navplay(key) {
-			uni.setStorageSync('temp', this.searchlists);
+		async navplay(searchlist,key) {
+			uni.setStorageSync('temp', searchlist);
 			let urll = `/pages/play/play?key=${key}`;
 			uni.navigateTo({ url: urll });
 		},
@@ -132,7 +130,6 @@ export default {
 		}
 	},
 	onLoad: function(option) {
-		console.log(111);
 		this.search = option.search;
 		this.getsitelists();
 	}
