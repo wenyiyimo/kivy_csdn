@@ -28,12 +28,14 @@
 		<view class="body">
 			<view v-for="(i, index) in searchlists" :key="index">
 				<view style="display: flex;flex-direction: column;justify-content: flex-start;">
-					<text class="first-text" @click="navplay(i[1],0)">{{ i[0] }}</text>
-					<text class="second-text" @click="navplay(i[1],0)">共获取到{{ i[1].length }}条结果</text>
+					<text class="first-text" @click="navplay(i[1], 0, false)">{{ i[0] }}</text>
+					<text class="second-text" @click="navplay(i[1], 0, false)">共获取到{{ i[1].length }}条结果</text>
 					<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
 						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
 							<view v-for="(j, key) in i[1]" :key="key">
-								<view class="first-text" @click="navplay(i[1],key)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">{{ j[0].state }}</view>
+								<view class="first-text" @click="navplay(i[1], key, true)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">
+									{{ j[0].state }}
+								</view>
 							</view>
 						</view>
 					</scroll-view>
@@ -61,10 +63,23 @@ export default {
 		};
 	},
 	methods: {
-		async navplay(searchlist,key) {
-			uni.setStorageSync('temp', searchlist);
-			let urll = `/pages/play/play?key=${key}`;
-			uni.navigateTo({ url: urll });
+		navplay(searchlist, key, flag) {
+			if (flag) {
+				let temp = [];
+				for (let i of searchlist) {
+					if (i[0].state == searchlist[key][0].state) {
+						temp.push(i);
+					}
+				}
+				uni.setStorageSync('temp', temp);
+				let urll = `/pages/play/play?index=0`;
+				uni.navigateTo({ url: urll });
+			}
+			if (!flag) {
+				uni.setStorageSync('temp', searchlist);
+				let urll = `/pages/play/play?index=${key}`;
+				uni.navigateTo({ url: urll });
+			}
 		},
 		async getsitelists() {
 			let sites = uni.getStorageSync('sites');
