@@ -28,9 +28,17 @@
 		<view class="body">
 			<view v-for="(i, index) in searchlists" :key="index">
 				<view style="display: flex;flex-direction: column;justify-content: flex-start;">
-					<text class="first-text">{{ i[0] }}</text>
-					<text class="second-text">共获取到{{ i[1].length }}条结果</text>
-					
+					<text class="first-text" @click="navplay(0)">{{ i[0] }}</text>
+					<text class="second-text" @click="navplay(0)">共获取到{{ i[1].length }}条结果</text>
+					<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
+						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;">
+							<view v-for="(j, key) in i[1]" :key="key">
+								<view>
+									<text class="second-text" @click="navplay(key)" style="background-color: #ebebeb;border-radius: 20%;">{{ j[0].state }}</text>
+								</view>
+							</view>
+						</view>
+					</scroll-view>
 				</view>
 			</view>
 		</view>
@@ -55,6 +63,11 @@ export default {
 		};
 	},
 	methods: {
+		async navplay(key) {
+			uni.setStorageSync('temp', this.searchlists);
+			let urll = `/pages/play/play?key=${key}`;
+			uni.navigateTo({ url: urll });
+		},
 		async getsitelists() {
 			let sites = uni.getStorageSync('sites');
 			for (let i of sites) {
@@ -68,7 +81,7 @@ export default {
 			uni.navigateBack();
 		},
 		async getsearchlists(site) {
-			let searchurl = site.search_href.replace('searchKey',this.search);
+			let searchurl = site.search_href.replace('searchKey', this.search);
 			if (site.id == 'XT') {
 				let res = await http.xtSearch(site, searchurl);
 				// console.log(res.data)
@@ -116,30 +129,10 @@ export default {
 		},
 		async searchClearEvent() {
 			this.search = '';
-		},
-		async detailButton(item) {
-			const targetHref = item[1];
-			const targetImage = item[2];
-			const targetTitle = item[0];
-			const targetState = item[3];
-			const targetName = item[4];
-			const key = targetName + '@@' + item[1];
-			const res = await db.get('notive', key);
-			if (res.flag) {
-				const targetStar = '../../static/star.png';
-				const targetUserState = res.data.userState;
-				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-				uni.navigateTo({ url: urll });
-			} else {
-				const targetStar = '../../static/star1.png';
-				const targetUserState = '无';
-				const urll = `/pages/detail/detail?href=${targetHref}&image=${targetImage}&title=${targetTitle}&state=${targetState}&userState=${targetUserState}&name=${targetName}&star=${targetStar}`;
-				uni.navigateTo({ url: urll });
-			}
 		}
 	},
 	onLoad: function(option) {
-		console.log(111)
+		console.log(111);
 		this.search = option.search;
 		this.getsitelists();
 	}
