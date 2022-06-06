@@ -10,7 +10,7 @@
 			<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
 				<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
 					<view v-for="(item, index) in searchlists" :key="index">
-						<view class="first-text" style="background-color: #ebebeb;border-radius: 20%;margin-right: 10rpx;">{{ item[0].state }}</view>
+						<view class="first-text" style="margin-right: 10rpx;">{{ item[0].name }}</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -18,7 +18,7 @@
 				<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
 					<view class="first-text" @click="nixu">逆序</view>
 					<view v-for="(item, index) in playdatas" :key="index">
-						<view class="first-text" style="background-color: #ebebeb;border-radius: 20%;margin-right: 10rpx;">{{ item.name }}</view>
+						<view class="first-text" style="margin-right: 10rpx;">{{ item.name }}</view>
 					</view>
 				</view>
 			</scroll-view>
@@ -28,7 +28,14 @@
 </template>
 
 <script>
+import db from '../../utils/database.js';
+import http from '../../utils/http.js';
+import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-icons.vue';
+
 export default {
+	components: {
+		UniIcons,
+	},
 	data() {
 		return {
 			downImage: 'arrow-down',
@@ -59,4 +66,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>
