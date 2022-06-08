@@ -84,4 +84,30 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.warp {
+	display: grid;
+	/* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
+	grid-template-columns: repeat(auto-fill, 60rpx);
+	grid-template-rows: auto;
+	/* grid-gap属性是grid-column-gap和grid-row-gap的合并简写形式， 
+	        grid-row-gap属性设置行与行的间隔（行间距），grid-column-gap属性设置列与列的间隔（列间距）
+	        我设置的是10 行与行之间 列与列之间 都是10*/
+	grid-row-gap: 10px;
+	grid-column-gap: 10px;
+	/* item在这个单元格中的位置justify-items属性设置单元格内容的水平位置（左中右），align-items属性设置单元格内容的垂直位置（上中下） */
+	align-items: center;
+	justify-items: center;
+	/* justify-content属性是整个内容区域在容器里面的水平位置（左中右），align-content属性是整个内容区域的垂直位置（上中下）。 */
+	justify-content: space-between;
+	align-content: center;
+}
+.item {
+	border-radius: 20%;
+	display: grid;
+	border: 1px solid #000000;
+	justify-content: center;
+	align-c#f3f3f3nt: center;
+	background-color: #eeeeee;
+}
+</style>
