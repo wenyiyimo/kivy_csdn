@@ -4,7 +4,7 @@ export default {
             xturl: '',
             playurl: '',
             webv: '',
-            videoContext: null;
+            videoContext: null,
         };
     },
     
@@ -27,6 +27,7 @@ export default {
             });
         },
         xtcallback(e) {
+			console.log(e.url);
             if (
                 e.url.indexOf('?url=') == -1 &&
                 e.url.indexOf('beiyong') == -1 &&
@@ -45,30 +46,57 @@ export default {
                 let re = new RegExp(matchrule, 'g')
                 let t = re.exec(e.url);
                 if (!t) {
-                    console.log(e.url);
                     this.playurl = e.url;
                     console.log(this.playurl);
                 }
             }
         },
-        async getplayurl(url, matchrule = '!!!') {
+         getplayurl(url, matchrule = '!!!') {
             uni.setStorageSync('matchrule', matchrule);
-            uni.showToast({
-                title: '嗅探中...',
-                duration: 30000,
-                icon: 'loading'
-            });
+            // uni.showToast({
+            //     title: '嗅探中...',
+            //     duration: 30000,
+            //     icon: 'loading'
+            // });
             this.webv.clear(); //清除之前的加载
             uni.setStorageSync('playurl', '');
             this.webv.loadURL(url);
+			console.log(url)
             // this.webv.overrideUrlLoading({ mode: 'reject' }, function(e) {});
             this.webv.overrideUrlLoading({
                 mode: 'allow',
                 match: '.*(mp4|m3u8|flv|url=|video).*'
-            }, function(e) {});
+            }, function(e) {
+				                    // console.log(e.url);
+			});
             this.webv.listenResourceLoading({
                 match: '.*(mp4|m3u8|flv|url=|video).*'
-            }, this.xtcallback(e))
+            }, function(e){
+				if (
+				    e.url.indexOf('?url=') == -1 &&
+				    e.url.indexOf('beiyong') == -1 &&
+				    e.url.indexOf('SVG') == -1 &&
+				    e.url.indexOf('update') == -1 &&
+				    e.url.indexOf('51.la/') == -1 &&
+				    !e.url.endsWith('.js') &&
+				    e.url.indexOf('.png') == -1 &&
+				    e.url.indexOf('.css') == -1 &&
+				    e.url.indexOf('gif') == -1 &&
+				    e.url.indexOf('.php') == -1 &&
+				    !e.url.endsWith('.jpg') &&
+				    e.url.indexOf('umuuid') == -1
+				) {
+				    let matchrule = uni.getStorageSync('matchrule');
+				    let re = new RegExp(matchrule, 'g')
+				    let t = re.exec(e.url);
+				    if (!t) {
+						console.log(1111111)
+						console.log(e.url)
+				        this.playurl = e.url;
+				        console.log(this.playurl);
+				    }
+				}
+			})
             // let that = this;
             // let alltime = 0;
             // let obj = setInterval(function() {
