@@ -1,146 +1,170 @@
 <template>
-	<view class="play">
-		<view class="header">
-			<view class="header-top"></view>
-			<view style="display: flex;flex-direction: row;justify-content: space-between;">
-				<uni-icons class="icon-style" color="#000000" size="40" type="arrow-left" @click="pageBacked" />
-				<text class="first-text" style="margin-top: 5rpx;" @click="openImpSite()">播放</text>
-				<uni-icons style="margin-right: 10px;" color="#000000" size="40" :type="downImage" @click="downvideo" />
-			</view>
-			<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-				<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
-					<view v-for="(item, index) in searchlists" :key="index">
-						<view class="first-text" style="margin-right: 10rpx;">{{ item[0].name }}</view>
-					</view>
-				</view>
-			</scroll-view>
-			<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-				<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
-					<view class="first-text" @click="nixu">逆序</view>
-					<view v-for="(item, index) in playdatas" :key="index">
-						<view class="first-text" style="margin-right: 10px;margin-left:10px;">{{ item.name }}</view>
-					</view>
-				</view>
-			</scroll-view>
-		</view>
-		<view class="body">
-			<view class="grid-layout" v-if="showplaydata">
-				<view class="first-text" v-for="(item,index) in playdatas[tagcurrent].data" :key="index">{{item.title}}</view>
-			</view>
-		</view>
-	</view>
+    <view class="play">
+        <view class="header">
+            <view class="header-top"></view>
+            <view style="display: flex;flex-direction: row;justify-content: space-between;">
+                <uni-icons class="icon-style" color="#000000" size="40" type="arrow-left" @click="pageBacked" />
+                <text class="first-text" style="margin-top: 5rpx;" @click="openImpSite()">播放</text>
+                <uni-icons style="margin-right: 10px;" color="#000000" size="40" :type="downImage" @click="downvideo" />
+            </view>
+        </view>
+        <view class="body">
+            <view class="detail" style='display:flex;flex-direction: row;'>
+                <view style="display:flex;flex-direction: row;">
+                    <image :src="searchlists[sitecurrent][0].pic" mode="aspectFit" class="item-img"></image>
+                    <view style="display:flex;flex-direction: column;">
+                        <view class="first-text">{{ searchlists[sitecurrent][0].title }}</view>
+                        <view class="second-text">状态：{{ searchlists[sitecurrent][0].state }}</view>
+                        <view class="second-text">上次观看：无</view>
+                    </view>
+                </view>
+                <image :src="notiveImage" mode="aspectFit"></image>
+            </view>
+            <scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
+                <view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
+                    <view v-for="(item, index) in searchlists" :key="index">
+                        <view class="first-text" style="margin-right: 10rpx;" @click='changesite(index)'>{{ item[0].name }}</view>
+                    </view>
+                </view>
+            </scroll-view>
+            <scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
+                <view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
+                    <view class="first-text" @click="nixu">逆序</view>
+                    <view v-for="(item, index) in playdatas" :key="index">
+                        <view class="first-text" style="margin-right: 10px;margin-left:10px;" @click='changetag(index)'>{{ item.name }}</view>
+                    </view>
+                </view>
+            </scroll-view>
+            <view class="grid-layout" v-if="showplaydata">
+                <view class="first-text" v-for="(item, index) in playdatas[tagcurrent].data" :key="index" @click="changeplay(index)">{{ item.title }}</view>
+            </view>
+        </view>
+    </view>
 </template>
-
 <script>
 import db from '../../utils/database.js';
 import http from '../../utils/http.js';
 import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-icons.vue';
 
 export default {
-	components: {
-		UniIcons
-	},
-	data() {
-		return {
-			downImage: 'arrow-down',
-			sitecurrent: 0,
-			tagcurrent: 0,
-			playcurrent: 0,
-			searchlists: [],
-			playdatas: [],
-			showplaydata:false
-		};
-	},
-	methods: {
-		downvideo() {
-			if (this.downImage == 'arrow-down') {
-				this.downImage = 'arrow-up';
-			} else {
-				this.downImage = 'arrow-down';
-				
-			}
-		},
-		pageBacked() {
-			// this.$router.go(-1);
-			uni.navigateBack();
-		},
-		nixu() {
-			let temp = [];
-			let tempLen = this.playdatas[this.tagcurrent].data.length;
-			for (let i = 0; i < tempLen; i++) {
-				temp[i]=this.playdatas[this.tagcurrent]['data'][tempLen - i - 1];
-			}
-			this.playdatas[this.tagcurrent].data=temp
-		},
-		async getplaydata() {
-			let site = this.searchlists[this.sitecurrent];
-			// console.log(site)
-			if(site[2]){
-				this.playdatas=site[2];
-			}else{
-				
-			if (site[1].id == 'XT') {
-				let res = await http.xtplaydata(site[0].href, site[1]);
-				if(res.flag){
-					this.playdatas=res.data;
-					this.showplaydata=true;
-					this.searchlists[this.sitecurrent].push(this.playdatas)
-				}else{
-					uni.showToast({
-						title:"获取失败!",
-						duration:2000
-					})
-				}
-			}
-			if (site[1].id == 'APP') {
-				// console.log(site)
-				let res = await http.appplaydata(site[0].href, site[1]);
-				if(res.flag){
-					this.playdatas=res.data;
-					this.showplaydata=true;
-					this.searchlists[this.sitecurrent].push(this.playdatas)
-				}else{
-					uni.showToast({
-						title:"获取失败!",
-						duration:2000
-					})
-				}
-			}}
-		}
-	},
-	onLoad: function(option) {
-		this.sitecurrent = Number(option.index);
-		this.searchlists = uni.getStorageSync('temp');
-		this.getplaydata()
-	}
+    components: {
+        UniIcons
+    },
+    data() {
+        return {
+            downImage: 'arrow-down',
+            sitecurrent: 0,
+            tagcurrent: 0,
+            playcurrent: 0,
+            searchlists: [],
+            playdatas: [],
+            showplaydata: false,
+            notiveImage: 'heart-filled'
+        };
+    },
+    methods: {
+        changeplay(index)() {
+            this.playcurrent = index;
+        },
+        changetag(index) {
+            this.tagcurrent = index;
+        },
+        changesite(index) {
+            this.sitecurrent = index;
+            this.getplaydata();
+        },
+        downvideo() {
+            if (this.downImage == 'arrow-down') {
+                this.downImage = 'arrow-up';
+            } else {
+                this.downImage = 'arrow-down';
+            }
+        },
+        pageBacked() {
+            // this.$router.go(-1);
+            uni.navigateBack();
+        },
+        nixu() {
+            let temp = [];
+            let tempLen = this.playdatas[this.tagcurrent].data.length;
+            for (let i = 0; i < tempLen; i++) {
+                temp[i] = this.playdatas[this.tagcurrent]['data'][tempLen - i - 1];
+            }
+            this.playdatas[this.tagcurrent].data = temp;
+        },
+        async getplaydata() {
+            let site = this.searchlists[this.sitecurrent];
+            // console.log(site)
+            if (site[2]) {
+                this.playdatas = site[2];
+            } else {
+                if (site[1].id == 'XT') {
+                    let res = await http.xtplaydata(site[0].href, site[1]);
+                    if (res.flag) {
+                        this.playdatas = res.data;
+                        this.showplaydata = true;
+                        this.searchlists[this.sitecurrent].push(this.playdatas);
+                    } else {
+                        uni.showToast({
+                            title: '获取失败!',
+                            duration: 2000
+                        });
+                    }
+                }
+                if (site[1].id == 'APP') {
+                    // console.log(site)
+                    let res = await http.appplaydata(site[0].href, site[1]);
+                    if (res.flag) {
+                        this.playdatas = res.data;
+                        this.showplaydata = true;
+                        this.searchlists[this.sitecurrent].push(this.playdatas);
+                    } else {
+                        uni.showToast({
+                            title: '获取失败!',
+                            duration: 2000
+                        });
+                    }
+                }
+            }
+        }
+    },
+    onLoad: function(option) {
+        this.sitecurrent = Number(option.index);
+        this.searchlists = uni.getStorageSync('temp');
+        this.getplaydata();
+    }
 };
 </script>
-
 <style lang="scss" scoped>
-	.grid-layout {
-		display: grid;
-		/* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
-		grid-template-columns: repeat(auto-fill, 80px);
-		grid-template-rows: auto;
-		/* grid-gap属性是grid-column-gap和grid-row-gap的合并简写形式， 
-		        grid-row-gap属性设置行与行的间隔（行间距），grid-column-gap属性设置列与列的间隔（列间距）
-		        我设置的是10 行与行之间 列与列之间 都是10*/
-		grid-row-gap: 10px;
-		// grid-column-gap: 10px;
-		/* item在这个单元格中的位置justify-items属性设置单元格内容的水平位置（左中右），align-items属性设置单元格内容的垂直位置（上中下） */
-		align-items: center;
-		justify-items: center;
-		/* justify-content属性是整个内容区域在容器里面的水平位置（左中右），align-content属性是整个内容区域的垂直位置（上中下）。 */
-		justify-content: space-between;
-		align-content: center;
-	}
-	.item {
-		border-radius: 20%;
-		display: grid;
-		border: 1px solid #000000;
-		justify-content: center;
-		align-content: center;
-		background-color: #eeeeee;
-	
-	}
+.body {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-layout {
+    display: grid;
+    /* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
+    grid-template-columns: repeat(auto-fill, 80px);
+    grid-template-rows: auto;
+    /* grid-gap属性是grid-column-gap和grid-row-gap的合并简写形式， 
+                grid-row-gap属性设置行与行的间隔（行间距），grid-column-gap属性设置列与列的间隔（列间距）
+                我设置的是10 行与行之间 列与列之间 都是10*/
+    grid-row-gap: 10px;
+    // grid-column-gap: 10px;
+    /* item在这个单元格中的位置justify-items属性设置单元格内容的水平位置（左中右），align-items属性设置单元格内容的垂直位置（上中下） */
+    align-items: center;
+    justify-items: center;
+    /* justify-content属性是整个内容区域在容器里面的水平位置（左中右），align-content属性是整个内容区域的垂直位置（上中下）。 */
+    justify-content: space-between;
+    align-content: center;
+}
+
+.item {
+    border-radius: 20%;
+    display: grid;
+    border: 1px solid #000000;
+    justify-content: center;
+    align-content: center;
+    background-color: #eeeeee;
+}
 </style>
