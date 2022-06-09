@@ -18,12 +18,16 @@
 				<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
 					<view class="first-text" @click="nixu">逆序</view>
 					<view v-for="(item, index) in playdatas" :key="index">
-						<view class="first-text" style="margin-right: 10rpx;">{{ item.name }}</view>
+						<view class="first-text" style="margin-right: 10px;margin-left:10px;">{{ item.name }}</view>
 					</view>
 				</view>
 			</scroll-view>
 		</view>
-		<view class="body"></view>
+		<view class="body">
+			<view class="grid-layout" v-if="showplaydata">
+				<view class="first-text" v-for="(item,index) in playdatas[tagcurrent].data" :key="index">{{item.title}}</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -43,71 +47,100 @@ export default {
 			tagcurrent: 0,
 			playcurrent: 0,
 			searchlists: [],
-			playdatas: []
+			playdatas: [],
+			showplaydata:false
 		};
 	},
 	methods: {
+		downvideo() {
+			if (this.downImage == 'arrow-down') {
+				this.downImage = 'arrow-up';
+			} else {
+				this.downImage = 'arrow-down';
+				
+			}
+		},
 		pageBacked() {
 			// this.$router.go(-1);
 			uni.navigateBack();
 		},
 		nixu() {
-			let temp = this.playdatas[this.tagcurrent].data;
-			let tempLen = temp.length;
+			let temp = [];
+			let tempLen = this.playdatas[this.tagcurrent].data.length;
 			for (let i = 0; i < tempLen; i++) {
-				this.playdatas[this.tagcurrent]['data'][i] = temp[tempLen - i - 1];
+				temp[i]=this.playdatas[this.tagcurrent]['data'][tempLen - i - 1];
 			}
+			this.playdatas[this.tagcurrent].data=temp
 		},
 		async getplaydata() {
 			let site = this.searchlists[this.sitecurrent];
-			if (res.data.id == 'XT') {
-				let res1 = await http.getPlayData(url, res.data);
-				this.playList = res1.data[1][0];
-				this.playLists = res1.data[1];
-				this.tagLists = res1.data[0];
-				this.nowTag = this.tagLists[0];
+			// console.log(site)
+			if(site[2]){
+				this.playdatas=site[2];
+			}else{
+				
+			if (site[1].id == 'XT') {
+				let res = await http.xtplaydata(site[0].href, site[1]);
+				if(res.flag){
+					this.playdatas=res.data;
+					this.showplaydata=true;
+					this.searchlists[this.sitecurrent].push(this.playdatas)
+				}else{
+					uni.showToast({
+						title:"获取失败!",
+						duration:2000
+					})
+				}
 			}
-			if (res.data.id == 'APP') {
-				this.siteid = 'APP';
-				let res1 = await http.appPlayData(url, res.data);
-				this.playList = res1.data[1][0];
-				this.playLists = res1.data[1];
-				this.tagLists = res1.data[0];
-				this.nowTag = this.tagLists[0];
-			}
+			if (site[1].id == 'APP') {
+				// console.log(site)
+				let res = await http.appplaydata(site[0].href, site[1]);
+				if(res.flag){
+					this.playdatas=res.data;
+					this.showplaydata=true;
+					this.searchlists[this.sitecurrent].push(this.playdatas)
+				}else{
+					uni.showToast({
+						title:"获取失败!",
+						duration:2000
+					})
+				}
+			}}
 		}
 	},
 	onLoad: function(option) {
 		this.sitecurrent = Number(option.index);
 		this.searchlists = uni.getStorageSync('temp');
+		this.getplaydata()
 	}
 };
 </script>
 
 <style lang="scss" scoped>
-.warp {
-	display: grid;
-	/* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
-	grid-template-columns: repeat(auto-fill, 60rpx);
-	grid-template-rows: auto;
-	/* grid-gap属性是grid-column-gap和grid-row-gap的合并简写形式， 
-	        grid-row-gap属性设置行与行的间隔（行间距），grid-column-gap属性设置列与列的间隔（列间距）
-	        我设置的是10 行与行之间 列与列之间 都是10*/
-	grid-row-gap: 10px;
-	grid-column-gap: 10px;
-	/* item在这个单元格中的位置justify-items属性设置单元格内容的水平位置（左中右），align-items属性设置单元格内容的垂直位置（上中下） */
-	align-items: center;
-	justify-items: center;
-	/* justify-content属性是整个内容区域在容器里面的水平位置（左中右），align-content属性是整个内容区域的垂直位置（上中下）。 */
-	justify-content: space-between;
-	align-content: center;
-}
-.item {
-	border-radius: 20%;
-	display: grid;
-	border: 1px solid #000000;
-	justify-content: center;
-	align-c#f3f3f3nt: center;
-	background-color: #eeeeee;
-}
+	.grid-layout {
+		display: grid;
+		/* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
+		grid-template-columns: repeat(auto-fill, 80px);
+		grid-template-rows: auto;
+		/* grid-gap属性是grid-column-gap和grid-row-gap的合并简写形式， 
+		        grid-row-gap属性设置行与行的间隔（行间距），grid-column-gap属性设置列与列的间隔（列间距）
+		        我设置的是10 行与行之间 列与列之间 都是10*/
+		grid-row-gap: 10px;
+		// grid-column-gap: 10px;
+		/* item在这个单元格中的位置justify-items属性设置单元格内容的水平位置（左中右），align-items属性设置单元格内容的垂直位置（上中下） */
+		align-items: center;
+		justify-items: center;
+		/* justify-content属性是整个内容区域在容器里面的水平位置（左中右），align-content属性是整个内容区域的垂直位置（上中下）。 */
+		justify-content: space-between;
+		align-content: center;
+	}
+	.item {
+		border-radius: 20%;
+		display: grid;
+		border: 1px solid #000000;
+		justify-content: center;
+		align-content: center;
+		background-color: #eeeeee;
+	
+	}
 </style>
