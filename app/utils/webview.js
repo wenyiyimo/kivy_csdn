@@ -7,6 +7,10 @@ export default {
             videoContext: null;
         };
     },
+    
+  //  import webvplay from '@/utils/webview.js';
+//export default {
+    //mixins: [webvplay],
     methods: {
         async addvideo() {
             this.videoContext = plus.video.createVideoPlayer('videoContext', {
