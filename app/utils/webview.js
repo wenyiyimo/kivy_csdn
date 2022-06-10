@@ -92,6 +92,7 @@ export default {
 				    if (!t) {
 						console.log(1111111)
 						console.log(e.url)
+						console.log(this)
 				        this.playurl = e.url;
 				        console.log(this.playurl);
 				    }
