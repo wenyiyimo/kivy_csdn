@@ -5,6 +5,7 @@ export default {
             playurl: '',
             webv: '',
             videoContext: null,
+            playRate: 1.0
         };
     },
 
@@ -28,6 +29,22 @@ export default {
             let currentWebview = this.$scope.$getAppWebview();
             currentWebview.append(this.videoContext);
             this.videoContext.hide();
+            this.videoContext.addEventListener('fullscreenclick', function(e) {
+                var clickW = e.detail.screenX;
+                var clickH = e.detail.screenY;
+                if (this.playRate == 1.0) {
+                    this.videoContext.playbackRate(2.0);
+                    this.playRate = 2.0;
+                    console.log(2)
+                } else {
+                    if (this.playRate != 1.0) {
+                        this.videoContext.playbackRate(1.0);
+                        this.playRate = 1.0;
+                        console.log(1)
+
+                    }
+                }
+            }, false)
         },
         xtplayurl(url, matchrule = '!!!') {
             uni.setStorageSync('matchrule', matchrule);
