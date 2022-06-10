@@ -13,39 +13,41 @@ export default {
     //export default {
     //mixins: [webvplay],
     methods: {
-        async addvideo() {
-            this.videoContext = plus.video.createVideoPlayer('videoContext', {
-                src: this.playurl,
-                top: '100px',
-                left: '0px',
-                width: '100%',
-                height: '200px',
-                position: 'absolute',
-                autoplay: true,
-                codec: 'hardware',
-                httpCache: true,
-                playStrategy: 3
-            });
-            let currentWebview = this.$scope.$getAppWebview();
-            currentWebview.append(this.videoContext);
-            this.videoContext.hide();
-            this.videoContext.addEventListener('fullscreenclick', function(e) {
-                var clickW = e.detail.screenX;
-                var clickH = e.detail.screenY;
-                if (this.playRate == 1.0) {
-                    this.videoContext.playbackRate(2.0);
-                    this.playRate = 2.0;
-                    console.log(2)
-                } else {
-                    if (this.playRate != 1.0) {
-                        this.videoContext.playbackRate(1.0);
-                        this.playRate = 1.0;
-                        console.log(1)
-
-                    }
-                }
-            }, false)
-        },
+           async addvideo() {
+    this.videoContext = plus.video.createVideoPlayer('videoContext', {
+        src: this.playurl,
+        top: '100px',
+        left: '0px',
+        width: '100%',
+        height: '20%',
+        position: 'absolute',
+        autoplay: true,
+        codec: 'hardware',
+        httpCache: true,
+        playStrategy: 3
+    });
+    let currentWebview = this.$scope.$getAppWebview();
+    currentWebview.append(this.videoContext);
+    this.videoContext.hide();
+    uni.setStorageSync('playrate', 1.0);
+    this.videoContext.addEventListener('fullscreenclick', function(e) {
+        let clickW = e.screenX / e.screenWidth;
+        let clickH = e.screenY / e.screenHeight;
+        let playrate = uni.getStorageSync('playrate');
+        let videoContext = plus.video.getVideoPlayerById('videoContext');
+        if (clickW > 0.875 && 0.4 < clickH < 0.6) {
+            if (playrate == 1.0) {
+                videoContext.playbackRate(2.0);
+                console.log(2);
+                uni.setStorageSync('playrate', 2.0);
+            } else {
+                videoContext.playbackRate(1.0);
+                console.log(1);
+                uni.setStorageSync('playrate', 1.0);
+            }
+        }
+    }, false)
+},
         xtplayurl(url, matchrule = '!!!') {
             uni.setStorageSync('matchrule', matchrule);
             uni.showToast({
