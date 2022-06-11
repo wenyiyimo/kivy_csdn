@@ -1,0 +1,195 @@
+<template>
+	<view class="body">
+		<video
+			:src="playurl"
+			autoplay="true"
+			:initial-time="initialtime"
+			:direction="direction"
+			:controls="controls"
+			:object-fit="objectfit"
+			codec="hardware"
+			http-cache="false"
+			:play-strategy="playstrategy"
+			@ended="nextvideo"
+			@fullscreenchange="fullscreenchange"
+			@error="showerror"
+			@fullscreenclick="fullscreenclick"
+		>
+			<cover-view class="play-control" v-if="fullscreen && controls">
+				<text class="first-text" @click="getnowtime()">{{ nowtime }}</text>
+				<text class="first-text" @click="changeplaystrategy()">解码:{{ playstrategytext }}</text>
+				<text class="first-text" @click="lastvideo()">上集</text>
+				<text class="first-text">{{ nowplay }}</text>
+				<text class="first-text" @click="nextvideo()">下集</text>
+				<text class="first-text" @click="changeobjectfit()">{{ objectfittext }}</text>
+
+				<text class="first-text" @click="changedirection()">旋转</text>
+				<text class="first-text" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
+			</cover-view>
+		</video>
+	</view>
+</template>
+<script>
+export default {
+	data() {
+		return {
+			nowtime: '',
+			playurl: '',
+			nowplay: '',
+			initialtime: 0,
+			controls: true,
+			objectfit: 'contain',
+			objectfittext: '包含',
+			playstrategy: '3',
+			playstrategytext: 'm3u8',
+			playstrategy: 3,
+			fullscreen: false,
+			playbackRate: 1.0,
+			direction: -90,
+			videoContext: null
+		};
+	},
+	onReady: function() {
+		this.videoContext = uni.createVideoContext('myvideo', this);
+	},
+	methods: {
+		nextvideo() {},
+		lastvideo() {},
+		getnowtime() {
+			let now = new Date();
+			let hh = now.getHours(); //时
+			if (hh < 10) hh = '0' + hh;
+			let mm = now.getMinutes(); //分
+			if (mm < 10) mm = '0' + mm;
+			this.nowtime = `${hh}:${mm}`;
+		},
+		showerror() {
+			uni.showToast({
+				title: '视频播放错误!',
+				duration: 1000
+			});
+		},
+		fullscreenchange() {
+			this.fullscreen = !this.fullscreen;
+			if (this.fullscreen) {
+				this.controls = false;
+				plus.navigator.setFullscreen(true);
+			} else {
+				plus.navigator.setFullscreen(false);
+			}
+		},
+		fullscreenclick(e) {
+			let clickW = e.detail.screenX / e.detail.screenWidth;
+			let clickH = e.detail.screenY / e.detail.screenHeight;
+			if (clickW > 0.875 && 0.4 < clickH && clickH < 0.6 && this.playbackRate == 1.0) {
+				this.videoContext.playbackRate(2.0);
+				this.playbackRate = 2.0;
+				this.controls = false;
+			} else {
+				if (clickW > 0.875 && 0.4 < clickH && clickH < 0.6 && this.playbackRate != 1.0) {
+					this.videoContext.playbackRate(1.0);
+					this.playbackRate = 1.0;
+					this.controls = false;
+				} else {
+					if (clickH > 0.2 && this.controls) {
+						this.controls = false;
+					} else {
+						this.getnowtime();
+						this.controls = true;
+					}
+				}
+			}
+		},
+		changeplaystrategy() {
+			if (this.playstrategytext == '网络') {
+				this.playstrategytext = '本地';
+				this.playstrategy = '0';
+				return;
+			}
+			if (this.playstrategytext == '本地') {
+				this.playstrategytext = '极端';
+				this.playstrategy = '1';
+				return;
+			}
+			if (this.playstrategytext == '极端') {
+				this.playstrategytext = '网络';
+				this.playstrategy = '3';
+				return;
+			}
+		},
+		changeplaybackRate() {
+			if (this.playbackRate == 1.0) {
+				this.videoContext.playbackRate(1.25);
+				this.playbackRate = 1.25;
+				return;
+			}
+			if (this.playbackRate == 1.25) {
+				this.videoContext.playbackRate(1.5);
+				this.playbackRate = 1.5;
+				return;
+			}
+			if (this.playbackRate == 1.5) {
+				this.videoContext.playbackRate(2.0);
+				this.playbackRate = 2.0;
+				return;
+			}
+			if (this.playbackRate == 2.0) {
+				this.videoContext.playbackRate(0.5);
+				this.playbackRate = 0.5;
+				return;
+			}
+			if (this.playbackRate == 0.5) {
+				this.videoContext.playbackRate(0.8);
+				this.playbackRate = 0.8;
+				return;
+			}
+			if (this.playbackRate === 0.8) {
+				this.videoContext.playbackRate(1.0);
+				this.playbackRate = 1.0;
+				return;
+			}
+		},
+		changedirection() {
+			if (this.direction == -90) {
+				this.direction = 0;
+				return;
+			}
+			if (this.direction == 0) {
+				this.direction = 90;
+				return;
+			}
+			if (this.direction == 90) {
+				this.direction = -90;
+				return;
+			}
+		},
+		changeobjectfit() {
+			if (this.objectfit == 'contain') {
+				this.objectfit = 'fill';
+				this.objectfittext = '填充';
+				return;
+			}
+			if (this.objectfit == 'fill') {
+				this.objectfit = 'cover';
+				this.objectfittext = '覆盖';
+				return;
+			}
+			if (this.objectfit == 'cover') {
+				this.objectfit = 'contain';
+				this.objectfittext = '包含';
+				return;
+			}
+		}
+	}
+};
+</script>
+<style lang="scss" scoped>
+.play-control {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	color: #ffffff;
+	margin-top: 13x;
+	margin-left: 40px;
+}
+</style>
