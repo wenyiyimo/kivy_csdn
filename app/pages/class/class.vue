@@ -19,16 +19,12 @@
 			</view>
 		</view>
 		<view class="body">
-			<view v-for="(item, index) in list" :key="index">
-				<view class="out-item">
-					<view class="tui-list-item" @click="handlerButton(item)">
-						<image :src="item.picurl" mode="aspectFit" class="item-img"></image>
-						<view class="item-box">
-							<text class="item-title">{{ item.name }}</text>
-							<text style="margin-left: 20px;" v-if="item.score != ''" class="item-name">评分：{{ item.score }}</text>
-							<text class="item-name" v-if="classnum != 1 && classnum != 3 && classnum != 4">更新至{{ item.ipad_play_for_list.episode }}集</text>
-						</view>
-					</view>
+			<view style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-between;" v-for="(item, index) in list" :key="index">
+				<view style="display: flex;flex-direction: column;">
+					<text class="second-text">评分：{{ item.score }}</text>
+					<image :src="item.picurl" mode="aspectFit"></image>
+					<text class="second-text">更新至{{ item.ipad_play_for_list.episode }}集</text>
+					<text class="second-text">{{ item.name }}</text>
 				</view>
 			</view>
 		</view>
