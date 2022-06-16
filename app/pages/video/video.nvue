@@ -1,6 +1,8 @@
 <template>
 	<view class="body">
 		<video
+			id="myvideo"
+			ref="myvideo"
 			:src="playurl"
 			autoplay="true"
 			:initial-time="initialtime"
@@ -16,15 +18,15 @@
 			@fullscreenclick="fullscreenclick"
 		>
 			<cover-view class="play-control" v-if="fullscreen && controls">
-				<text class="first-text" @click="getnowtime()">{{ nowtime }}</text>
-				<text class="first-text" @click="changeplaystrategy()">解码:{{ playstrategytext }}</text>
-				<text class="first-text" @click="lastvideo()">上集</text>
-				<text class="first-text">{{ nowplay }}</text>
-				<text class="first-text" @click="nextvideo()">下集</text>
-				<text class="first-text" @click="changeobjectfit()">{{ objectfittext }}</text>
+				<text class="first-text" style="color: #fff;" @click="getnowtime()">{{ nowtime }}</text>
+				<text class="first-text" style="color: #fff;" @click="changeplaystrategy()">解码:{{ playstrategytext }}</text>
+				<text class="first-text" style="color: #fff;" @click="lastvideo()">上集</text>
+				<text class="first-text" style="color: #fff;" >{{ nowplay }}</text>
+				<text class="first-text" style="color: #fff;" @click="nextvideo()">下集</text>
+				<text class="first-text" style="color: #fff;" @click="changeobjectfit()">{{ objectfittext }}</text>
 
-				<text class="first-text" @click="changedirection()">旋转</text>
-				<text class="first-text" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
+				<text class="first-text" style="color: #fff;" @click="changedirection()">旋转</text>
+				<text class="first-text" style="color: #fff;" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
 			</cover-view>
 		</video>
 	</view>
@@ -42,7 +44,6 @@ export default {
 			objectfittext: '包含',
 			playstrategy: '3',
 			playstrategytext: 'm3u8',
-			playstrategy: 3,
 			fullscreen: false,
 			playbackRate: 1.0,
 			direction: -90,
@@ -50,11 +51,25 @@ export default {
 		};
 	},
 	onReady: function() {
-		this.videoContext = uni.createVideoContext('myvideo', this);
+		this.videoContext = uni.createVideoContext('myvideo',this);
+		uni.$on('play', this.playvideo);
 	},
 	methods: {
-		nextvideo() {},
-		lastvideo() {},
+		playvideo(data){
+			// console.log(data);
+			// console.log(that.playurl);
+			this.nowplay = data.nowplay;
+			this.playurl = data.playurl;
+			this.videoContext.play();
+		},
+		nextvideo() {
+			uni.$emit('controls', { msg: 'next' });
+			this.videoContext.pause();
+		},
+		lastvideo() {
+			uni.$emit('controls', { msg: 'last' });
+			this.videoContext.pause();
+		},
 		getnowtime() {
 			let now = new Date();
 			let hh = now.getHours(); //时
@@ -64,10 +79,13 @@ export default {
 			this.nowtime = `${hh}:${mm}`;
 		},
 		showerror() {
-			uni.showToast({
-				title: '视频播放错误!',
-				duration: 1000
-			});
+			if(this.playurl!=''){
+				uni.showToast({
+					title: '视频播放错误!',
+					duration: 1000
+				});
+			}
+			
 		},
 		fullscreenchange() {
 			this.fullscreen = !this.fullscreen;
@@ -180,7 +198,8 @@ export default {
 				return;
 			}
 		}
-	}
+	},
+	onLoad() {}
 };
 </script>
 <style lang="scss" scoped>
