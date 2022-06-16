@@ -16,16 +16,19 @@
 					:src="playurl"
 					autoplay="true"
 					:initial-time="initialtime"
-					:direction="direction"
 					:controls="controls"
 					:object-fit="objectfit"
 					codec="hardware"
 					http-cache="false"
 					:play-strategy="playstrategy"
+					vslide-gesture="true"
+					show-center-play-btn="true"
+					enable-play-gesture="true"
 					@ended="nextvideo"
 					@fullscreenchange="fullscreenchange"
 					@error="showerror"
 					@fullscreenclick="fullscreenclick"
+					@controlstoggle="controlstoggle"
 				>
 					<cover-view class="play-control" v-if="fullscreen && controls">
 						<text class="first-text" style="color: #fff;" @click="getnowtime()">{{ nowtime }}</text>
@@ -40,7 +43,7 @@
 					</cover-view>
 				</video>
 			</view>
-            <view class="detail" style='display:flex;flex-direction: row;height: 250rpx;justify-content: space-between;margin-bottom:2vh'>
+            <view class="detail" style='display:flex;flex-direction: row;height: 250rpx;justify-content: space-between;'>
                 <view style="display:flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;margin-bottom: 10rpx;">
                     <image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height:250rpx;width:180rpx;"></image>
                     <view style="display:flex;flex-direction: column;justify-content: space-around;margin-left:50rpx;width:300rpx">
@@ -58,12 +61,11 @@
                     </view>
                 </view>
             </scroll-view>
-            <scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-                <view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
-                    <view class="first-text" @click="nixu">逆序</view>
-                    <view v-for="(item, index) in playdatas" :key="index">
-                        <text class="first-text" style="margin-right: 10px;margin-left:10px;" @click='changetag(index)'>{{ item.name }}</text>
-                    </view>
+            <scroll-view style="white-space: nowrap;display: flex;flex-direction: row;" scroll-x="true" show-scrollbar="false" scroll-left="120">
+                <view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5px;margin-bottom: 5px;">
+                    <text class="first-text" @click="nixu">逆序</text>
+                    <text v-for="(item, index) in playdatas" :key="index" class="first-text" style="margin-right: 10px;margin-left:10px;" @click='changetag(index)'>{{ item.name }}</text>
+                    
                 </view>
             </scroll-view>
             <view class="grid-layout" v-if="showplaydata">
@@ -78,10 +80,11 @@ import db from '../../utils/database.js';
 import http from '../../utils/http.js';
 import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-icons.vue';
    import webvplay from '@/utils/webview.js';
+   import UniCard from '@/components/uni-ui/uni-card/components/uni-card/uni-card.vue';
 export default {
     mixins: [webvplay],
     components: {
-        UniIcons
+        UniIcons,UniCard
     },
     data() {
         return {
@@ -122,6 +125,9 @@ export default {
 				} else {
 					plus.navigator.setFullscreen(false);
 				}
+			},
+			controlstoggle(e){
+				this.controls=e.detail.show;
 			},
 			fullscreenclick(e) {
 				let clickW = e.detail.screenX / e.detail.screenWidth;
@@ -195,16 +201,29 @@ export default {
 				}
 			},
 			changedirection() {
+				this.videoContext.exitFullScreen();
 				if (this.direction == -90) {
+					this.videoContext.requestFullScreen({
+						direction: 0
+					});
 					this.direction = 0;
+					plus.navigator.setFullscreen(true);
 					return;
 				}
 				if (this.direction == 0) {
+					this.videoContext.requestFullScreen({
+						direction: 90
+					});
 					this.direction = 90;
+					plus.navigator.setFullscreen(true);
 					return;
 				}
 				if (this.direction == 90) {
+					this.videoContext.requestFullScreen({
+						direction: -90
+					});
 					this.direction = -90;
+					plus.navigator.setFullscreen(true);
 					return;
 				}
 			},
