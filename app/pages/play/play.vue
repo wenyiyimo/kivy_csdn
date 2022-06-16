@@ -54,23 +54,18 @@
                 </view>
                 <image :src="notiveImage" mode="aspectFit"></image>
             </view>
-            <scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-                <view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
-                    <view v-for="(item, index) in searchlists" :key="index">
-                        <view class="first-text" style="margin-right: 10rpx;" @click='changesite(index)'>{{ item[0].name }}</view>
-                    </view>
-                </view>
-            </scroll-view>
             <scroll-view style="white-space: nowrap;display: flex;flex-direction: row;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-                <view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5px;margin-bottom: 5px;">
+                    <text v-for="(item, index) in searchlists" :key="index" class="first-text" style="margin-right: 10rpx;" @click='changesite(index)'>{{ item[0].name }}</text>
+                
+            </scroll-view>
+            <scroll-view style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 5px;margin-bottom: 5px;" scroll-x="true" show-scrollbar="false" scroll-left="120">
                     <text class="first-text" @click="nixu">逆序</text>
                     <text v-for="(item, index) in playdatas" :key="index" class="first-text" style="margin-right: 10px;margin-left:10px;" @click='changetag(index)'>{{ item.name }}</text>
                     
-                </view>
             </scroll-view>
             <view class="grid-layout" v-if="showplaydata">
-                <text class="first-text" style="flex: 1;margin: 10px;" v-for="(item, index) in playdatas[tagcurrent].data" :key="index" @click="changeplay(index)">{{ item.title }}</text>
-                <text class="first-text"></text>
+                <text class="first-text" style="flex: 1;margin: 5px;background-color: #fff;border-radius: 5%;" v-for="(item, index) in playdatas[tagcurrent].data" :key="index" @click="changeplay(index)">{{ item.title }}</text>
+                <text class="first-text" style="flex: 1;"></text>
 			</view>
         </view>
     </view>
@@ -277,11 +272,13 @@ export default {
 				this.nowtime = `${hh}:${mm}`;
 			},
 			showerror() {
-					uni.showToast({
-						title: '视频播放错误!',
-						duration: 1000
-					});
-				
+					if(this.playurl!=''){
+						// this.playurl='';
+						uni.showToast({
+							title: '视频播放错误!',
+							duration: 1000
+						});
+					}
 			},
 			
 	        playvideo() {
@@ -404,6 +401,7 @@ export default {
 .play-control {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	justify-content: space-around;
 	color: #ffffff;
 	margin-top: 13x;
