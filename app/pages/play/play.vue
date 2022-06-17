@@ -61,25 +61,37 @@
 					</view>
 				</view>
 			</view>
-			<scroll-view style="white-space: nowrap;display: flex;flex-direction: row;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-				<text v-for="(item, index) in searchlists" :key="index" class="first-text" style="margin-right: 10px;margin-top: 5px;" @click="changesite(index)">
+			<scroll-view
+				style="white-space: nowrap;display: flex;flex-direction: row;padding-right: 10px;padding-top: 5px;"
+				scroll-x="true"
+				show-scrollbar="false"
+				scroll-left="120"
+			>
+				<text v-for="(item, index) in searchlists" :key="index" class="first-text" :class="[sitecurrent == index ? 'active-text' : '']" @click="changesite(index)">
 					{{ item[0].name }}
 				</text>
 			</scroll-view>
 			<scroll-view
-				style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;"
+				style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;padding-right: 10px;padding-left: 10px;"
 				scroll-x="true"
 				show-scrollbar="false"
 				scroll-left="120"
 			>
 				<text class="first-text" @click="nixu(tagcurrent)">逆序</text>
-				<text v-for="(item, index) in searchlists[sitecurrent][2]" :key="index" class="first-text" style="margin-right: 10px;margin-left:10px;" @click="changetag(index)">
+				<text
+					v-for="(item, index) in searchlists[sitecurrent][2]"
+					:key="index"
+					class="first-text"
+					:class="[tagcurrent == index ? 'active-text' : '']"
+					@click="changetag(index)"
+				>
 					{{ item.name }}
 				</text>
 			</scroll-view>
 			<view class="grid-layout" v-if="showplaydata">
 				<text
 					class="first-text"
+					:class="[playcurrent == index ? 'active-text' : '']"
 					style="flex: 1;margin: 10px;"
 					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
