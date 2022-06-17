@@ -9,7 +9,7 @@
 			</view>
 		</view>
 		<view class="body">
-			<view class="play" v-if="hideplay">
+			<view class="play" v-if="hideplay" style="margin-left: 10px;margin-right: 10px;">
 				<video
 					id="myvideo"
 					ref="myvideo"
@@ -42,7 +42,7 @@
 						<text class="first-text" style="color: #fff;" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
 					</cover-view>
 				</video>
-				<view style="margin-bottom: 5px;margin-top: 5px;margin-left: 20px;margin-right: 20px;display: flex;flex-direction: row;justify-content: space-between;">
+				<view style="margin-top: 10px;display: flex;flex-direction: row;justify-content: space-between;">
 					<text style="text-align:center;font-size: 20px;" @click="navigateUrl()">腾讯免流</text>
 					<text style="text-align:center;font-size: 20px;" @click="copyUrl()">复制链接</text>
 					<text style="text-align:center;font-size: 20px;" @click="searchdev()">点击投屏</text>
@@ -51,38 +51,41 @@
 					<text class="first-text" style="text-align: center;margin-bottom: 10px;" @click="startdev(dev.id)">{{ dev.name }}</text>
 				</view>
 			</view>
-			<view class="detail" style="display:flex;flex-direction: row;height: 250rpx;justify-content: space-between;">
-				<view style="display:flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;margin-bottom: 10rpx;">
-					<image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height:250rpx;width:180rpx;"></image>
+			<uni-card>
+				
+			<view class="detail" style="display:flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;margin-bottom: 10rpx;">
+					<image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height:160px;width:115px;"></image>
 					<view style="display:flex;flex-direction: column;justify-content: space-around;margin-left:50rpx;width:300rpx">
 						<text class="first-text">{{ searchlists[sitecurrent][0].title }}</text>
 						<text class="second-text">状态：{{ searchlists[sitecurrent][0].state }}</text>
 						<text class="second-text">上次观看：无</text>
 					</view>
-				</view>
+				
 			</view>
+			</uni-card>
 			<scroll-view
-				style="white-space: nowrap;display: flex;flex-direction: row;padding-right: 10px;padding-top: 5px;"
+				style="white-space: nowrap;display: flex;flex-direction: row;padding-top: 5px;margin-left: 10px;margin-right: 10px;"
 				scroll-x="true"
 				show-scrollbar="false"
 				scroll-left="120"
 			>
-				<text v-for="(item, index) in searchlists" :key="index" class="first-text" :class="[sitecurrent == index ? 'active-text' : '']" @click="changesite(index)">
+				<text v-for="(item, index) in searchlists" :key="index" class="first-text" :class="[sitecurrent == index ? 'active-text' : '']" style="margin-right: 20px;" @click="changesite(index)">
 					{{ item[0].name }}
 				</text>
 			</scroll-view>
 			<scroll-view
-				style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;padding-right: 10px;padding-left: 10px;"
+				style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px;"
 				scroll-x="true"
 				show-scrollbar="false"
 				scroll-left="120"
 			>
-				<text class="first-text" @click="nixu(tagcurrent)">逆序</text>
+				<text class="first-text" style="margin-right: 20px;" @click="nixu(tagcurrent)">逆序</text>
 				<text
 					v-for="(item, index) in searchlists[sitecurrent][2]"
 					:key="index"
 					class="first-text"
 					:class="[tagcurrent == index ? 'active-text' : '']"
+					style="margin-right: 20px;"
 					@click="changetag(index)"
 				>
 					{{ item.name }}
