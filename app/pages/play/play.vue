@@ -54,11 +54,18 @@
 				</view>
 			</view>
 			<scroll-view style="white-space: nowrap;display: flex;flex-direction: row;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-				<text v-for="(item, index) in searchlists" :key="index" class="first-text" style="margin-right: 10px;margin-top: 5px;" @click="changesite(index)">{{ item[0].name }}</text>
+				<text v-for="(item, index) in searchlists" :key="index" class="first-text" style="margin-right: 10px;margin-top: 5px;" @click="changesite(index)">
+					{{ item[0].name }}
+				</text>
 			</scroll-view>
-			<scroll-view style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-				<text class="first-text" @click="nixu">逆序</text>
-				<text v-for="(item, index) in playdatas" :key="index" class="first-text" style="margin-right: 10px;margin-left:10px;" @click="changetag(index)">
+			<scroll-view
+				style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;"
+				scroll-x="true"
+				show-scrollbar="false"
+				scroll-left="120"
+			>
+				<text class="first-text" @click="nixu(tagcurrent)">逆序</text>
+				<text v-for="(item, index) in searchlists[sitecurrent][2]" :key="index" class="first-text" style="margin-right: 10px;margin-left:10px;" @click="changetag(index)">
 					{{ item.name }}
 				</text>
 			</scroll-view>
@@ -66,7 +73,7 @@
 				<text
 					class="first-text"
 					style="flex: 1;margin: 10px;"
-					v-for="(item, index) in playdatas[tagcurrent].data"
+					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
 				>
@@ -102,7 +109,6 @@ export default {
 			tagcurrent: 0,
 			playcurrent: 0,
 			searchlists: [],
-			playdatas: [],
 			showplaydata: false,
 			notiveImage: 'heart-filled',
 			nowtime: '',
@@ -253,7 +259,7 @@ export default {
 		},
 		nextvideo() {
 			this.videoContext.pause();
-			if (this.playdatas[this.tagcurrent].data.length == this.playcurrent + 1) {
+			if (this.searchlists[sitecurrent][2][this.tagcurrent].data.length == this.playcurrent + 1) {
 				uni.showToast({
 					title: '最后一集了!',
 					duration: 1000
@@ -300,15 +306,15 @@ export default {
 		},
 		changeplay(index) {
 			this.playcurrent = index;
-			this.nowplay = this.playdatas[this.tagcurrent].data[index].title;
-			this.xtplayurl(this.playdatas[this.tagcurrent].data[index].href);
+			this.nowplay = this.searchlists[sitecurrent][2][this.tagcurrent].data[index].title;
+			this.xtplayurl(this.searchlists[sitecurrent][2][this.tagcurrent].data[index].href);
 		},
 		changetag(index) {
 			this.tagcurrent = index;
 		},
 		changesite(index) {
 			this.sitecurrent = index;
-			this.getplaydata(this.playdatas[this.tagcurrent].data[index].href);
+			this.getplaydata(index);
 		},
 		downvideo() {
 			if (this.downImage == 'arrow-down') {
@@ -321,19 +327,18 @@ export default {
 			// this.$router.go(-1);
 			uni.navigateBack();
 		},
-		nixu() {
+		nixu(index) {
 			let temp = [];
-			let tempLen = this.playdatas[this.tagcurrent].data.length;
+			let tempLen = this.searchlists[sitecurrent][2][index].data.length;
 			for (let i = 0; i < tempLen; i++) {
-				temp[i] = this.playdatas[this.tagcurrent]['data'][tempLen - i - 1];
+				temp[i] = this.searchlists[sitecurrent][2][index]['data'][tempLen - i - 1];
 			}
-			this.playdatas[this.tagcurrent].data = temp;
+			this.searchlists[sitecurrent][2][index].data = temp;
 		},
-		async getplaydata() {
-			let site = this.searchlists[this.sitecurrent];
+		async getplaydata(index) {
+			let site = this.searchlists[index];
 			// console.log(site)
 			if (site[2]) {
-				this.playdatas = site[2];
 				this.showloading = false;
 				this.showplaydata = true;
 			} else {
@@ -342,10 +347,9 @@ export default {
 				if (site[1].id == 'XT') {
 					let res = await http.xtplaydata(site[0].href, site[1]);
 					if (res.flag) {
-						this.playdatas = res.data;
 						this.showplaydata = true;
 						this.showloading = false;
-						this.searchlists[this.sitecurrent].push(this.playdatas);
+						this.searchlists[index].push(res.data);
 					} else {
 						this.showloading = false;
 						uni.showToast({
@@ -358,10 +362,9 @@ export default {
 					// console.log(site)
 					let res = await http.appplaydata(site[0].href, site[1]);
 					if (res.flag) {
-						this.playdatas = res.data;
 						this.showplaydata = true;
 						this.showloading = false;
-						this.searchlists[this.sitecurrent].push(this.playdatas);
+						this.searchlists[index].push(res.data);
 					} else {
 						this.showloading = false;
 						uni.showToast({
@@ -375,7 +378,7 @@ export default {
 	},
 	onLoad: function() {
 		this.searchlists = uni.getStorageSync('temp');
-		this.getplaydata();
+		this.getplaydata(this.sitecurrent);
 	},
 	onReady: function() {
 		this.videoContext = uni.createVideoContext('myvideo', this);
