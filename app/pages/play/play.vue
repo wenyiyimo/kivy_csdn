@@ -19,10 +19,13 @@
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+		  margin-left: 10px;
+		  margin-right: 10px;
+		  margin-bottom: 10px;
         "
 			>
 				<input maxlength="-1" style="width: 400px; font-size: 20px" v-model="extrakey" type="text" placeholder="请输入嗅探排除关键词" />
-				<text class="first-text" style="margin-right: 20px" @click="importextrakey">导入</text>
+				<text class="first-text" @click="importextrakey">导入</text>
 			</view>
 		</view>
 		<view class="body">
@@ -462,6 +465,7 @@ export default {
 		},
 		changesite(index) {
 			this.sitecurrent = index;
+	       this.tagcurrent = 0;
 			this.getplaydata(index);
 		},
 		downvideo() {
