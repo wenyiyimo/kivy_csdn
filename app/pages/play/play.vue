@@ -2,14 +2,31 @@
 	<view class="play">
 		<view class="header">
 			<view class="header-top"></view>
-			<view style="display: flex;flex-direction: row;justify-content: space-between;">
+			<view
+				style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        "
+			>
 				<uni-icons class="icon-style" color="#000000" size="40" type="arrow-left" @click="pageBacked" />
-				<text class="first-text" style="margin-top: 5rpx;" @click="openImpSite()">播放</text>
-				<uni-icons style="margin-right: 10px;" color="#000000" size="40" :type="downImage" @click="downvideo" />
+				<text class="first-text" style="margin-top: 5rpx" @click="openimport">播放</text>
+				<uni-icons style="margin-right: 10px" color="#000000" size="40" :type="downImage" @click="downvideo" />
+			</view>
+			<view
+				v-if="impextrakey"
+				style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        "
+			>
+				<input maxlength="-1" style="width: 400px; font-size: 20px" v-model="extrakey" type="text" placeholder="请输入嗅探排除关键词" />
+				<text class="first-text" style="margin-right: 20px" @click="importextrakey">导入</text>
 			</view>
 		</view>
 		<view class="body">
-			<view class="play" v-if="hideplay" style="margin-left: 10px;margin-right: 10px;">
+			<view class="play" v-if="hideplay" style="margin-left: 10px; margin-right: 10px">
 				<video
 					id="myvideo"
 					ref="myvideo"
@@ -32,60 +49,104 @@
 				>
 					<!-- @timeupdate="timeupdate" -->
 					<cover-view class="play-control" v-if="fullscreen && controls">
-						<text class="first-text" style="color: #fff;" @click="getnowtime()">{{ nowtime }}</text>
-						<text class="first-text" style="color: #fff;" @click="changeplaystrategy()">解码:{{ playstrategytext }}</text>
-						<text class="first-text" style="color: #fff;" @click="lastvideo()">上集</text>
-						<text class="first-text" style="color: #fff;">{{ nowplay }}</text>
-						<text class="first-text" style="color: #fff;" @click="nextvideo()">下集</text>
-						<text class="first-text" style="color: #fff;" @click="changeobjectfit()">{{ objectfittext }}</text>
-						<text class="first-text" style="color: #fff;" @click="changedirection()">旋转</text>
-						<text class="first-text" style="color: #fff;" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
+						<text class="first-text" style="color: #fff" @click="getnowtime()">{{ nowtime }}</text>
+						<text class="first-text" style="color: #fff" @click="changeplaystrategy()">解码:{{ playstrategytext }}</text>
+						<text class="first-text" style="color: #fff" @click="lastvideo()">上集</text>
+						<text class="first-text" style="color: #fff">{{ nowplay }}</text>
+						<text class="first-text" style="color: #fff" @click="nextvideo()">下集</text>
+						<text class="first-text" style="color: #fff" @click="changeobjectfit()">{{ objectfittext }}</text>
+						<text class="first-text" style="color: #fff" @click="changedirection()">旋转</text>
+						<text class="first-text" style="color: #fff" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
 					</cover-view>
 				</video>
-				<view style="margin-top: 10px;display: flex;flex-direction: row;justify-content: space-between;">
-					<text style="text-align:center;font-size: 20px;" @click="navigateUrl()">腾讯免流</text>
-					<text style="text-align:center;font-size: 20px;" @click="copyUrl()">复制链接</text>
-					<text style="text-align:center;font-size: 20px;" @click="searchdev()">点击投屏</text>
+				<view
+					style="
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+          "
+				>
+					<text style="text-align: center; font-size: 20px" @click="navigateUrl()">腾讯免流</text>
+					<text style="text-align: center; font-size: 20px" @click="copyUrl()">复制链接</text>
+					<text style="text-align: center; font-size: 20px" @click="searchdev()">点击投屏</text>
 				</view>
 				<view v-for="dev in devList" :key="dev.id">
-					<text class="first-text" style="text-align: center;margin-bottom: 10px;" @click="startdev(dev.id)">{{ dev.name }}</text>
+					<text class="first-text" style="text-align: center; margin-bottom: 10px" @click="startdev(dev.id)">{{ dev.name }}</text>
 				</view>
 			</view>
 			<uni-card>
-				
-			<view class="detail" style="display:flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;margin-bottom: 10rpx;">
-					<image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height:160px;width:115px;"></image>
-					<view style="display:flex;flex-direction: column;justify-content: space-around;margin-left:50rpx;width:300rpx">
+				<view
+					class="detail"
+					style="
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin-top: 10rpx;
+            margin-bottom: 10rpx;
+          "
+				>
+					<image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height: 160px; width: 115px"></image>
+					<view
+						style="
+              display: flex;
+              flex-direction: column;
+              justify-content: space-around;
+              margin-left: 50rpx;
+              width: 300rpx;
+            "
+					>
 						<text class="first-text">{{ searchlists[sitecurrent][0].title }}</text>
 						<text class="second-text">状态：{{ searchlists[sitecurrent][0].state }}</text>
 						<text class="second-text">上次观看：无</text>
 					</view>
-				
-			</view>
+				</view>
 			</uni-card>
 			<scroll-view
-				style="white-space: nowrap;display: flex;flex-direction: row;padding-top: 5px;margin-left: 10px;margin-right: 10px;"
+				style="
+          white-space: nowrap;
+          display: flex;
+          flex-direction: row;
+          padding-top: 5px;
+          margin-left: 10px;
+          margin-right: 10px;
+        "
 				scroll-x="true"
 				show-scrollbar="false"
 				scroll-left="120"
 			>
-				<text v-for="(item, index) in searchlists" :key="index" class="first-text" :class="[sitecurrent == index ? 'active-text' : '']" style="margin-right: 20px;" @click="changesite(index)">
+				<text
+					v-for="(item, index) in searchlists"
+					:key="index"
+					class="first-text"
+					:class="[sitecurrent == index ? 'active-text' : '']"
+					style="margin-right: 20px"
+					@click="changesite(index)"
+				>
 					{{ item[0].name }}
 				</text>
 			</scroll-view>
 			<scroll-view
-				style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;margin-left: 10px;margin-right: 10px;"
+				style="
+          white-space: nowrap;
+          display: flex;
+          flex-direction: row;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          margin-left: 10px;
+          margin-right: 10px;
+        "
 				scroll-x="true"
 				show-scrollbar="false"
 				scroll-left="120"
 			>
-				<text class="first-text" style="margin-right: 20px;" @click="nixu(tagcurrent)">逆序</text>
+				<text class="first-text" style="margin-right: 20px" @click="nixu(tagcurrent)">逆序</text>
 				<text
 					v-for="(item, index) in searchlists[sitecurrent][2]"
 					:key="index"
 					class="first-text"
 					:class="[tagcurrent == index ? 'active-text' : '']"
-					style="margin-right: 20px;"
+					style="margin-right: 20px"
 					@click="changetag(index)"
 				>
 					{{ item.name }}
@@ -95,14 +156,14 @@
 				<text
 					class="first-text"
 					:class="[playcurrent == index ? 'active-text' : '']"
-					style="flex: 1;margin: 10px;"
+					style="flex: 1; margin: 10px"
 					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
 				>
 					{{ item.title }}
 				</text>
-				<text class="first-text" style="flex: 1;"></text>
+				<text class="first-text" style="flex: 1"></text>
 			</view>
 			<uni-load-more status="loading" v-if="showloading"></uni-load-more>
 		</view>
@@ -125,6 +186,8 @@ export default {
 	},
 	data() {
 		return {
+			extrakey: '',
+			impextrakey: false,
 			showloading: true,
 			videoContext: null,
 			hideplay: false,
@@ -155,6 +218,19 @@ export default {
 		}
 	},
 	methods: {
+		importextrakey() {
+			if (this.extrakey == '') {
+				this.openimport();
+				return;
+			} else {
+				let extrakey = uni.getStorageSync('extrakey');
+				extrakey.push(this.extrakey);
+				uni.setStorageSync('extrakey', extrakey);
+			}
+		},
+		openimport() {
+			this.impextrakey = !this.impextrakey;
+		},
 		startdev(id) {
 			dlna.play({ id: id, url: this.playurl, title: this.nowPlay }, result => {
 				console.log(result.msg);
