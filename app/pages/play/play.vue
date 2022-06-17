@@ -448,6 +448,7 @@ export default {
 	onLoad: function() {
 		this.searchlists = uni.getStorageSync('temp');
 		this.getplaydata(this.sitecurrent);
+		this.initialtime = uni.getStorageSync('initialtime');
 	},
 	onReady: function() {
 		this.videoContext = uni.createVideoContext('myvideo', this);
