@@ -259,7 +259,7 @@ export default {
 		},
 		nextvideo() {
 			this.videoContext.pause();
-			if (this.searchlists[sitecurrent][2][this.tagcurrent].data.length == this.playcurrent + 1) {
+			if (this.searchlists[this.sitecurrent][2][this.tagcurrent].data.length == this.playcurrent + 1) {
 				uni.showToast({
 					title: '最后一集了!',
 					duration: 1000
@@ -306,8 +306,8 @@ export default {
 		},
 		changeplay(index) {
 			this.playcurrent = index;
-			this.nowplay = this.searchlists[sitecurrent][2][this.tagcurrent].data[index].title;
-			this.xtplayurl(this.searchlists[sitecurrent][2][this.tagcurrent].data[index].href);
+			this.nowplay = this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].title;
+			this.xtplayurl(this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].href);
 		},
 		changetag(index) {
 			this.tagcurrent = index;
@@ -329,11 +329,11 @@ export default {
 		},
 		nixu(index) {
 			let temp = [];
-			let tempLen = this.searchlists[sitecurrent][2][index].data.length;
+			let tempLen = this.searchlists[this.sitecurrent][2][index].data.length;
 			for (let i = 0; i < tempLen; i++) {
-				temp[i] = this.searchlists[sitecurrent][2][index]['data'][tempLen - i - 1];
+				temp[i] = this.searchlists[this.sitecurrent][2][index]['data'][tempLen - i - 1];
 			}
-			this.searchlists[sitecurrent][2][index].data = temp;
+			this.searchlists[this.sitecurrent][2][index].data = temp;
 		},
 		async getplaydata(index) {
 			let site = this.searchlists[index];
