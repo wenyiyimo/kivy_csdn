@@ -27,6 +27,15 @@ const db = {
 		if (!urlList) {
 			uni.setStorageSync('urlNotive', []);
 		}
+		// 排除
+		let extrakey = uni.getStorageSync('extrakey');
+		if (!extrakey) {
+			uni.setStorageSync('extrakey', []);
+		}
+		let initialtime = uni.getStorageSync('initialtime');
+		if (!initialtime) {
+			uni.setStorageSync('initialtime', 0);
+		}
 		return {
 			flag: true,
 			data: null,
@@ -40,6 +49,8 @@ const db = {
 		uni.setStorageSync('hearts', []);
 		uni.setStorageSync('livelists', []);
 		uni.setStorageSync('urlNotive', []);
+		uni.setStorageSync('extrakey', []);
+		uni.setStorageSync('initialtime', 0);
 		return {
 			flag: true,
 			data: null,
