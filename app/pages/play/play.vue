@@ -42,6 +42,14 @@
 						<text class="first-text" style="color: #fff;" @click="changeplaybackRate()">速度:{{ playbackRate }}</text>
 					</cover-view>
 				</video>
+				<view style="margin-bottom: 5px;margin-top: 5px;margin-left: 20px;margin-right: 20px;display: flex;flex-direction: row;justify-content: space-between;">
+					<text style="text-align:center;font-size: 20px;" @click="navigateUrl()">腾讯免流</text>
+					<text style="text-align:center;font-size: 20px;" @click="copyUrl()">复制链接</text>
+					<text style="text-align:center;font-size: 20px;" @click="searchdev()">点击投屏</text>
+				</view>
+				<view v-for="dev in devList" :key="dev.id">
+					<text class="first-text" style="text-align: center;margin-bottom: 10px;" @click="startdev(dev.id)">{{ dev.name }}</text>
+				</view>
 			</view>
 			<view class="detail" style="display:flex;flex-direction: row;height: 250rpx;justify-content: space-between;">
 				<view style="display:flex;flex-direction: row;justify-content: flex-start;margin-top: 10rpx;margin-bottom: 10rpx;">
@@ -92,6 +100,7 @@ import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-ico
 import webvplay from '@/utils/webview.js';
 import UniCard from '@/components/uni-ui/uni-card/components/uni-card/uni-card.vue';
 import UniLoadMore from '../../components/uni-ui/uni-load-more/components/uni-load-more/uni-load-more.vue';
+const dlna = uni.requireNativePlugin('JX-Dlna');
 export default {
 	mixins: [webvplay],
 	components: {
@@ -121,7 +130,8 @@ export default {
 			playstrategytext: '网络',
 			fullscreen: false,
 			playbackRate: 1.0,
-			direction: -90
+			direction: -90,
+			devList: []
 		};
 	},
 	watch: {
@@ -130,6 +140,53 @@ export default {
 		}
 	},
 	methods: {
+		startdev(id) {
+			dlna.play({ id: id, url: this.playurl, title: this.nowPlay }, result => {
+				console.log(result.msg);
+				// this.title = result.msg
+			});
+		},
+		searchdev() {
+			this.devList = [];
+			dlna.search(result => {
+				//alert(result.type)
+				if (result.type === 'add') {
+					this.devList.push({ id: result.id, name: result.name });
+				} else {
+					this.devList = this.devList.filter(x => x.id != result.id);
+				}
+			});
+		},
+		copyUrl() {
+			uni.setClipboardData({
+				data: this.playurl,
+				success: function() {
+					uni.showToast({
+						title: '复制成功！',
+						duration: 1000
+					});
+				},
+				fail: function(err) {
+					uni.showToast({
+						title: '复制失败！',
+						duration: 1000
+					});
+				}
+			});
+		},
+		navigateUrl() {
+			this.videoContext.pause();
+			plus.runtime.openURL(
+				this.playurl,
+				err => {
+					uni.showToast({
+						title: '跳转失败！',
+						duration: 1000
+					});
+				},
+				'com.tencent.mtt'
+			);
+		},
 		fullscreenchange() {
 			this.fullscreen = !this.fullscreen;
 			if (this.fullscreen) {
