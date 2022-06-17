@@ -54,9 +54,9 @@
 				</view>
 			</view>
 			<scroll-view style="white-space: nowrap;display: flex;flex-direction: row;" scroll-x="true" show-scrollbar="false" scroll-left="120">
-				<text v-for="(item, index) in searchlists" :key="index" class="first-text" style="margin-right: 10rpx;" @click="changesite(index)">{{ item[0].name }}</text>
+				<text v-for="(item, index) in searchlists" :key="index" class="first-text" style="margin-right: 10px;margin-top: 5px;" @click="changesite(index)">{{ item[0].name }}</text>
 			</scroll-view>
-			<scroll-view style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 5px;margin-bottom: 5px;" scroll-x="true" show-scrollbar="false" scroll-left="120">
+			<scroll-view style="white-space: nowrap;display: flex;flex-direction: row;margin-top: 10px;margin-bottom: 10px;" scroll-x="true" show-scrollbar="false" scroll-left="120">
 				<text class="first-text" @click="nixu">逆序</text>
 				<text v-for="(item, index) in playdatas" :key="index" class="first-text" style="margin-right: 10px;margin-left:10px;" @click="changetag(index)">
 					{{ item.name }}
@@ -65,7 +65,7 @@
 			<view class="grid-layout" v-if="showplaydata">
 				<text
 					class="first-text"
-					style="flex: 1;margin: 5px;background-color: #fff;border-radius: 5%;"
+					style="flex: 1;margin: 10px;"
 					v-for="(item, index) in playdatas[tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
@@ -292,7 +292,6 @@ export default {
 				});
 			}
 		},
-
 		playvideo() {
 			this.hideplay = true;
 			this.videoContext.playbackRate(1.0);
@@ -309,7 +308,6 @@ export default {
 		},
 		changesite(index) {
 			this.sitecurrent = index;
-
 			this.getplaydata(this.playdatas[this.tagcurrent].data[index].href);
 		},
 		downvideo() {
@@ -390,7 +388,6 @@ export default {
 	display: flex;
 	flex-direction: column;
 }
-
 .grid-layout {
 	// display: grid;
 	// /* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
@@ -412,7 +409,6 @@ export default {
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
-
 .play-control {
 	display: flex;
 	flex-direction: row;
