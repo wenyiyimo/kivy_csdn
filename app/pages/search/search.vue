@@ -30,7 +30,7 @@
 		<view class="body">
 			<view v-for="(i, index) in searchlists" :key="index">
 				<uni-card style="display: flex;flex-direction: column;justify-content: flex-start;margin-bottom: -5px;">
-					<view style="display: flex;flex-direction: row;justify-content: space-between;">
+					<view style="display: flex;flex-direction: row;justify-content: space-between;" @click="navallplay(i[1])">
 						<text class="first-text" style="margin-bottom: 10px;">{{ i[0] }}</text>
 						<text class="first-text" style="color: #00aa00;display: flex;flex-direction: row;">{{ i[1].length }}</text>
 					</view>
@@ -69,8 +69,17 @@ export default {
 		};
 	},
 	methods: {
+		navallplay(searchlist) {
+			let temp = [];
+			for (let i of searchlist) {
+				temp = [...temp, ...i[1]];
+			}
+			uni.setStorageSync('temp', searchlist[key][1]);
+			let urll = `/pages/play/play`;
+			uni.navigateTo({ url: urll });
+		},
 		navplay(searchlist, key) {
-			uni.setStorageSync('temp', searchlist[key]);
+			uni.setStorageSync('temp', searchlist[key][1]);
 			let urll = `/pages/play/play`;
 			uni.navigateTo({ url: urll });
 		},
