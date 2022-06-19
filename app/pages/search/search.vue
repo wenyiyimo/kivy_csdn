@@ -30,24 +30,19 @@
 		<view class="body">
 			<view v-for="(i, index) in searchlists" :key="index">
 				<uni-card style="display: flex;flex-direction: column;justify-content: flex-start;margin-bottom: -5px;">
-						<view style="display: flex;flex-direction: row;justify-content: space-between;" @click="navplay(i[1], 0, false)">
-							<text class="first-text" style="margin-bottom: 10px;">{{ i[0] }}</text>
-							<text
-								class="first-text"
-								style="color: #00aa00;display: flex;flex-direction: row;"
-							>
-								{{ i[1].length }}
-							</text>
-						</view>
-						<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-							<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
-								<view v-for="(j, key) in i[1]" :key="key">
-									<view class="first-text" @click="navplay(i[1], key, true)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">
-										{{ j[0].state!=0?j[0].state:''}}
-									</view>
+					<view style="display: flex;flex-direction: row;justify-content: space-between;">
+						<text class="first-text" style="margin-bottom: 10px;">{{ i[0] }}</text>
+						<text class="first-text" style="color: #00aa00;display: flex;flex-direction: row;">{{ i[1].length }}</text>
+					</view>
+					<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
+						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
+							<view v-for="(j, key) in i[1]" :key="key">
+								<view class="first-text" @click="navplay(i[1], key)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">
+									{{ j[0] != 0 ? j[0] : '未知' }}
 								</view>
 							</view>
-						</scroll-view>
+						</view>
+					</scroll-view>
 				</uni-card>
 			</view>
 		</view>
@@ -74,23 +69,10 @@ export default {
 		};
 	},
 	methods: {
-		navplay(searchlist, key, flag) {
-			if (flag) {
-				let temp = [];
-				for (let i of searchlist) {
-					if (i[0].state == searchlist[key][0].state) {
-						temp.push(i);
-					}
-				}
-				uni.setStorageSync('temp', temp);
-				let urll = `/pages/play/play?index=0`;
-				uni.navigateTo({ url: urll });
-			}
-			if (!flag) {
-				uni.setStorageSync('temp', searchlist);
-				let urll = `/pages/play/play?index=${key}`;
-				uni.navigateTo({ url: urll });
-			}
+		navplay(searchlist, key) {
+			uni.setStorageSync('temp', searchlist[key]);
+			let urll = `/pages/play/play`;
+			uni.navigateTo({ url: urll });
 		},
 		async getsitelists() {
 			let sites = uni.getStorageSync('sites');
@@ -131,14 +113,20 @@ export default {
 			if (num != 0) {
 				for (let i = 0; i < num; i++) {
 					if (data.title == this.searchlists[i][0]) {
-						this.searchlists[i][1].push([data, site]);
-						// console.log(this.searchlists)
+						let statenum = this.searchlists[i][1].length;
+						for (let j = 0; j < statenum; j++) {
+							if (data.state == this.searchlists[i][1][j][0]) {
+								this.searchlists[i][1][j][1].push([data, site]);
+								return;
+							}
+						}
+						this.searchlists[i][1].push([data.state, [[data, site]]]);
 						return;
 					}
 				}
-				this.searchlists.push([data.title, [[data, site]]]);
+				this.searchlists.push([data.title, [[data.state, [[data, site]]]]]);
 			} else {
-				this.searchlists.push([data.title, [[data, site]]]);
+				this.searchlists.push([data.title, [[data.state, [[data, site]]]]]);
 			}
 		},
 		async searchEvent() {
