@@ -8,6 +8,8 @@
           justify-content: space-between;
           background-color: #ffffff;
           display: flex;
+		  margin-right: 10px;
+		  margin-left: 10px;
         "
 			>
 				<uni-icons color="#000000" size="40" type="arrow-left" @click="goback" />
@@ -27,19 +29,26 @@
 		</view>
 		<view class="body">
 			<view v-for="(i, index) in searchlists" :key="index">
-				<view style="display: flex;flex-direction: column;justify-content: flex-start;">
-					<text class="first-text" @click="navplay(i[1], 0, false)">{{ i[0] }}</text>
-					<text class="second-text" @click="navplay(i[1], 0, false)">共获取到{{ i[1].length }}条结果</text>
-					<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
-						<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
-							<view v-for="(j, key) in i[1]" :key="key">
-								<view class="first-text" @click="navplay(i[1], key, true)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">
-									{{ j[0].state }}
+				<uni-card style="display: flex;flex-direction: column;justify-content: flex-start;margin-bottom: -5px;">
+						<view style="display: flex;flex-direction: row;justify-content: space-between;" @click="navplay(i[1], 0, false)">
+							<text class="first-text" style="margin-bottom: 10px;">{{ i[0] }}</text>
+							<text
+								class="first-text"
+								style="color: #00aa00;display: flex;flex-direction: row;"
+							>
+								{{ i[1].length }}
+							</text>
+						</view>
+						<scroll-view style="white-space: nowrap" scroll-x="true" show-scrollbar="false" scroll-left="120">
+							<view style="display: flex;flex-direction: row;justify-content: flex-start;margin-top: 5rpx;margin-bottom: 15rpx;">
+								<view v-for="(j, key) in i[1]" :key="key">
+									<view class="first-text" @click="navplay(i[1], key, true)" style="background-color: #ebebeb;border-radius: 10%;margin-right: 10rpx;">
+										{{ j[0].state!=0?j[0].state:''}}
+									</view>
 								</view>
 							</view>
-						</view>
-					</scroll-view>
-				</view>
+						</scroll-view>
+				</uni-card>
 			</view>
 		</view>
 	</view>
@@ -50,10 +59,12 @@ import db from '../../utils/database.js';
 import http from '../../utils/http.js';
 import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-icons.vue';
 import UniSearchBar from '@/components/uni-ui/uni-search-bar/components/uni-search-bar/uni-search-bar.vue';
+import UniCard from '@/components/uni-ui/uni-card/components/uni-card/uni-card.vue';
 export default {
 	components: {
 		UniIcons,
-		UniSearchBar
+		UniSearchBar,
+		UniCard
 	},
 	data() {
 		return {
@@ -87,6 +98,7 @@ export default {
 				if (i.isActive) {
 					this.sitelists.push(i);
 					this.getsearchlists(i);
+					// console.log(i)
 				}
 			}
 		},
@@ -147,6 +159,7 @@ export default {
 	onLoad: function(option) {
 		this.search = option.search;
 		this.getsitelists();
+		// console.log(111)
 	}
 };
 </script>
