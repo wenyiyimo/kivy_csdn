@@ -8,33 +8,37 @@
 				<text class="first-text" style="margin-top: 5rpx;margin-right: 20rpx;" @click="changeState">{{ urlNotive }}</text>
 			</view>
 			<view v-if="impSite" style="display: flex;flex-direction: row;justify-content: space-between;">
-				<input maxlength="-1" style="width: 80%;font-size: 40rpx;" v-model="url" type="text" placeholder="请导入JSON数据" />
+				<input maxlength="-1" style="width: 80%;font-size: 40rpx;margin-top:5rpx;" v-model="url" type="text" placeholder="请导入JSON数据" />
 				<text class="first-text" style="margin-right: 20rpx;" @click="importSiteEvent">导入</text>
 			</view>
 		</view>
 		<view class="body">
-			<view v-for="(i, j) in siteList" :key="j" class="item-group">
-				<text class="first-text">{{ i.name }}</text>
-				<view class="deal-name">
-					<button class="delete" size="mini" :ripple="true" @click="deleteEvent(i)">删除</button>
-					<button class="pushpin" size="mini" :ripple="true" @click="pushpinEvent(i, j)">置顶</button>
-					<switch class="switch-button" :checked="i.isActive" @change="switchChange(i)" type="switch" active-color="#c7ccce"></switch>
+			<uni-card style="padding: -1px;margin: 5px;" v-for="(i, j) in siteList" :key="j">
+				<view style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;">
+					<text class="first-text">{{ i.name }}</text>
+					<view style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;">
+						<text class="first-text" style="margin-right: 20rpx;color: #2c2c2c;" @click="delesite(j)">删除</text>
+						<text class="first-text" style="margin-right: 20rpx;color: #2c2c2c;" @click="pushpinEvent(i, j)">置顶</text>
+						<switch class="switch-button" :checked="i.isActive" @change="switchChange(j)" type="switch" active-color="#c7ccce"></switch>
+					</view>
 				</view>
-			</view>
+				
+			</uni-card>
 		</view>
 	</view>
 </template>
 <script>
+	import UniCard from '@/components/uni-ui/uni-card/components/uni-card/uni-card.vue';
 import db from '../../utils/database.js';
 import http from '../../utils/http.js';
 import UniIcons from '@/components/uni-ui/uni-icons/components/uni-icons/uni-icons.vue';
 export default {
 	components: {
-		UniIcons
+		UniIcons,
+		UniCard
 	},
 	data() {
 		return {
-			searchwidth: 200,
 			siteList: [],
 			impSite: false,
 			url: '',
@@ -42,7 +46,6 @@ export default {
 			urlNotive: '订阅'
 		};
 	},
-
 	methods: {
 		async changeState() {
 			if (this.urlNotive == '订阅') {
@@ -57,7 +60,7 @@ export default {
 				this.siteList = [];
 				let that = this;
 				setTimeout(function() {
-					that.getAllSite();
+					that.siteList = uni.getStorageSync('sites');
 				}, 500);
 			}
 		},
@@ -73,101 +76,56 @@ export default {
 			if (this.url === '') {
 				return false;
 			}
-			const res = await http.site(this.url);
-			if (res && res.length > 0) {
-				for (const i of res) {
-					if (i.name.length > 0) {
-						await db.add('site', i);
-					} else {
-						plus.nativeUI.toast('格式错误!', { align: 'center', verticalAlign: 'center' });
-					}
-				}
-				this.getAllSite();
+			let res = await http.site(this.url);
+			if (res.flag) {
 				this.impSite = false;
 				this.url = '';
-
-				plus.nativeUI.toast('导入成功!', { align: 'center', verticalAlign: 'center' });
-				return false;
+				uni.showToast({
+					title: '导入成功!',
+					duration: 2000
+				});
+			} else {
+				uni.showToast({
+					title: '格式错误!',
+					duration: 2000
+				});
 			}
-			plus.nativeUI.toast('格式错误,导入失败!', { align: 'center', verticalAlign: 'center' });
 		},
 		async pushpinEvent(i, index) {
 			if (index === 0) {
 				return false;
 			}
-			this.siteList.sort(function(x, y) {
-				return x.name === i.name ? -1 : y.name === i.name ? 1 : 0;
-			});
-			const res = await db.removeAll('site');
-			if (res.flag) {
-				for (const i of this.siteList) {
-					await db.add('site', i);
-				}
-			}
-			plus.nativeUI.toast('置顶成功!', { align: 'center', verticalAlign: 'center' });
-		},
-		async getAllSite() {
-			const res = await db.getAll('site');
-			if (res.flag) {
-				if (res.data.length <= 0) {
-					return false;
-				}
-				this.siteList = res.data;
-			}
-		},
-		async switchChange(e) {
+			this.siteList.unshift(this.siteList.splice(index,1)[0])
 			if (this.urlNotive == '订阅') {
-				e.isActive = !e.isActive;
-				await db.remove('site', e.name);
-				const res = await db.add('site', e);
-				if (res.flag) {
-					uni.showToast({ title: '修改成功', type: 'success', duration: '2300' });
-				}
+				uni.setStorageSync('sites', this.siteList);
 			} else {
-				e.isActive = !e.isActive;
-				let urlList = uni.getStorageSync('urlNotive');
-				let delnum = await this.getlistnum(urlList, e);
-				urlList[delnum] = e;
-				uni.setStorageSync('urlNotive', urlList);
-				this.siteList = [];
-				this.siteList = uni.getStorageSync('urlNotive');
+				uni.setStorageSync('urlNotive', this.siteList);
 			}
 		},
-		async getlistnum(urlList, item) {
-			let i = 0;
-			for (let urllist of urlList) {
-				if (urllist.name == item.name) {
-					return i;
-				}
-				i = i + 1;
-			}
-		},
-		async deleteEvent(item) {
-			if (this.urlNotive == '订阅') {
-				await db.remove('site', item.name);
-				plus.nativeUI.toast('删除成功!', { align: 'center', verticalAlign: 'center' });
-				this.siteList = [];
-				this.getAllSite();
-			} else {
-				let urlList = uni.getStorageSync('urlNotive');
-				let delnum = await this.getlistnum(urlList, item);
-				urlList.splice(delnum, 1);
+	
 
-				uni.setStorageSync('urlNotive', urlList);
-				this.siteList = [];
-				this.siteList = urlList;
-			}
-		}
-	},
-	onLoad() {
-		// this.getAllSite();
-	},
-	onShow() {
+	async switchChange(index) {
+		this.siteList[index].isActive=!this.siteList[index].isActive
 		if (this.urlNotive == '订阅') {
-			this.siteList = [];
-			// this.getAllSite();
+			uni.setStorageSync('sites', this.siteList);
+		} else {
+			uni.setStorageSync('urlNotive', this.siteList);
 		}
 	},
+
+	async delesite(index) {
+		if (this.urlNotive == '订阅') {
+			this.siteList.splice(index, 1);
+			uni.setStorageSync('sites', this.siteList);
+		} else {
+			this.siteList.splice(index, 1);
+			uni.setStorageSync('urlNotive', this.siteList);
+		}
+	},},
+	onLoad() {
+		this.siteList = uni.getStorageSync('sites');
+	},
+	onShow() {},
 	onUnload() {
 		this.siteList = [];
 	}
