@@ -10,7 +10,7 @@
         "
 			>
 				<uni-icons class="icon-style" color="#000000" size="40" type="arrow-left" @click="pageBacked" />
-				<text class="first-text" style="margin-top: 5rpx" @click="openimport">播放</text>
+				<text class="first-text" style="margin-top: 5px" @click="openimport">播放</text>
 				<uni-icons style="margin-right: 10px" color="#000000" size="40" :type="downImage" @click="downvideo" />
 			</view>
 			<view
@@ -24,7 +24,7 @@
 		  margin-bottom: 10px;
         "
 			>
-				<input maxlength="-1" style="width: 400px; font-size: 20px" v-model="extrakey" type="text" placeholder="请输入嗅探排除关键词" />
+				<input maxlength="-1" style="width: 250px; font-size: 20px" v-model="extrakey" type="text" placeholder="请输入嗅探排除关键词" />
 				<text class="first-text" @click="importextrakey">导入</text>
 			</view>
 		</view>
@@ -78,7 +78,7 @@
 					<text class="first-text" style="text-align: center; margin-bottom: 10px" @click="startdev(dev.id)">{{ dev.name }}</text>
 				</view>
 			</view>
-			<uni-card>
+			<uni-card style="margin: 5px;">
 				<view
 					class="detail"
 					style="
@@ -101,7 +101,7 @@
 					>
 						<text class="first-text">{{ searchlists[sitecurrent][0].title }}</text>
 						<text class="second-text">状态：{{ searchlists[sitecurrent][0].state }}</text>
-						<text class="second-text">上次观看：无</text>
+						<text class="second-text">上次观看：{{nowplay}}</text>
 					</view>
 				</view>
 			</uni-card>
@@ -143,7 +143,7 @@
 				show-scrollbar="false"
 				scroll-left="120"
 			>
-				<text class="first-text" style="margin-right: 20px" @click="nixu(tagcurrent)">逆序</text>
+				<text class="first-text" style="margin-right:20px;" @click="nixu(tagcurrent)">逆序</text>
 				<text
 					v-for="(item, index) in searchlists[sitecurrent][2]"
 					:key="index"
@@ -156,17 +156,18 @@
 				</text>
 			</scroll-view>
 			<view class="grid-layout" v-if="showplaydata">
-				<text
-					class="first-text"
-					:class="[playcurrent == index ? 'active-text' : '']"
-					style="flex: 1; margin: 10px"
+				<uni-card
+					
 					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
+					style="justify-content: center;align-items: center;margin: 5px"
 				>
+				<text class="first-text"
+					:class="[playcurrent == index ? 'active-text' : '']">
 					{{ item.title }}
 				</text>
-				<text class="first-text" style="flex: 1"></text>
+				</uni-card>
 			</view>
 			<uni-load-more status="loading" v-if="showloading"></uni-load-more>
 		</view>
@@ -202,7 +203,7 @@ export default {
 			showplaydata: false,
 			notiveImage: 'heart-filled',
 			nowtime: '',
-			nowplay: '',
+			nowplay: '无',
 			initialtime: 0,
 			controls: true,
 			objectfit: 'contain',
@@ -221,15 +222,32 @@ export default {
 		}
 	},
 	methods: {
-		importextrakey() {
+		 async importextrakey() {
 			if (this.extrakey == '') {
 				this.openimport();
 				return;
 			} else {
 				let extrakey = uni.getStorageSync('extrakey');
-				extrakey.push(this.extrakey);
-				uni.setStorageSync('extrakey', extrakey);
+				let flag=await this.checkextrakey(extrakey,this.extrakey);
+				this.openimport();
+				if(flag.flag){
+					extrakey.push(this.extrakey);
+					uni.setStorageSync('extrakey', extrakey);
+					this.extrakey="";
+					return
+				}else{
+					this.extrakey="";
+					return
+				}
 			}
+		},
+		async checkextrakey(sites,key){
+			for(let i of sites){
+				if(i.indexOf(key)!=-1){
+					return {flag:false}
+				}
+			}
+			return {flag:true}
 		},
 		openimport() {
 			this.impextrakey = !this.impextrakey;
@@ -296,12 +314,12 @@ export default {
 		fullscreenclick(e) {
 			let clickW = e.detail.screenX / e.detail.screenWidth;
 			let clickH = e.detail.screenY / e.detail.screenHeight;
-			if (clickW > 0.875 && 0.4 < clickH && clickH < 0.6 && this.playbackRate == 1.0) {
+			if (clickW > 0.8 && 0.4 < clickH && clickH < 0.6 && this.playbackRate == 1.0) {
 				this.videoContext.playbackRate(2.0);
 				this.playbackRate = 2.0;
 				this.controls = false;
 			} else {
-				if (clickW > 0.875 && 0.4 < clickH && clickH < 0.6 && this.playbackRate != 1.0) {
+				if (clickW > 0.8 && 0.4 < clickH && clickH < 0.6 && this.playbackRate != 1.0) {
 					this.videoContext.playbackRate(1.0);
 					this.playbackRate = 1.0;
 					this.controls = false;
@@ -459,6 +477,53 @@ export default {
 			this.playcurrent = index;
 			this.nowplay = this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].title;
 			this.xtplayurl(this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].href);
+			let site={
+				title:this.searchlists[this.sitecurrent][0].title,
+				state:this.nowplay
+			};
+			this.sethistory(site);
+		},
+		async sethistory(site){
+			let historys = uni.getStorageSync("historys");
+			let flag=await this.checkhistory(historys,site);
+			if(flag.flag){
+				historys.unshift(site);
+				uni.setStorageSync('historys', historys);
+			}
+		},
+		async gethistory(){
+			let historys = uni.getStorageSync("historys");
+			let title= this.searchlists[sitecurrent][0].title;
+			for(let i of historys){
+				if(i.title==title){
+			      this.nowplay=i.state
+				}
+			}
+		},
+		async checkhistory(historys,site){
+			let num = historys.length;
+			if(num>100){
+				historys.pop()
+				for(let i=0;i<num-1;i++){
+					if(historys[i].title==site.title){
+				       historys.splice(i,1);
+					   historys.unshift(site);
+					   uni.setStorageSync('historys', historys);
+					   return {flag:false}
+					}
+				}
+				return {flag:true}
+			}else{
+				for(let i=0;i<num;i++){
+					if(historys[i].title==site.title){
+				       historys.splice(i,1);
+					   historys.unshift(site);
+					   uni.setStorageSync('historys', historys);
+					   return {flag:false}
+					}
+				}
+				return {flag:true}
+			}
 		},
 		changetag(index) {
 			this.tagcurrent = index;
@@ -531,6 +596,7 @@ export default {
 	onLoad: function() {
 		this.searchlists = uni.getStorageSync('temp');
 		this.getplaydata(this.sitecurrent);
+		this.gethistory()
 		this.initialtime = uni.getStorageSync('initialtime');
 	},
 	onReady: function() {
