@@ -309,7 +309,9 @@ export default {
 			}
 		},
 		controlstoggle(e) {
-			this.controls = e.detail.show;
+			if(!e.detail.show){
+				this.controls = e.detail.show;
+			}
 		},
 		fullscreenclick(e) {
 			let clickW = e.detail.screenX / e.detail.screenWidth;
