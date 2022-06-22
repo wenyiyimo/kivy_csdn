@@ -89,14 +89,13 @@
             margin-bottom: 10rpx;
           "
 				>
-					<image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height: 160px; width: 115px"></image>
+					<image :src="searchlists[sitecurrent][0].pic" mode="aspectFill" style="height: 120px; width: 90px"></image>
 					<view
 						style="
               display: flex;
               flex-direction: column;
               justify-content: space-around;
-              margin-left: 50rpx;
-              width: 300rpx;
+              margin-left: 30px;
             "
 					>
 						<text class="first-text">{{ searchlists[sitecurrent][0].title }}</text>
@@ -161,11 +160,11 @@
 					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
-					style="justify-content: center;align-items: center;margin: 5px"
+					style="justify-content: center;align-items: center;margin: 5px;padding: -5px;background-color: #fff;"
 				>
 				<text class="first-text"
-					:class="[playcurrent == index ? 'active-text' : '']">
-					{{ item.title }}
+					:class="[playcurrent == index ? 'active-text' : '']" style="margin: 0px;padding: 0px;">
+					{{ item.title.trim() }}
 				</text>
 				</uni-card>
 			</view>
@@ -306,10 +305,11 @@ export default {
 				plus.navigator.setFullscreen(true);
 			} else {
 				plus.navigator.setFullscreen(false);
+			this.controls =true;
 			}
 		},
 		controlstoggle(e) {
-			if(!e.detail.show){
+			if(!e.detail.show&&this.fullscreen){
 				this.controls = e.detail.show;
 			}
 		},
