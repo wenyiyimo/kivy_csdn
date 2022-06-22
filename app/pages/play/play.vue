@@ -100,7 +100,7 @@
 					>
 						<text class="first-text">{{ searchlists[sitecurrent][0].title }}</text>
 						<text class="second-text">状态：{{ searchlists[sitecurrent][0].state }}</text>
-						<text class="second-text">上次观看：{{nowplay}}</text>
+						<text class="second-text">上次观看：{{ nowplay }}</text>
 					</view>
 				</view>
 			</uni-card>
@@ -155,18 +155,17 @@
 				</text>
 			</scroll-view>
 			<view class="grid-layout" v-if="showplaydata">
-				<uni-card
-					
+				<text
+					class="first-text"
+					:class="[playcurrent == index ? 'active-text' : '']"
 					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
-					style="justify-content: center;align-items: center;margin: 5px;padding: -5px;background-color: #fff;"
+					style="justify-content: center;align-items: center;margin: 5px;padding: 5px;background-color: #fff;border-radius: 10%;border-style:solid;border-color:border-width: 2; flex;flex-direction: row;flex-wrap: nowrap;flex:1;"
 				>
-				<text class="first-text"
-					:class="[playcurrent == index ? 'active-text' : '']" style="margin: 0px;padding: 0px;">
-					{{ item.title.trim() }}
+					{{ item.title }}
 				</text>
-				</uni-card>
+				<text style="flex: 1;"></text>
 			</view>
 			<uni-load-more status="loading" v-if="showloading"></uni-load-more>
 		</view>
@@ -221,32 +220,32 @@ export default {
 		}
 	},
 	methods: {
-		 async importextrakey() {
+		async importextrakey() {
 			if (this.extrakey == '') {
 				this.openimport();
 				return;
 			} else {
 				let extrakey = uni.getStorageSync('extrakey');
-				let flag=await this.checkextrakey(extrakey,this.extrakey);
+				let flag = await this.checkextrakey(extrakey, this.extrakey);
 				this.openimport();
-				if(flag.flag){
+				if (flag.flag) {
 					extrakey.push(this.extrakey);
 					uni.setStorageSync('extrakey', extrakey);
-					this.extrakey="";
-					return
-				}else{
-					this.extrakey="";
-					return
+					this.extrakey = '';
+					return;
+				} else {
+					this.extrakey = '';
+					return;
 				}
 			}
 		},
-		async checkextrakey(sites,key){
-			for(let i of sites){
-				if(i.indexOf(key)!=-1){
-					return {flag:false}
+		async checkextrakey(sites, key) {
+			for (let i of sites) {
+				if (i.indexOf(key) != -1) {
+					return { flag: false };
 				}
 			}
-			return {flag:true}
+			return { flag: true };
 		},
 		openimport() {
 			this.impextrakey = !this.impextrakey;
@@ -305,11 +304,11 @@ export default {
 				plus.navigator.setFullscreen(true);
 			} else {
 				plus.navigator.setFullscreen(false);
-			this.controls =true;
+				this.controls = true;
 			}
 		},
 		controlstoggle(e) {
-			if(!e.detail.show&&this.fullscreen){
+			if (!e.detail.show && this.fullscreen) {
 				this.controls = e.detail.show;
 			}
 		},
@@ -479,52 +478,52 @@ export default {
 			this.playcurrent = index;
 			this.nowplay = this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].title;
 			this.xtplayurl(this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].href);
-			let site={
-				title:this.searchlists[this.sitecurrent][0].title,
-				state:this.nowplay
+			let site = {
+				title: this.searchlists[this.sitecurrent][0].title,
+				state: this.nowplay
 			};
 			this.sethistory(site);
 		},
-		async sethistory(site){
-			let historys = uni.getStorageSync("historys");
-			let flag=await this.checkhistory(historys,site);
-			if(flag.flag){
+		async sethistory(site) {
+			let historys = uni.getStorageSync('historys');
+			let flag = await this.checkhistory(historys, site);
+			if (flag.flag) {
 				historys.unshift(site);
 				uni.setStorageSync('historys', historys);
 			}
 		},
-		async gethistory(){
-			let historys = uni.getStorageSync("historys");
-			let title= this.searchlists[sitecurrent][0].title;
-			for(let i of historys){
-				if(i.title==title){
-			      this.nowplay=i.state
+		async gethistory() {
+			let historys = uni.getStorageSync('historys');
+			let title = this.searchlists[sitecurrent][0].title;
+			for (let i of historys) {
+				if (i.title == title) {
+					this.nowplay = i.state;
 				}
 			}
 		},
-		async checkhistory(historys,site){
+		async checkhistory(historys, site) {
 			let num = historys.length;
-			if(num>100){
-				historys.pop()
-				for(let i=0;i<num-1;i++){
-					if(historys[i].title==site.title){
-				       historys.splice(i,1);
-					   historys.unshift(site);
-					   uni.setStorageSync('historys', historys);
-					   return {flag:false}
+			if (num > 100) {
+				historys.pop();
+				for (let i = 0; i < num - 1; i++) {
+					if (historys[i].title == site.title) {
+						historys.splice(i, 1);
+						historys.unshift(site);
+						uni.setStorageSync('historys', historys);
+						return { flag: false };
 					}
 				}
-				return {flag:true}
-			}else{
-				for(let i=0;i<num;i++){
-					if(historys[i].title==site.title){
-				       historys.splice(i,1);
-					   historys.unshift(site);
-					   uni.setStorageSync('historys', historys);
-					   return {flag:false}
+				return { flag: true };
+			} else {
+				for (let i = 0; i < num; i++) {
+					if (historys[i].title == site.title) {
+						historys.splice(i, 1);
+						historys.unshift(site);
+						uni.setStorageSync('historys', historys);
+						return { flag: false };
 					}
 				}
-				return {flag:true}
+				return { flag: true };
 			}
 		},
 		changetag(index) {
@@ -532,7 +531,7 @@ export default {
 		},
 		changesite(index) {
 			this.sitecurrent = index;
-	       this.tagcurrent = 0;
+			this.tagcurrent = 0;
 			this.getplaydata(index);
 		},
 		downvideo() {
@@ -598,7 +597,7 @@ export default {
 	onLoad: function() {
 		this.searchlists = uni.getStorageSync('temp');
 		this.getplaydata(this.sitecurrent);
-		this.gethistory()
+		this.gethistory();
 		this.initialtime = uni.getStorageSync('initialtime');
 	},
 	onReady: function() {
@@ -611,27 +610,6 @@ export default {
 .body {
 	display: flex;
 	flex-direction: column;
-}
-.grid-layout {
-	// display: grid;
-	// /* grid-template-columns属性定义每一列的列宽，grid-template-rows属性定义每一行的行高。 */
-	// grid-template-columns: repeat(auto-fill, 80px);
-	// grid-template-rows: auto;
-	// /* grid-gap属性是grid-column-gap和grid-row-gap的合并简写形式，
-	//             grid-row-gap属性设置行与行的间隔（行间距），grid-column-gap属性设置列与列的间隔（列间距）
-	//             我设置的是10 行与行之间 列与列之间 都是10*/
-	// grid-row-gap: 10px;
-	// // grid-column-gap: 10px;
-	// /* item在这个单元格中的位置justify-items属性设置单元格内容的水平位置（左中右），align-items属性设置单元格内容的垂直位置（上中下） */
-	// align-items: center;
-	// justify-items: center;
-	// /* justify-content属性是整个内容区域在容器里面的水平位置（左中右），align-content属性是整个内容区域的垂直位置（上中下）。 */
-	// justify-content: space-between;
-	// align-content: center;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-between;
 }
 .play-control {
 	display: flex;
