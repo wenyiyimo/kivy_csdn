@@ -211,7 +211,8 @@ export default {
 			fullscreen: false,
 			playbackRate: 1.0,
 			direction: -90,
-			devList: []
+			devList: [],
+			downloadlists: []
 		};
 	},
 	watch: {
@@ -475,14 +476,36 @@ export default {
 			this.videoContext.play();
 		},
 		changeplay(index) {
-			this.playcurrent = index;
-			this.nowplay = this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].title;
-			this.xtplayurl(this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].href);
-			let site = {
-				title: this.searchlists[this.sitecurrent][0].title,
-				state: this.nowplay
-			};
-			this.sethistory(site);
+			if (this.downImage == 'arrow-down') {
+				this.playcurrent = index;
+				this.nowplay = this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].title;
+				this.xtplayurl(this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].href);
+				let site = {
+					title: this.searchlists[this.sitecurrent][0].title,
+					state: this.nowplay
+				};
+				this.sethistory(site);
+			} else {
+				let temp = [
+					this.searchlists[this.sitecurrent][0].title,
+					this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].title,
+					this.searchlists[this.sitecurrent][2][this.tagcurrent].data[index].href
+				];
+				let tempindex = this.downloadlists.findIndex(item => item[3] == temp[3]);
+				if (tempindex) {
+					uni.showToast({
+						title: '已添加过该集',
+						duration: 1000
+					});
+					return;
+				} else {
+					this.downloadlists.push(temp);
+					uni.showToast({
+						title: temp[1] + '添加成功',
+						duration: 800
+					});
+				}
+			}
 		},
 		async sethistory(site) {
 			let historys = uni.getStorageSync('historys');
@@ -539,6 +562,8 @@ export default {
 				this.downImage = 'arrow-up';
 			} else {
 				this.downImage = 'arrow-down';
+				uni.setStorageSync('downloadlists', this.downloadlists);
+				uni.navigateTo({ url: `/pages/download/download` });
 			}
 		},
 		pageBacked() {
@@ -599,6 +624,7 @@ export default {
 		this.getplaydata(this.sitecurrent);
 		this.gethistory();
 		this.initialtime = uni.getStorageSync('initialtime');
+		this.downloadlists = uni.getStorageInfoSync('downloadlists');
 	},
 	onReady: function() {
 		this.videoContext = uni.createVideoContext('myvideo', this);
