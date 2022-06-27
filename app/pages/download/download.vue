@@ -542,11 +542,49 @@ export default {
 			if (this.downloadlists[index][4]) {
 				this.playurl = this.downloadlists[index][4];
 				this.playvideo();
+				let site = {
+					title: this.downloadlists[index][0],
+					state: this.nowplay
+				};
+				this.sethistory(site);
 			} else {
 				uni.showToast({
 					title: `${this.nowplay}未下载!`,
 					duration: 1000
 				});
+			}
+		},
+		async sethistory(site) {
+			let historys = uni.getStorageSync('historys');
+			let flag = await this.checkhistory(historys, site);
+			if (flag.flag) {
+				historys.unshift(site);
+				uni.setStorageSync('historys', historys);
+			}
+		},
+		async checkhistory(historys, site) {
+			let num = historys.length;
+			if (num > 100) {
+				historys.pop();
+				for (let i = 0; i < num - 1; i++) {
+					if (historys[i].title == site.title) {
+						historys.splice(i, 1);
+						historys.unshift(site);
+						uni.setStorageSync('historys', historys);
+						return { flag: false };
+					}
+				}
+				return { flag: true };
+			} else {
+				for (let i = 0; i < num; i++) {
+					if (historys[i].title == site.title) {
+						historys.splice(i, 1);
+						historys.unshift(site);
+						uni.setStorageSync('historys', historys);
+						return { flag: false };
+					}
+				}
+				return { flag: true };
 			}
 		},
 		playvideo() {
