@@ -154,18 +154,18 @@
 					{{ item.name }}
 				</text>
 			</scroll-view>
-			<view class="grid-layout" v-if="showplaydata">
+			<view style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap;" v-if="showplaydata">
 				<text
 					class="first-text"
 					:class="[playcurrent == index ? 'active-text' : '']"
 					v-for="(item, index) in searchlists[sitecurrent][2][tagcurrent].data"
 					:key="index"
 					@click="changeplay(index)"
-					style="justify-content: center;align-items: center;margin: 5px;padding: 5px;background-color: #fff;border-radius: 10%;border-style:solid;border-color:border-width: 2; flex;flex-direction: row;flex-wrap: nowrap;flex:1;"
+					style="justify-content: center;align-items: center;margin: 5px;padding: 5px;background-color: #fff;border-radius: 10%;border-style:solid;border-color:border-width: 2; flex;flex-direction: row;flex-wrap: nowrap;"
 				>
 					{{ item.title }}
 				</text>
-				<text style="flex: 1;"></text>
+				<text style="width:0px"></text>
 			</view>
 			<uni-load-more status="loading" v-if="showloading"></uni-load-more>
 		</view>
@@ -315,12 +315,12 @@ export default {
 		fullscreenclick(e) {
 			let clickW = e.detail.screenX / e.detail.screenWidth;
 			let clickH = e.detail.screenY / e.detail.screenHeight;
-			if (clickW > 0.8 && 0.4 < clickH && clickH < 0.6 && this.playbackRate == 1.0) {
+			if (clickW > 0.88 && 0.4 < clickH && clickH < 0.6 && this.playbackRate == 1.0) {
 				this.videoContext.playbackRate(2.0);
 				this.playbackRate = 2.0;
 				this.controls = false;
 			} else {
-				if (clickW > 0.8 && 0.4 < clickH && clickH < 0.6 && this.playbackRate != 1.0) {
+				if (clickW > 0.88 && 0.4 < clickH && clickH < 0.6 && this.playbackRate != 1.0) {
 					this.videoContext.playbackRate(1.0);
 					this.playbackRate = 1.0;
 					this.controls = false;
@@ -494,7 +494,7 @@ export default {
 		},
 		async gethistory() {
 			let historys = uni.getStorageSync('historys');
-			let title = this.searchlists[sitecurrent][0].title;
+			let title = this.searchlists[this.sitecurrent][0].title;
 			for (let i of historys) {
 				if (i.title == title) {
 					this.nowplay = i.state;
