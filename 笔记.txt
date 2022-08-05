@@ -11,3 +11,4 @@ ProtonVPN   Hotspot Shield
 https://royqh1979.gitee.io/redpandacpp/
 
 
+player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
