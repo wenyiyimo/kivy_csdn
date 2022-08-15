@@ -24,3 +24,19 @@ def deal_img_mask(img, mask):
     im = im * 255
     im = im.astype(np.uint8)
     return im
+
+
+def get_bg(width, height, coord):
+    if len(coord) == 4:
+        # bg = np.zeros((height, width, 3), np.uint8)
+        bg = np.zeros((height, width), np.uint8)
+        pts = np.array(coord, np.int32)
+        bg = cv2.fillPoly(bg, [pts], 255, lineType=cv2.LINE_AA)
+        return bg
+        
+
+tar_img = edg_mask[:, :, None]*img + \
+                                    (1-edg_mask[:, :, None])*temp_img
+        
+        
+        
