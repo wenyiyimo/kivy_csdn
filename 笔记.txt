@@ -12,3 +12,15 @@ https://royqh1979.gitee.io/redpandacpp/
 
 
 player.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+
+
+def deal_img_mask(img, mask):
+
+    if img.max() > 1:
+        img = img / 255
+    if mask.max() > 1:
+        mask = mask / 255
+    im = img * mask
+    im = im * 255
+    im = im.astype(np.uint8)
+    return im
